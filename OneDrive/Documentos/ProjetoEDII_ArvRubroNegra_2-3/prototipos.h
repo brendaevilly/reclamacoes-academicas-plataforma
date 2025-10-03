@@ -42,7 +42,10 @@ typedef struct Arvore{
 
 
 //FUNÇÕES DE ARVORE
-void cadastrarArvore();
+Arvore criarNoArvore(Dados info, int flag, Cor cor);
+void rotacaoEsquerda(Arvore **raiz); 
+void rotacaoDireita(Arvore **raiz);
+int cadastrarArvore();
 void removerNoArvore(); 
 void buscarNoPorNome();
 

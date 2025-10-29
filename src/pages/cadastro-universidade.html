@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Universidade</title>
+    <link rel="stylesheet" href="../styles/cadastro-universidade.css">
+    <link rel="stylesheet" href="../styles/global.css">
+</head>
+<body>
+
+    <main class="box-universidade">
+        <h2>Cadastrar Nova Universidade</h2>
+        <form id="form-universidade">
+            
+            <div class="form-grupo-universidade">
+                <label for="nome">Nome Completo da Universidade</label>
+                <input type="text" id="nome" name="nome" required>
+            </div>
+
+            <div class="form-grupo-universidade">
+                <label for="sigla">Sigla (Ex: UFPI, USP)</label>
+                <input type="text" id="sigla" name="sigla" required>
+            </div>
+
+            <div class="form-grupo-universidade">
+                <label for="campus">Campus</label>
+                <input type="text" id="campus" name="campus" required>
+            </div>
+
+            <button type="submit">Cadastrar Universidade</button>
+        </form>
+    </main>
+
+    <script src="../scripts/cadastro-universidade.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,65 @@
+.box-login{
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.box-login h2{
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-grupo-login{
+    margin-bottom: 15px;
+}
+
+.form-grupo-login label{
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-grupo-login input[type="email"],
+.form-grupo-login input[type="senha"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.box-login p{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.box-login a{
+    color: #007bff;
+    text-decoration: none;
+}
+
+.box-login a:hover{
+    text-decoration: underline;
+}

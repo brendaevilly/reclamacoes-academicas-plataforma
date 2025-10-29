@@ -1,0 +1,77 @@
+.box-cadastro{
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.box-cadastro h2{
+    text-align: center;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-tipo-usuario{
+    margin-bottom: 15px;
+}
+
+.form-tipo-usuario label{
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-tipo-usuario input[type="text"],
+.form-tipo-usuario input[type="email"],
+.form-tipo-usuario input[type="senha"]{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.checkbox-grupo{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.checkbox-grupo input[type="checkbox"]{
+    margin-right: 10px;
+}
+
+
+button[type="submit"]{
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.box-cadastro p{
+    text-align: center;
+    margin-top: 20px;
+}
+
+.box-cadastro a{
+    color: #007bff;
+    text-decoration: none;
+}
+
+.box-cadastro a:hover{
+    text-decoration: underline;
+}

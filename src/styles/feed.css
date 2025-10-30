@@ -1,0 +1,130 @@
+
+body {
+  background-color: #f8f9fa;
+  font-family: 'Inter', Arial, sans-serif;
+  position: relative;
+  padding-bottom: 90px; 
+}
+
+header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dee2e6;
+  padding: 15px 30px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+header h1 {
+  color: #007b8a;
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.status-geral {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+
+.filtro-area {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 15px 20px;
+  margin-bottom: 25px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.filtro-area label {
+  font-weight: 500;
+  color: #6c757d;
+  margin-right: 10px;
+}
+
+.categoria-titulo {
+  color: #007b8a;
+  font-weight: 600;
+  margin-top: 30px;
+  border-bottom: 2px solid #007b8a33;
+  padding-bottom: 5px;
+}
+
+
+.card {
+  border-radius: 10px;
+  border: 1px solid #dee2e6;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.status {
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.status.em-analise {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.status.resolvido {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.btn-icon {
+  border: none;
+  background: none;
+  color: #007b8a;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.btn-icon:hover {
+  color: #005f63;
+  transform: scale(1.2);
+  transition: 0.2s;
+}
+
+.contador {
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.comentarios {
+  color: #6c757d;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.categoria {
+  color: #007b8a;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.universidade {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.btn-adicionar {
+  background-color: #007b8a;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  padding: 15px 30px;
+  font-weight: 500;
+  position: fixed;
+  bottom: 25px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  z-index: 20;
+}
+
+.btn-adicionar:hover {
+  background-color: #005f63;
+}

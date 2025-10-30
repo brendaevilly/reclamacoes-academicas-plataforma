@@ -49,7 +49,12 @@
       </form>
     </section>
   </main>
-
+  <script src="../scripts/login.js"></script>
+  <script>
+  document.getElementById("form-login").addEventListener("submit", function(event) {
+    event.preventDefault(); // evita que o formulário recarregue a página
+    window.location.href = "telaprincipal.html"; // redireciona para a tela principal
+  });
   <script src="../scripts/login.js"></script>
 </body>
 </html>

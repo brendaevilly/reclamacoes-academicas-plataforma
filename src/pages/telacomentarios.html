@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comentários - Falta de Ar-Condicionado</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Consolas', monospace;
+      padding-bottom: 80px; /* espaço para botão fixo */
+    }
+
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #dee2e6;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #00a8cc;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .comentario-area {
+      background-color: #ffffff;
+      border: 1px solid #dee2e6;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 25px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .comentario {
+      font-family: Arial, Helvetica, sans-serif;
+      border-bottom: 1px solid #dee2e6;
+      padding: 10px 0;
+    }
+
+    .comentario:last-child {
+      border-bottom: none;
+    }
+
+    .autor {
+      font-family:Arial, Helvetica, sans-serif;
+      font-weight: bold;
+      color: #343a40;
+    }
+    
+
+    .data {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-left: 10px;
+    }
+
+    .conteudo {
+      margin-top: 5px;
+      color: #495057;
+    }
+
+    .btn-voltar {
+      background-color: #00a8cc;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 10px 20px;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    .btn-voltar:hover {
+      background-color: #0091b3;
+      text-decoration: none;
+      color: white;
+    }
+
+    .nova-reclamacao {
+      margin-top: 30px;
+      text-align: center;
+    }
+
+    @media (max-width: 576px) {
+      .comentario-area {
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="d-flex justify-content-between align-items-center">
+    <h1>Ouvidoria Universitária</h1>
+    <div class="status-geral">Comentários da reclamação</div>
+  </header>
+
+  <main class="container my-4">
+   
+    <a href="telafeed.html" class="btn btn-voltar">← Voltar ao Feed</a>
+
+    
+    <div class="comentario-area">
+      <h4>Reclamação: Falta de Ar-Condicionado nas Salas do Bloco 3</h4>
+      <p class="text-muted">As salas do bloco 3 estão sem ar-condicionado há mais de um mês, dificultando as aulas.</p>
+      <span class="badge bg-warning text-dark">Em Análise</span>
+    </div>
+
+    
+    <div class="comentario-area mt-4">
+      <h5>Comentários</h5>
+
+      <div class="comentario">
+        <span class="autor">Anônimo 1</span><span class="data">25/10/2025</span>
+        <p class="conteudo">Isso está realmente atrapalhando as aulas. Espero que a manutenção seja rápida!</p>
+      </div>
+
+      <div class="comentario">
+        <span class="autor">Anônimo 2</span><span class="data">26/10/2025</span>
+        <p class="conteudo">A falta de ar-condicionado é um problema sério, principalmente nos dias mais quentes.</p>
+      </div>
+
+      <div class="comentario">
+        <span class="autor">Anônimo 3</span><span class="data">27/10/2025</span>
+        <p class="conteudo">Sugiro que a universidade disponibilize ventiladores até o conserto do ar-condicionado.</p>
+      </div>
+    </div>
+
+   
+    <div class="nova-reclamacao">
+      <a href="nova-reclamacao.html" class="btn btn-voltar">+ Adicionar Nova Reclamação</a>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard - Ouvidoria Universitária</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Inter', Arial, sans-serif;
+      min-height: 100vh;
+    }
+
+   
+    header {
+      background-color: #ffffff;
+      border-bottom: 1px solid #dee2e6;
+      padding: 15px 30px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      color: #00a8cc;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .sidebar {
+      background-color: #ffffff;
+      border-right: 1px solid #dee2e6;
+      min-height: 100vh;
+      padding: 20px;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 10px 15px;
+      margin-bottom: 5px;
+      color: #343a40;
+      border-radius: 5px;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .sidebar a:hover {
+      background-color: #00a8cc;
+      color: #fff;
+    }
+
+   
+    main {
+      padding: 20px;
+    }
+
+    .card-option {
+      border-radius: 10px;
+      border: 1px solid #dee2e6;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+      padding: 20px;
+      transition: 0.3s;
+      cursor: pointer;
+    }
+
+    .card-option:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .card-option h5 {
+      color: #00a8cc;
+      margin-bottom: 10px;
+    }
+
+    .card-option p {
+      color: #6c757d;
+      font-size: 0.9rem;
+    }
+
+   
+    @media (max-width: 768px) {
+      .sidebar {
+        min-height: auto;
+        position: relative;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <header class="d-flex justify-content-between align-items-center">
+    <h1>Ouvidoria Universitária</h1>
+    <div class="status-geral">Bem-vindo(a) ao seu painel</div>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      
+      <nav class="col-md-3 col-lg-2 sidebar">
+        <h5>Menu Principal</h5>
+        <a href="telafeed.html">Feed de Reclamações</a>
+        <a href="#">Cadastrar Universidade</a>
+        <a href="#">Adicionar Reclamação</a>
+        <a href="#">Meu perfil</a>
+        <a href="config.html">Configurações</a>
+        <a href="notificacoes.html">Notificações</a>
+        <a href="#">Sair</a>
+      </nav>
+
+      
+      <main class="col-md-9 col-lg-10">
+        <h4>Painel de Opções</h4>
+        <div class="row g-3 mt-3">
+          
+          <div class="col-md-4">
+            <div class="card-option" onclick="window.location.href='telafeed.html'">
+              <h5>Feed de Reclamações</h5>
+              <p>Veja todas as reclamações públicas da ouvidoria, com filtros por categoria e universidade.</p>
+            </div>
+          </div>
+
+         
+          <div class="col-md-4">
+              <div class="card-option" onclick="window.location.href='cadastraruniversidade.html'">
+              <h5>Cadastrar Universidade</h5>
+              <p>Faça o cadastramento da Universidade.</p>
+            </div>
+          </div>
+
+       
+          <div class="col-md-4">
+              <div class="card-option" onclick="window.location.href='cadastraruniversidade.html'">
+              <h5>Adicionar Reclamação</h5>
+              <p>Crie uma nova reclamação preenchendo o formulário completo e escolha a categoria adequada.</p>
+            </div>
+          </div>
+
+      
+          <div class="col-md-4">
+              <div class="card-option" onclick="window.location.href='cadastraruniversidade.html'">
+              <h5>Perfil de Usuário</h5>
+              <p>Atualize suas informações pessoais, universidade, foto de perfil e preferências de notificações.</p>
+            </div>
+          </div>
+
+          
+          <div class="col-md-4">
+              <div class="card-option" onclick="window.location.href='config.html'">
+              <h5>Configurações</h5>
+              <p>Gerencie segurança, privacidade e preferências do sistema da sua ouvidoria.</p>
+            </div>
+          </div>
+
+          
+          <div class="col-md-4">
+              <div class="card-option" onclick="window.location.href='notificacoes.html'">
+              <h5>Notificações</h5>
+              <p>Veja alertas de atualização de reclamações, respostas de comentários e novidades do sistema.</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+</body>
+</html>

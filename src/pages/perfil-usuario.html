@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil - Usuário</title>
+    <!-- Link para o CSS global e o CSS específico da página -->
+    <link rel="stylesheet" href="../styles/perfil-usuario.css">
+    <link rel="stylesheet" href="../styles/global.css">
+
+</head>
+<body>
+    <main class="box-perfil">
+        <section class="sessao-info-usuario">
+            <h2>Meu Perfil</h2>
+            <div class="detalhes-usuario">
+                <p><strong>Nome:</strong> <span id="nome-usuario">Ana Carolina Silva</span></p>
+                <p><strong>E-mail:</strong> <span id="usuario-email">ana.carolina@universidade.edu.br</span></p>
+            </div>
+            <button id="edit-perfil-btn">Editar Perfil</button>
+        </section>
+
+        <section class="historico-posts">
+            <h3>Meu Histórico de Reclamações</h3>
+            
+            <!-- Container onde os posts serão injetados -->
+            <div class="posts-lista" id="posts-historico-container">
+                <!-- Exemplo de como um post deve ser renderizado (será removido pelo JS) -->
+                <div class="post-card examplo-post">
+                    <h4>Reclamação de Exemplo (Será substituída pelo JS)</h4>
+                    <p>Status: Em Análise | Apoios: 15</p>
+                    <a href="detail.html?id=123">Ver Detalhes</a>
+                </div>
+                
+                <p id="carregando-msg">Carregando histórico de posts...</p>
+                <!-- Se não houver posts, o JS pode exibir uma mensagem aqui -->
+            </div>
+        </section>
+    </main>
+
+    <script src="../scripts/perfil-usuario.js"></script>
+</body>
+</html>

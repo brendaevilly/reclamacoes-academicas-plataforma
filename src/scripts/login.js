@@ -1,34 +1,32 @@
 document.addEventListener('DOMContentLoaded', () => {
     const formLogin = document.getElementById('form-login');
 
-    formLogin.addEventListener('submit', async (e) =>{
+    formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const email = document.getElementById('email').value;
-        const senha = document.getElementById('senha').value;
+        // Captura os valores dos inputs
+        const email = document.getElementById('email').value.trim();
+        const senha = document.getElementById('senha').value.trim();
 
-        if(!email || ! senha){
+        // Validação simples
+        if (!email || !senha) {
             alert('Por favor, preencha o email e a senha.');
             return;
         }
 
-        // Simulação de envio para api
+        // Dados que seriam enviados para a API
+        const dadosLogin = { email, senha };
 
-        const dadosLogin = {
-            email: email,
-            senha: senha
-        };
+        console.log('Dados de login a serem enviados:', dadosLogin);
 
-        console.log('Dados de login a serem enviados: ', dadosLogin);
-
-        // Aqui seria a chamada real da api
-
-        // Simulação de sucesso para fins de demonstração
-
+        // Simulação de resposta da API
         alert(`Simulação de login:
-            Email: ${email}
-            Senha: [oculta]
-            
-            Login simulado com sucesso, o próximo passo seria receber o token e redicionar para o feed.`);
+Email: ${email}
+Senha: [oculta]
+
+Login simulado com sucesso! O próximo passo seria receber o token e redirecionar para o feed.`);
+        
+        // Aqui você poderia redirecionar, por exemplo:
+        // window.location.href = 'feed.html';
     });
 });

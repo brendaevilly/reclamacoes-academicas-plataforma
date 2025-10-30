@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,24 +8,23 @@
     <link rel="stylesheet" href="../styles/global.css">
 </head>
 <body>
-
-    <main class="box-universidade">
-        <h2>Cadastrar Nova Universidade</h2>
-        <form id="form-universidade">
+    <main class="form-container">
+        <form id="form-universidade" class="form-flutuante">
+            <h2>Cadastrar Nova Universidade</h2>
             
-            <div class="form-grupo-universidade">
+            <div class="form-grupo">
                 <label for="nome">Nome Completo da Universidade</label>
-                <input type="text" id="nome" name="nome" required>
+                <input type="text" id="nome" name="nome" placeholder="Ex: Universidade Federal do Piauí" required>
             </div>
 
-            <div class="form-grupo-universidade">
-                <label for="sigla">Sigla (Ex: UFPI, USP)</label>
-                <input type="text" id="sigla" name="sigla" required>
+            <div class="form-grupo">
+                <label for="sigla">Sigla</label>
+                <input type="text" id="sigla" name="sigla" placeholder="Ex: UFPI" required>
             </div>
 
-            <div class="form-grupo-universidade">
+            <div class="form-grupo">
                 <label for="campus">Campus</label>
-                <input type="text" id="campus" name="campus" required>
+                <input type="text" id="campus" name="campus" placeholder="Ex: Teresina" required>
             </div>
 
             <button type="submit">Cadastrar Universidade</button>
@@ -33,6 +32,5 @@
     </main>
 
     <script src="../scripts/cadastro-universidade.js"></script>
-    
 </body>
 </html>

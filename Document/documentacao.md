@@ -1,5 +1,7 @@
 # Estrutura do Projeto
 
+Projeto estruturado em "microsserviços", estre aspas pois eles compartilham banco.
+
 - Pastas para cada microsservico
     - **users-service**: Gerenciamento de usuários (alunos e universidades), login, registro, perfis, autenticação (JWT) e autorização. Entidades do banco: Usuario (Aluno), Universidade, Credenciais.
     - **complaints-service**: Criação, visualização, edição e exclusão de reclamações. Gerenciamento do feed principal e busca de reclamações. Entidades do banco: Reclamacao, Categoria.
@@ -142,7 +144,7 @@ docker-compose up --build
 
 ## Microsserviços rodando
 
-![aContainers/Microsserviços](image.png)
+![Microsserviços](image-2.png)
 
 ## Para testar conexão
 

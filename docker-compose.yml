@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "${GATEWAY_PORT}:3000"
+    environment:
+      USERS_SERVICE_URL: ${USERS_SERVICE_URL}
+      COMPLAINTS_SERVICE_URL: ${COMPLAINTS_SERVICE_URL}
+      INTERACTIONS_SERVICE_URL: ${INTERACTIONS_SERVICE_URL}
+    depends_on:
+      - users-service
+      - complaints-service
+      - interactions-service
+
+  users-service:
+    build: ./users-service
+    container_name: users-service
+    ports:
+      - "${USERS_SERVICE_PORT}:3001"
+    environment:
+      DATABASE_URL: ${USERS_DB_URL}
+    depends_on:
+      - postgres
+
+  complaints-service:
+    build: ./complaints-service
+    container_name: complaints-service
+    ports:
+      - "${COMPLAINTS_SERVICE_PORT}:3002"
+    environment:
+      DATABASE_URL: ${COMPLAINTS_DB_URL}
+    depends_on:
+      - postgres
+
+  interactions-service:
+    build: ./interactions-service
+    container_name: interactions-service
+    ports:
+      - "${INTERACTIONS_SERVICE_PORT}:3003"
+    environment:
+      DATABASE_URL: ${INTERACTIONS_DB_URL}
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

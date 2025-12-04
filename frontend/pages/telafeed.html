@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ouvidoria Universitária - Feed</title>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../styles/feed.css" />
+</head>
+<body>
+  <header class="d-flex justify-content-between align-items-center">
+    <h1>Ouvidoria Universitária</h1>
+    <div class="status-geral">Plataforma ativa · 256 reclamações públicas</div>
+  </header>
+
+
+
+
+  <main class="container my-4">
+    <div class="mb-3">
+    <button class="btn btn-secondary btn-sm" onclick="voltarPagina()">← Voltar</button>
+  </div>
+    <h4 class="mb-3">Feed de Reclamações</h4>
+
+    
+    <div class="filtro-area">
+      <form class="row g-2 align-items-center">
+        <div class="col-md-4">
+          <label for="categoria" class="form-label">Categoria:</label>
+          <select class="form-select" id="categoria">
+            <option value="Todos" selected>Todos</option>
+            <option value="Infraestrutura">Infraestrutura</option>
+            <option value="Administração">Administração</option>
+            <option value="Docentes">Docentes</option>
+            <option value="Serviços Acadêmicos">Serviços Acadêmicos</option>
+            <option value="Outros">Outros</option>
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label for="universidade" class="form-label">Universidade:</label>
+          <select class="form-select" id="universidade">
+            <option value="Todas" selected>Todas</option>
+            <option value="@UFPI">@UFPI</option>
+            <option value="@UESPI">@UESPI</option>
+            <option value="@UFMA">@UFMA</option>
+          </select>
+        </div>
+        <div class="col-md-4 d-flex align-items-end">
+          <button type="button" class="btn btn-outline-info w-100" id="btn-filtrar">Filtrar Reclamações</button>
+        </div>
+      </form>
+    </div>
+
+    
+    <h5 class="categoria-titulo">Infraestrutura</h5>
+    <div class="card p-3 mb-3" data-categoria="Infraestrutura" data-universidade="@UFPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Problemas no ar-condicionado das salas</h5>
+          <span class="categoria">Infraestrutura</span> ·
+          <span class="universidade">@UFPI</span>
+        </div>
+        <small class="text-muted">25/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        As salas do bloco 3 estão sem ar-condicionado há mais de um mês, dificultando as aulas.
+      </p>
+      <span class="status em-analise">Em Análise</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">14</span>
+          <button class="btn-icon ms-2">↻</button>
+        </div>
+        <a href="telacomentarios.html" class="comentarios">💬 3 comentários</a>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3" data-categoria="Infraestrutura" data-universidade="@UESPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Banheiros do bloco 2 sujos</h5>
+          <span class="categoria">Infraestrutura</span> ·
+          <span class="universidade">@UESPI</span>
+        </div>
+        <small class="text-muted">24/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        Falta de limpeza adequada nos banheiros do bloco 2, prejudicando o bem-estar dos alunos.
+      </p>
+      <span class="status em-analise">Em Análise</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">5</span>
+          <button class="btn-icon ms-2">↻</button>
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 1 comentário</a>
+      </div>
+    </div>
+
+   
+    <h5 class="categoria-titulo">Administração</h5>
+    <div class="card p-3 mb-3" data-categoria="Administração" data-universidade="@UESPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Demora na liberação de histórico</h5>
+          <span class="categoria">Administração</span> ·
+          <span class="universidade">@UESPI</span>
+        </div>
+        <small class="text-muted">24/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        A secretaria está demorando mais de 30 dias para liberar históricos acadêmicos.
+      </p>
+      <span class="status resolvido">Resolvido</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">0</span>
+          <button class="btn-icon ms-2">↻</button>
+          
+         
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 1 comentário</a>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3" data-categoria="Administração" data-universidade="@UFPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Problemas com matrícula online</h5>
+          <span class="categoria">Administração</span> 
+          <span class="universidade">@UFPI</span>
+        </div>
+        <small class="text-muted">23/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        A plataforma de matrícula apresenta falhas constantes e não conclui a inscrição de alguns alunos.
+      </p>
+      <span class="status em-analise">Em Análise</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">11</span>
+         <a href="telarepublicar.html" class="btn-icon ms-2">↻</a>
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 4 comentários</a>
+      </div>
+    </div>
+
+    
+    <h5 class="categoria-titulo">Docentes</h5>
+    <div class="card p-3 mb-3" data-categoria="Docentes" data-universidade="@UFMA">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Professor falta constantemente sem aviso</h5>
+          <span class="categoria">Docentes</span> ·
+          <span class="universidade">@UFMA</span>
+        </div>
+        <small class="text-muted">23/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        O professor da disciplina de Anatomia tem faltado seguidamente, prejudicando o conteúdo do curso.
+      </p>
+      <span class="status em-analise">Em Análise</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">7</span>
+          <button class="btn-icon ms-2">↻</button>
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 5 comentários</a>
+      </div>
+    </div>
+
+    <div class="card p-3 mb-3" data-categoria="Docentes" data-universidade="@UFPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Professor não entrega material didático</h5>
+          <span class="categoria">Docentes</span> ·
+          <span class="universidade">@UFPI</span>
+        </div>
+        <small class="text-muted">22/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        Aulas práticas estão sem material de apoio, dificultando o aprendizado dos alunos.
+      </p>
+      <span class="status em-analise">Em Análise</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">6</span>
+          <button class="btn-icon ms-2">↻</button>
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 2 comentários</a>
+      </div>
+    </div>
+
+    
+    <h5 class="categoria-titulo">Serviços Acadêmicos</h5>
+    <div class="card p-3 mb-3" data-categoria="Serviços Acadêmicos" data-universidade="@UESPI">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h5 class="mb-1">Demora na entrega de certificados</h5>
+          <span class="categoria">Serviços Acadêmicos</span> ·
+          <span class="universidade">@UESPI</span>
+        </div>
+        <small class="text-muted">21/10/2025</small>
+      </div>
+      <p class="mt-2 mb-2">
+        Os certificados de conclusão de curso estão sendo entregues com atraso de semanas.
+      </p>
+      <span class="status resolvido">Resolvido</span>
+      <div class="d-flex justify-content-between align-items-center border-top pt-2 mt-2">
+        <div class="d-flex align-items-center">
+          <button class="btn-icon">↑</button>
+          <span class="contador">12</span>
+          <button class="btn-icon ms-2">↻</button>
+        </div>
+        <a href="comentarios.html" class="comentarios">💬 6 comentários</a>
+      </div>
+    </div>
+  </main>
+
+  
+  <a href="reclamacao.html" class="btn btn-adicionar">+ Adicionar Reclamação</a>
+
+  <script src="../scripts/feed.js"></script>
+</body>
+</html>
+
+
+
+
+

@@ -240,7 +240,7 @@ Se falhar → retorna 401.
 
 Objetivo: controlar acesso às rotas privadas.
 
-5. Rotas Protegidas
+## 5. Rotas Protegidas
 
 Exemplo:
 
@@ -254,7 +254,7 @@ Exemplo:
 
 Só funcionam se o middleware validar o token.
 
-6. Refresh Token (opcional)
+## 6. Refresh Token (opcional)
 
 Serve para manter o usuário logado sem pedir login sempre.
 
@@ -272,7 +272,7 @@ Backend valida e gera um novo JWT.
 
 Objetivo: sessão mais estável e segura.
 
-7. Logout
+## 7. Logout
 
 Se usar refresh token:
 

@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Tabela de Usuários (Alunos)
+model Usuario {
+  id            Int           @id @default(autoincrement())
+  nome          String
+  email         String        @unique
+  senha         String
+  tipo          String        @default("aluno") // aluno ou universidade
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  // Relações
+  reclamacoes   Reclamacao[]
+  comentarios   Comentario[]
+  notificacoes  Notificacao[]
+
+  @@map("usuarios")
+}
+
+// Tabela de Universidades
+model Universidade {
+  id            Int           @id @default(autoincrement())
+  nome          String
+  email         String        @unique
+  senha         String
+  cnpj          String?       @unique
+  descricao     String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  // Relações
+  reclamacoes   Reclamacao[]
+  respostas     Comentario[]  @relation("UniversidadeRespostas")
+  notificacoes  Notificacao[]
+
+  @@map("universidades")
+}
+
+// Tabela de Categorias
+model Categoria {
+  id            Int           @id @default(autoincrement())
+  nome          String        @unique
+  descricao     String?
+  createdAt     DateTime      @default(now())
+  
+  // Relações
+  reclamacoes   Reclamacao[]
+
+  @@map("categorias")
+}
+
+// Tabela de Reclamações
+model Reclamacao {
+  id                Int           @id @default(autoincrement())
+  titulo            String
+  descricao         String
+  status            String        @default("Pendente") // Pendente, Em Análise, Resolvida, Rejeitada
+  categoriaId       Int
+  universidadeId    Int
+  alunoId           Int
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relações
+  categoria         Categoria     @relation(fields: [categoriaId], references: [id])
+  universidade      Universidade  @relation(fields: [universidadeId], references: [id])
+  aluno             Usuario       @relation(fields: [alunoId], references: [id])
+  comentarios       Comentario[]
+  notificacoes      Notificacao[]
+
+  @@map("reclamacoes")
+}
+
+// Tabela de Comentários
+model Comentario {
+  id                Int           @id @default(autoincrement())
+  texto             String
+  reclamacaoId      Int
+  autorId           Int?          // Pode ser aluno
+  universidadeId    Int?          // Ou universidade
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  
+  // Relações
+  reclamacao        Reclamacao    @relation(fields: [reclamacaoId], references: [id], onDelete: Cascade)
+  autor             Usuario?      @relation(fields: [autorId], references: [id])
+  universidade      Universidade? @relation("UniversidadeRespostas", fields: [universidadeId], references: [id])
+
+  @@map("comentarios")
+}
+
+// Tabela de Notificações
+model Notificacao {
+  id                Int           @id @default(autoincrement())
+  mensagem          String
+  lida              Boolean       @default(false)
+  tipo              String        // comentario, resposta, status_mudanca
+  reclamacaoId      Int?
+  usuarioId         Int?
+  universidadeId    Int?
+  createdAt         DateTime      @default(now())
+  
+  // Relações
+  reclamacao        Reclamacao?   @relation(fields: [reclamacaoId], references: [id], onDelete: Cascade)
+  usuario           Usuario?      @relation(fields: [usuarioId], references: [id])
+  universidade      Universidade? @relation(fields: [universidadeId], references: [id])
+
+  @@map("notificacoes")
+}

@@ -7,6 +7,8 @@
   <link rel="stylesheet" href="../styles/login.css" />
   <link rel="stylesheet" href="../styles/global.css">
 </head>
+
+
 <body>
   <main class="container-login">
     <section class="login-imagem">
@@ -26,11 +28,6 @@
           <input type="password" id="senha" placeholder="********" required />
         </div>
 
-        <div class="opcoes-login">
-          <label><input type="checkbox"> Lembrar-me</label>
-          <a href="#">Esqueceu a senha?</a>
-        </div>
-
         <button type="submit">Entrar</button>
 
         <p class="criar-conta">
@@ -38,23 +35,10 @@
           <a href="cadastro.html">Inscrever-se</a>
         </p>
 
-        <div class="login-social">
-          <p>Ou entre com</p>
-          <div class="icones-sociais">
-            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/facebook.svg" alt="Facebook"></a>
-            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/google.svg" alt="Google"></a>
-            <a href="#"><img src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/apple.svg" alt="Apple"></a>
-          </div>
-        </div>
       </form>
     </section>
   </main>
-  <script>
-  document.getElementById("form-login").addEventListener("submit", function(event) {
-    event.preventDefault(); // evita que o formulário recarregue a página
-    window.location.href = "telaprincipal.html"; // redireciona para a tela principal
-  });
-  </script>
   <script src="../scripts/login.js"></script>
+  </script>
 </body>
 </html>

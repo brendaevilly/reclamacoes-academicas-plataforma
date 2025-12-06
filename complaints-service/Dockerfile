@@ -1,14 +1,15 @@
-FROM node:18
-
-RUN apt-get update && \
-    apt-get install -y iputils-ping && \
-    rm -rf /var/lib/apt/lists/*
+FROM node:20
 
 WORKDIR /app
-COPY package.json ./
+
+COPY package*.json ./
 RUN npm install
 
 COPY . .
 
+# Gerar Prisma Client
+RUN npx prisma generate
+
 EXPOSE 3002
+
 CMD ["npm", "start"]

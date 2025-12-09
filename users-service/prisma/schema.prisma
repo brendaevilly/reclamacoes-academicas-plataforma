@@ -90,6 +90,7 @@ model Comentario {
 }
 
 // Tabela de Avaliações de Universidades
+
 model Avaliacao {
   id              Int           @id @default(autoincrement())
   universidadeId  Int

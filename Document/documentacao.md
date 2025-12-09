@@ -152,4 +152,140 @@ docker-compose up --build
 - Dentro do container: ping nome-de-outro-container
 - Se estiverem trocando pacotes de forma saudável: Tudo OK
 
-![ping nos microsserviços](image-1.png)
+![ping nos microsserviços](image-1.png) 
+
+
+
+## Pasta Auth — 
+ **1. Cadastro (Register / Sign Up)**
+
+Fluxo:
+
+Usuário envia nome, email e senha.
+
+A senha NÃO é salva em texto puro → é transformada em hash com:
+
+bcrypt ou argon2
+
+O usuário é salvo no banco com:
+
+id
+
+nome
+
+email
+
+senha (hash)
+
+timestamps 
+
+Objetivo: criar conta com segurança.
+
+## 2. Login (Sign In)
+
+Fluxo:
+
+Usuário envia email e senha.
+
+Você busca o usuário pelo email.
+
+Compara a senha enviada com o hash salvo no banco.
+
+Se estiver tudo certo, gera um token JWT com:
+
+id do usuário
+
+tempo de expiração (15m, 1h, etc.)
+
+Objetivo: gerar um token que representa que o usuário está autenticado.
+
+## 3. Token JWT
+
+O JWT é dividido em 3 partes:
+
+Header (tipo + algoritmo)
+
+Payload (dados do usuário, geralmente só o ID)
+
+Signature (garante autenticidade)
+
+Exemplo de payload:
+
+{
+  "sub": "123",
+  "exp": 1735699000
+}
+
+
+Objetivo: permitir autenticação sem precisar perguntar senha toda hora.
+
+## 4. Middleware de Autenticação
+
+Fica no backend protegido.
+
+Fluxo:
+
+Recebe um header:
+
+Authorization: Bearer TOKEN_AQUI
+
+
+Verifica se o token existe.
+
+Valida o token com jsonwebtoken.verify.
+
+Se OK → coloca req.user = { id } e continua
+
+Se falhar → retorna 401.
+
+Objetivo: controlar acesso às rotas privadas.
+
+## 5. Rotas Protegidas
+
+Exemplo:
+
+/me
+
+/posts/create
+
+/dashboard
+
+/settings
+
+Só funcionam se o middleware validar o token.
+
+## 6. Refresh Token (opcional)
+
+Serve para manter o usuário logado sem pedir login sempre.
+
+JWT curto (15min)
+
+Refresh token longo (7 dias, 30 dias)
+
+Armazenado em cookie httpOnly
+
+Fluxo:
+
+Quando o JWT expira, o user envia o refresh token.
+
+Backend valida e gera um novo JWT.
+
+Objetivo: sessão mais estável e segura.
+
+## 7. Logout
+
+Se usar refresh token:
+
+apaga refresh da base
+
+limpa cookies httpOnly
+
+Se usar JWT simples:
+
+frontend só remove o token local
+
+Objetivo: encerrar sessão.
+
+
+
+Resumo da pasta Auth = cadastrar usuário → verificar senha → gerar token → validar token em rotas protegidas →  refresh token para sessão longa.

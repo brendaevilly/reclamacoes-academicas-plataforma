@@ -6,90 +6,183 @@
   <title>Comentários - Falta de Ar-Condicionado</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background-color: #f8f9fa;
-      font-family: 'Consolas', monospace;
-      padding-bottom: 80px; /* espaço para botão fixo */
-    }
-
-    header {
-      background-color: #ffffff;
-      border-bottom: 1px solid #dee2e6;
-      padding: 15px 30px;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    header h1 {
-      color: #00a8cc;
-      font-size: 1.5rem;
-      margin: 0;
-    }
-
-    .comentario-area {
-      background-color: #ffffff;
-      border: 1px solid #dee2e6;
-      border-radius: 10px;
-      padding: 20px;
-      margin-top: 25px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-    }
-
-    .comentario {
-      font-family: Arial, Helvetica, sans-serif;
-      border-bottom: 1px solid #dee2e6;
-      padding: 10px 0;
-    }
-
-    .comentario:last-child {
-      border-bottom: none;
-    }
-
-    .autor {
-      font-family:Arial, Helvetica, sans-serif;
-      font-weight: bold;
-      color: #343a40;
-    }
-    
-
-    .data {
-      font-size: 0.8rem;
-      color: #6c757d;
-      margin-left: 10px;
-    }
-
-    .conteudo {
-      margin-top: 5px;
-      color: #495057;
-    }
-
-    .btn-voltar {
-      background-color: #00a8cc;
-      color: white;
-      border: none;
-      border-radius: 50px;
-      padding: 10px 20px;
-      font-weight: 500;
-      margin-top: 20px;
-    }
-
-    .btn-voltar:hover {
-      background-color: #0091b3;
-      text-decoration: none;
-      color: white;
-    }
-
-    .nova-reclamacao {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    @media (max-width: 576px) {
-      .comentario-area {
-        padding: 15px;
+          /* ===== RESET E BASE ===== */
+      body {
+        background-color: #050418;
+        color: #ffffff;
+        font-family: 'Inter', Arial, sans-serif;
+        padding-bottom: 90px;
       }
-    }
+
+      /* ===== HEADER ===== */
+      header {
+        background-color: #050418;
+        border-radius: 0 0 10px 10px;
+        box-shadow: 0 10px 35px rgba(241, 241, 241, 0.15);
+        padding: 20px 30px;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      header h1 {
+        color: #1BCBF2;
+        font-size: 1.6rem;
+        margin: 0;
+        font-weight: 700;
+      }
+
+      .status-geral {
+        color: #ffffffcc;
+        font-size: 0.9rem;
+      }
+
+      /* ===== ÁREA DAS CARDS ===== */
+      .comentario-area {
+        background: linear-gradient(145deg, #090a2c, #050418);
+        border: 1px solid #103173;
+        border-radius: 14px;
+        padding: 22px;
+        margin-top: 25px;
+        box-shadow: 0 0 15px #00000055;
+        transition: 0.2s ease;
+      }
+
+      .comentario-area:hover {
+        border-color: #169EF2;
+        box-shadow: 0 0 18px #169ef244;
+      }
+
+      /* Títulos internos */
+      .comentario-area h4,
+      .comentario-area h5 {
+        color: #1BCBF2;
+        font-weight: 600;
+      }
+
+      /* ===== TEXTO DA RECLAMAÇÃO ===== */
+      .text-muted {
+        color: #ffffffbb !important;
+      }
+
+      /* ===== CADA COMENTÁRIO ===== */
+      .comentario {
+        border-bottom: 1px solid #103173;
+        padding: 12px 0;
+      }
+
+      .comentario:last-child {
+        border-bottom: none;
+      }
+
+      .autor {
+        font-weight: 600;
+        color: #1BCBF2;
+      }
+
+      .data {
+        font-size: 0.8rem;
+        color: #ffffff77;
+        margin-left: 10px;
+      }
+
+      .conteudo {
+        margin-top: 6px;
+        color: #ffffffdd;
+        font-size: 0.95rem;
+      }
+
+      /* ===== BOTÃO EXCLUIR ===== */
+      .btn-danger {
+        background-color: #E63946;
+        border: none;
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 6px;
+      }
+
+      .btn-danger:hover {
+        background-color: #c72f3b;
+      }
+
+      /* ===== LIKE ===== */
+      .btn-icon {
+        background: none;
+        border: none;
+        color: #ffffffcc;
+        font-size: 1.25rem;
+        cursor: pointer;
+        transition: 0.2s ease;
+      }
+
+      .btn-icon:hover {
+        color: #1BCBF2;
+        transform: scale(1.2);
+      }
+
+      .liked {
+        color: #E63946 !important;
+      }
+
+      .likes-count-comentario {
+        color: #ffffff;
+        font-weight: 600;
+      }
+
+      /* ===== BOTÕES GERAIS ===== */
+      .btn-voltar {
+        background-color: #1BCBF2;
+        color: #060526;
+        font-weight: 700;
+        border-radius: 40px;
+        padding: 10px 22px;
+        border: none;
+        transition: 0.2s ease;
+      }
+
+      .btn-voltar:hover {
+        background-color: #16B4F2;
+        color: #060526;
+        box-shadow: 0 0 12px #1BCBF2;
+      }
+
+      /* Botão Comentar */
+      .btn-primary {
+        background-color: #169EF2;
+        border: none;
+        font-weight: 600;
+      }
+
+      .btn-primary:hover {
+        background-color: #1288d1;
+      }
+
+      /* ===== TEXTAREA ===== */
+      textarea.form-control {
+        background-color: #060526;
+        color: white;
+        border: 1px solid #169EF2;
+      }
+
+      textarea.form-control:focus {
+        background-color: #060526;
+        border-color: #1BCBF2;
+        box-shadow: 0 0 8px #1BCBF288;
+        color: white;
+      }
+
+      /* ===== LINKS ===== */
+      a {
+        text-decoration: none;
+      }
+
+      /* ===== RESPONSIVIDADE ===== */
+      @media (max-width: 576px) {
+        .comentario-area {
+          padding: 18px;
+        }
+      }
+
   </style>
 </head>
 <body>
@@ -105,35 +198,35 @@
 
     
     <div class="comentario-area">
-      <h4>Reclamação: Falta de Ar-Condicionado nas Salas do Bloco 3</h4>
-      <p class="text-muted">As salas do bloco 3 estão sem ar-condicionado há mais de um mês, dificultando as aulas.</p>
-      <span class="badge bg-warning text-dark">Em Análise</span>
+      <h4 id="reclamacao-titulo">Carregando...</h4>
+      <p class="text-muted" id="reclamacao-descricao">Carregando...</p>
     </div>
 
     
     <div class="comentario-area mt-4">
       <h5>Comentários</h5>
-
-      <div class="comentario">
-        <span class="autor">Anônimo 1</span><span class="data">25/10/2025</span>
-        <p class="conteudo">Isso está realmente atrapalhando as aulas. Espero que a manutenção seja rápida!</p>
+      <div id="comentarios-container">
+        <p class="text-muted">Carregando comentários...</p>
       </div>
+    </div>
 
-      <div class="comentario">
-        <span class="autor">Anônimo 2</span><span class="data">26/10/2025</span>
-        <p class="conteudo">A falta de ar-condicionado é um problema sério, principalmente nos dias mais quentes.</p>
-      </div>
-
-      <div class="comentario">
-        <span class="autor">Anônimo 3</span><span class="data">27/10/2025</span>
-        <p class="conteudo">Sugiro que a universidade disponibilize ventiladores até o conserto do ar-condicionado.</p>
-      </div>
+    <div class="comentario-area mt-4">
+      <h5>Adicionar Comentário</h5>
+      <form id="form-comentario">
+        <div class="mb-3">
+          <textarea class="form-control" id="texto-comentario" rows="3" placeholder="Digite seu comentário..." required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Comentar</button>
+      </form>
     </div>
 
    
     <div class="nova-reclamacao">
-      <a href="nova-reclamacao.html" class="btn btn-voltar">+ Adicionar Nova Reclamação</a>
+      <a href="reclamacao.html" class="btn btn-voltar">+ Adicionar Nova Reclamação</a>
     </div>
   </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../scripts/comentarios.js"></script>
 </body>
 </html>

@@ -10,10 +10,13 @@ services:
       USERS_SERVICE_URL: ${USERS_SERVICE_URL}
       COMPLAINTS_SERVICE_URL: ${COMPLAINTS_SERVICE_URL}
       INTERACTIONS_SERVICE_URL: ${INTERACTIONS_SERVICE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
       - users-service
       - complaints-service
       - interactions-service
+    networks:
+      - app-network
 
   users-service:
     build: ./users-service
@@ -21,9 +24,13 @@ services:
     ports:
       - "${USERS_SERVICE_PORT}:3001"
     environment:
-      DATABASE_URL: ${USERS_DB_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
 
   complaints-service:
     build: ./complaints-service
@@ -31,9 +38,13 @@ services:
     ports:
       - "${COMPLAINTS_SERVICE_PORT}:3002"
     environment:
-      DATABASE_URL: ${COMPLAINTS_DB_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - postgres
+      postgres: 
+        condition: service_healthy
+    networks:
+      - app-network
 
   interactions-service:
     build: ./interactions-service
@@ -41,19 +52,35 @@ services:
     ports:
       - "${INTERACTIONS_SERVICE_PORT}:3003"
     environment:
-      DATABASE_URL: ${INTERACTIONS_DB_URL}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
 
   postgres:
     image: postgres:15
     container_name: postgres
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      retries: 5
+      timeout: 5s
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
 
 volumes:
   postgres-data:

@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const dadosUsuario = { nome, email, senha, ehAnonimo };
     console.log('Dados a serem enviados: ', dadosUsuario);
 
-    alert(`Simulação de cadastro:
+    alert(`Simulação de Cadastro:
 Anônimo: ${ehAnonimo}
 Nome: ${nome || 'N/A'}
 Email: ${email}

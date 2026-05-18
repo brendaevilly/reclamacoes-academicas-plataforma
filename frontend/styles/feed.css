@@ -1,0 +1,193 @@
+/* ===== RESET E BASE ===== */
+body {
+  background-color: #050418; /* preto profundo com leve azul */
+  color: #ffffff;
+  font-family: 'Inter', Arial, sans-serif;
+  padding-bottom: 90px;
+}
+
+/* ===== HEADER ===== */
+header {
+  background: linear-gradient(180deg, #070628 0%, #050418 100%);
+  border-radius: 0 0 10px 10px;
+  box-shadow: 0 12px 40px rgba(0, 195, 255, 0.18);
+  padding: 20px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+header h1 {
+  color: #ffffff;
+  font-size: 1.75rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.status-geral {
+  color: #b9e7ffcc;
+  font-size: 0.9rem;
+}
+
+/* ===== BOTÃO VOLTAR ===== */
+.btn-secondary {
+  background-color: #050418;
+  border: 1px solid #0a0a24;
+  color: #d8efff;
+  transition: 0.2s ease;
+}
+
+.btn-secondary:hover {
+  box-shadow: 0 0 15px #1bcdf255;
+  border-color: #1bcdf2;
+}
+
+/* ===== ÁREA DE FILTROS ===== */
+.filtro-area {
+  background: linear-gradient(145deg, #070628, #050418);
+  border: 1px solid #1BCBF244;
+  border-radius: 14px;
+  padding: 18px 22px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 18px #1BCBF222;
+}
+
+.filtro-area label {
+  color: #e7f8ffdd;
+  font-weight: 500;
+}
+
+.form-select {
+  background-color: #050418;
+  border: 1px solid #169EF266;
+  color: #ffffff;
+  transition: 0.2s ease;
+}
+
+.form-select:focus {
+  border-color: #1BCBF2;
+  box-shadow: 0 0 10px #1BCBF288;
+}
+
+/* ===== TÍTULOS DE CATEGORIA ===== */
+.categoria-titulo {
+  color: #1BCBF2;
+  font-weight: 600;
+  margin-top: 40px;
+  border-bottom: 2px solid #169EF255;
+  padding-bottom: 6px;
+  letter-spacing: 1px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: linear-gradient(145deg, #090a2c, #050418);
+  border: 1px solid #0f296666;
+  border-radius: 14px;
+  box-shadow: 0 0 25px #0003;
+  transition: 0.25s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #169EF2;
+  box-shadow: 0 0 20px #169EF244;
+}
+
+.card h5 {
+  color: #1BCBF2;
+}
+
+.card small {
+  color: #d7eaffaa !important;
+}
+
+.card p {
+  color: #ffffffdd;
+}
+
+/* ===== STATUS ===== */
+.status {
+  padding: 6px 13px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.em-analise {
+  background-color: #169EF233;
+  color: #169EF2;
+  border: 1px solid #169EF2;
+}
+
+.resolvido {
+  background-color: #1BCBF233;
+  color: #1BCBF2;
+  border: 1px solid #1BCBF2;
+}
+
+.pendente {
+  background-color: #E6394633;
+  color: #E63946;
+  border: 1px solid #E63946;
+}
+
+/* ===== INTERAÇÕES ===== */
+.btn-icon {
+  background: none;
+  border: none;
+  color: #cfeaffcc;
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-icon:hover {
+  color: #1BCBF2;
+  transform: scale(1.18);
+}
+
+.liked {
+  color: #E63946 !important;
+}
+
+.likes-count {
+  margin-left: 6px;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ===== LINK COMENTÁRIOS ===== */
+.comentarios {
+  color: #1BCBF2;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.comentarios:hover {
+  color: #16B4F2;
+  text-decoration: underline;
+}
+
+/* ===== BOTÃO ADICIONAR ===== */
+.btn-adicionar {
+  position: fixed;
+  bottom: 25px;
+  right: 25px;
+  background: linear-gradient(135deg, #1BCBF2, #16B4F2);
+  color: #060526;
+  font-weight: 700;
+  border-radius: 50px;
+  padding: 12px 24px;
+  box-shadow: 0 0 15px #1BCBF299;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.btn-adicionar:hover {
+  background-color: #16B4F2;
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px #1BCBF2aa;
+}

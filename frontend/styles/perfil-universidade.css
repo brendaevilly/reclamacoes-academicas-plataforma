@@ -1,0 +1,181 @@
+/* ============================
+   GLOBAL DARK MODE
+=============================== */
+body {
+    margin: 0;
+    font-family: "Inter", sans-serif;
+    background: #050418;
+    color: #e6edf3;
+    padding: 90px 20px 40px;
+    display: flex;
+    justify-content: center;
+}
+
+/* ============================
+   CONTAINER PRINCIPAL
+=============================== */
+.perfil-container {
+    width: 100%;
+    max-width: 1100px;
+    padding: 40px;
+    background: #050418;
+    border-radius: 18px;
+    box-shadow: 0 0 20px #1bcef278;
+    border: 1px solid #30363d;
+    margin-top: 60px;
+}
+
+/* ============================
+   CABEÇALHO
+=============================== */
+.universidade-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.universidade-header h1 {
+    font-size: 2.4rem;
+    margin-bottom: 5px;
+    font-weight: 700;
+}
+
+.subinfo {
+    color: #8b949e;
+    font-size: 1rem;
+    margin-top: 2px;
+}
+
+/* ============================
+   CAIXAS DE AVALIAÇÃO
+=============================== */
+.avaliacao-box,
+.avaliacao-user {
+    background: #07051e;
+    padding: 30px 25px;
+    border-radius: 14px;
+    border: 1px solid rgb(42, 52, 64);
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.avaliacao-box h2,
+.avaliacao-user h2 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    color: #e6edf3;
+}
+
+/* ============================
+   ESTRELAS
+=============================== */
+.estrelas-display,
+.estrelas-input {
+    font-size: 45px;
+    margin-bottom: 10px;
+    user-select: none;
+}
+
+.estrela {
+    cursor: pointer;
+    transition: transform .2s ease, color .3s ease;
+}
+
+.estrela:hover {
+    transform: scale(1.15);
+}
+
+.filled::before {
+    content: "★";
+    color: #f1c40f;
+    text-shadow: 0 0 8px #f1c40f;
+}
+
+.empty::before {
+    content: "★";
+    color: #3d424a;
+}
+
+/* ============================
+   TEXTO DE AVALIAÇÃO
+=============================== */
+.avaliacao-texto,
+#mensagem-avaliacao {
+    font-size: 0.95rem;
+    color: #8b949e;
+    margin-top: 6px;
+}
+
+/* ============================
+   RECLAMAÇÕES
+=============================== */
+.reclamacoes-wrapper {
+    margin-top: 40px;
+}
+
+.reclamacoes-wrapper h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 1.5rem;
+}
+
+/* CARDS DE RECLAMAÇÃO */
+.reclamacao-card {
+    background: linear-gradient(145deg, #090a2c, #050418);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #30363d;
+    transition: 0.25s ease;
+}
+
+.reclamacao-card:hover {
+    transform: translateY(-3px);
+    background: #232b36;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.35);
+}
+
+.reclamacao-card h4 {
+    margin: 0 0 10px;
+    font-size: 1.2rem;
+}
+
+.reclamacao-card p {
+    color: #b1b8c0;
+    margin-bottom: 16px;
+    line-height: 1.6;
+}
+
+/* INFO DO CARD */
+.reclamacao-info {
+    border-top: 1px solid #30363d;
+    padding-top: 15px;
+    font-size: 0.9rem;
+    color: #8b949e;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.reclamacao-info a {
+    color: #58a6ff;
+    text-decoration: none;
+}
+
+.reclamacao-info a:hover {
+    text-decoration: underline;
+}
+
+/* ============================
+   RESPONSIVO
+=============================== */
+@media (max-width: 700px) {
+    .perfil-container {
+        padding: 25px;
+    }
+
+    .estrelas-display,
+    .estrelas-input {
+        font-size: 35px;
+    }
+}

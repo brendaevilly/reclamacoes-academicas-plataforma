@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Universidade - Ouvidoria Universitária</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <style>
+
+        /* ===== BASE DO TEMA ESCURO ===== */
+        body {
+            background-color: #060526;
+            color: #ffffff;
+            font-family: 'Inter', Arial, sans-serif;
+            padding-bottom: 60px;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background-color: #060526;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 35px rgba(241, 241, 241, 0.15);
+            padding: 22px 28px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            color: #1BCBF2;
+            font-size: 1.7rem;
+            margin: 0;
+            font-weight: 700;
+        }
+
+        header a {
+            color: #1BCBF2 !important;
+            border-color: #1BCBF2 !important;
+            border-radius: 30px;
+            padding: 6px 14px;
+            transition: 0.2s;
+        }
+
+        header a:hover {
+            background-color: #1BCBF2 !important;
+            color: #060526 !important;
+        }
+
+        /* ===== ÁREA PRINCIPAL ===== */
+        .container-busca {
+            max-width: 900px;
+            margin: 70px auto;
+        }
+
+        /* ===== CARD DE BUSCA ===== */
+        .search-box {
+            background-color: #0d0b3a;
+            border: 1px solid #103173;
+            padding: 30px;
+            border-radius: 14px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+            transition: 0.2s ease;
+        }
+
+        .search-box:hover {
+            border-color: #169EF2;
+            box-shadow: 0 0 22px #169ef244;
+        }
+
+        .search-box h4 {
+            color: #1BCBF2;
+            font-weight: 600;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #060526;
+            border: 1px solid #169EF2;
+            color: #ffffff;
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .search-input::placeholder {
+            color: #b9c2ff88;
+        }
+
+        .search-input:focus {
+            border-color: #1BCBF2;
+            outline: none;
+            box-shadow: 0 0 10px #1BCBF255;
+        }
+
+        /* ===== RESULTADOS ===== */
+        .results-container {
+            background-color: #0d0b3a;
+            border: 1px solid #103173;
+            margin-top: 20px;
+            border-radius: 14px;
+            padding: 25px;
+            box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
+        }
+
+        .university-card {
+            background-color: #060526;
+            border: 1px solid #103173;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .university-card:hover {
+            transform: translateY(-3px);
+            border-color: #169EF2;
+            box-shadow: 0 0 15px #169ef244;
+        }
+
+        .university-card h5 {
+            color: #1BCBF2;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .university-card p {
+            color: #dcdcdcdd;
+            margin: 4px 0;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 35px;
+            color: #b9c2ff88;
+        }
+
+        @media (max-width: 576px) {
+            .container-busca {
+                margin: 50px 16px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header class="d-flex justify-content-between align-items-center">
+        <h1>Ouvidoria Universitária</h1>
+        <a href="telaprincipal.html" class="btn btn-outline-secondary btn-sm">← Voltar</a>
+    </header>
+
+    <div class="container-busca">
+        <div class="search-box">
+            <h4 class="mb-3">Buscar Universidade</h4>
+
+            <input 
+                type="text"
+                class="search-input"
+                id="search-input"
+                placeholder="Digite o nome, sigla ou campus..."
+                autocomplete="off"
+            >
+        </div>
+
+        <div class="results-container">
+            <div id="results-container">
+                <p class="no-results">Digite algo para buscar universidades...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../scripts/api-config.js"></script>
+    <script src="../scripts/buscar-universidade.js"></script>
+</body>
+</html>

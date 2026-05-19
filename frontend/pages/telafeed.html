@@ -16,9 +16,6 @@
     <div class="status-geral">Plataforma ativa · 256 reclamações públicas</div>
   </header>
 
-
-
-
   <main class="container my-4">
     <div class="mb-3">
     <button class="btn btn-secondary btn-sm" onclick="voltarPagina()">← Voltar</button>
@@ -33,13 +30,13 @@
           <select class="form-select" id="categoria">
             <option value="Todos" selected>Todos</option>
             <option value="Infraestrutura">Infraestrutura</option>
-            <option value="Administração">Administração</option>
-            <option value="Docentes">Docentes</option>
-            <option value="Serviços Acadêmicos">Serviços Acadêmicos</option>
-            <option value="Outros">Outros</option>
+            <option value="Atendimento">Atendimento</option>
+            <option value="Ensino">Ensino</option>
+            <option value="Alimentação">Alimentação</option>
+            <option value="Segurança">Segurança</option>
           </select>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <label for="universidade" class="form-label">Universidade:</label>
           <select class="form-select" id="universidade">
             <option value="Todas" selected>Todas</option>
@@ -48,7 +45,13 @@
             <option value="@UFMA">@UFMA</option>
           </select>
         </div>
-        <div class="col-md-4 d-flex align-items-end">
+        <div class="col-md-3">
+          <label for="campus" class="form-label">Campus:</label>
+          <select class="form-select" id="campus">
+            <option value="Todos" selected>Todos</option>
+          </select>
+        </div>
+        <div class="col-md-2 d-flex align-items-end">
           <button type="button" class="btn btn-outline-info w-100" id="btn-filtrar">Filtrar Reclamações</button>
         </div>
       </form>

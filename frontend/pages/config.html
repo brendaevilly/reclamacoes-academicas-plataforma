@@ -4,19 +4,32 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Configurações - Ouvidoria Universitária</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --bg: #050418;
+      --bg-card: #07051e;
+      --text: #e6edf3;
+      --text-muted: #9ba4b1;
+      --primary: #16B4F2;
+      --primary-hover: #119bd2;
+      --border: #0b2746;
+    }
+
     body {
-      background-color: #f8f9fa;
-      font-family: 'Inter', Arial, sans-serif;
+      background-color: var(--bg);
+      font-family: 'Inter', sans-serif;
       min-height: 100vh;
       padding-bottom: 60px;
+      color: var(--text);
     }
 
     header {
-      background-color: #ffffff;
-      border-bottom: 1px solid #dee2e6;
+      background-color: var(--bg-card);
+      border-bottom: 1px solid var(--border);
       padding: 15px 30px;
       position: sticky;
       top: 0;
@@ -24,58 +37,86 @@
     }
 
     header h1 {
-      color: #00a8cc;
+      color: var(--primary);
       font-size: 1.5rem;
       margin: 0;
+      font-weight: 600;
+    }
+
+    header a {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    header a:hover {
+      background-color: var(--primary);
+      color: white;
     }
 
     .container-config {
       max-width: 800px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-      padding: 30px;
+      margin: 60px auto;
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: 0 0 20px #1bcef278;
+      padding: 35px;
+      border: 1px solid var(--border);
     }
 
     .section-title {
-      color: #00a8cc;
+      color: var(--primary);
       font-weight: 600;
-      border-bottom: 2px solid #00a8cc33;
-      margin-bottom: 15px;
-      padding-bottom: 5px;
+      border-bottom: 2px solid rgba(0,168,204,0.35);
+      margin-bottom: 20px;
+      padding-bottom: 6px;
     }
 
     .form-label {
       font-weight: 500;
-      color: #495057;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      background-color: #07051e;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px;
+    }
+
+    .form-control:focus {
+      background-color: #10161d;
+      border-color: var(--primary);
+      color: var(--text);
+      box-shadow: 0 0 0 3px rgba(0,168,204,0.25);
+    }
+
+    .form-control:disabled {
+      opacity: 0.6;
     }
 
     .btn-salvar {
-      background-color: #00a8cc;
+      background-color: var(--primary);
       color: white;
       border: none;
       border-radius: 8px;
-      padding: 10px 25px;
-      font-weight: 500;
+      padding: 12px 28px;
+      font-weight: 600;
+      transition: 0.2s;
     }
 
     .btn-salvar:hover {
-      background-color: #007f9a;
-    }
-
-    .form-check-label {
-      color: #6c757d;
+      background-color: var(--primary-hover);
     }
 
     footer {
       text-align: center;
-      color: #6c757d;
+      color: var(--text-muted);
       font-size: 0.9rem;
       margin-top: 40px;
     }
   </style>
 </head>
+
 <body>
 
   <header class="d-flex justify-content-between align-items-center">
@@ -84,58 +125,48 @@
   </header>
 
   <div class="container-config">
-    <h4 class="mb-4">Configurações da Conta</h4>
+    <h4 class="mb-4 fw-bold">Configurações da Conta</h4>
 
-    
     <div class="mb-4">
       <h6 class="section-title">Informações de Perfil</h6>
+
       <div class="mb-3">
         <label class="form-label">Nome completo</label>
-        <input type="text" class="form-control" placeholder="Seu nome completo">
+        <input type="text" class="form-control" id="nome-completo" placeholder="Seu nome completo">
       </div>
+
       <div class="mb-3">
         <label class="form-label">E-mail</label>
-        <input type="email" class="form-control" placeholder="exemplo@email.com">
+        <input type="email" class="form-control" id="email-usuario" placeholder="exemplo@email.com">
       </div>
+
       <div class="mb-3">
         <label class="form-label">Universidade</label>
-        <input type="text" class="form-control" placeholder="Universidade Federal...">
+        <input type="text" class="form-control" id="universidade-usuario" placeholder="Universidade Federal..." disabled>
       </div>
     </div>
 
-  
     <div class="mb-4">
       <h6 class="section-title">Segurança</h6>
+
       <div class="mb-3">
         <label class="form-label">Senha atual</label>
-        <input type="password" class="form-control" placeholder="••••••••">
+        <input type="password" class="form-control" id="senha-atual" placeholder="••••••••">
       </div>
+
       <div class="mb-3">
         <label class="form-label">Nova senha</label>
-        <input type="password" class="form-control" placeholder="Nova senha">
+        <input type="password" class="form-control" id="nova-senha" placeholder="Nova senha">
       </div>
+
       <div class="mb-3">
         <label class="form-label">Confirmar nova senha</label>
-        <input type="password" class="form-control" placeholder="Confirme sua nova senha">
+        <input type="password" class="form-control" id="confirmar-senha" placeholder="Confirme sua nova senha">
       </div>
     </div>
 
-    
-    <div class="mb-4">
-      <h6 class="section-title">Notificações</h6>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="emailNotifs" checked>
-        <label class="form-check-label" for="emailNotifs">Receber notificações por e-mail</label>
-      </div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="pushNotifs">
-        <label class="form-check-label" for="pushNotifs">Receber alertas no navegador</label>
-      </div>
-    </div>
-
- 
     <div class="text-end">
-      <button class="btn-salvar">Salvar Alterações</button>
+      <button class="btn-salvar" id="btn-salvar">Salvar Alterações</button>
     </div>
   </div>
 
@@ -143,5 +174,7 @@
     &copy; 2025 Ouvidoria Universitária — Todos os direitos reservados.
   </footer>
 
+  <script src="../scripts/api-config.js"></script>
+  <script src="../scripts/config.js"></script>
 </body>
 </html>

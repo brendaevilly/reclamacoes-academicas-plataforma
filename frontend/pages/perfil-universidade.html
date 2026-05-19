@@ -1,35 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil - Universidade</title>
+
     <link rel="stylesheet" href="../styles/perfil-universidade.css">
     <link rel="stylesheet" href="../styles/global.css">
 </head>
-<body>
 
-    <main class="box-perfil-universidade">
+<body>
+    <main class="perfil-container">
+        
         <div class="universidade-header">
-            <h2 id="universidade-nome">Universidade Federal do Piauí</h2>
-            <p id="campus">Campus Senador Helvídio Nunes de Barros</p>
-            <p id="sigla">UFPI</p>
+            <h1 id="universidade-nome">Carregando...</h1>
+            <p class="subinfo" id="campus">-</p>
+            <p class="subinfo" id="sigla">-</p>
         </div>
 
-        <section class="secao-avaliacao">
-            <h3>Nota Média de Satisfação</h3>
-            <div class="box-estrelas" id="estrelas-avaliacao">
-                <!-- Estrelas serão inseridas aqui via JavaScript -->
-            </div>
-            <p id="valor-avaliacao">Média: 4.2 / 5.0 (Baseado em 120 avaliações)</p>
+        <section class="avaliacao-box">
+            <h2>Nota Média de Satisfação</h2>
+            <div class="estrelas-display" id="estrelas-avaliacao-media"></div>
+            <p class="avaliacao-texto" id="valor-avaliacao">Carregando...</p>
         </section>
-        
-        <section class="reclamacoes-link">
-            <p><a href="index.html?uni_id=1">Ver todas as reclamações desta Universidade</a></p>
+
+        <section class="avaliacao-user" id="secao-avaliar-usuario" style="display: none;">
+            <h2>Sua Avaliação</h2>
+            <div class="estrelas-input" id="estrelas-avaliacao-usuario"></div>
+            <p id="mensagem-avaliacao"></p>
         </section>
+
+        <section class="reclamacoes-wrapper">
+            <h2>Reclamações da Universidade</h2>
+            <div id="reclamacoes-container"></div>
+        </section>
+
     </main>
 
+    <script src="../scripts/api-config.js"></script>
     <script src="../scripts/perfil-universidade.js"></script>
-
 </body>
 </html>

@@ -8,7 +8,7 @@
 
 /* ===== CONTAINER ===== */
 body {
-  background: linear-gradient(135deg, #f0f4f8 0%, #c2dcf8 50%, #a3d3ff 100%);
+  background: #060526;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -21,7 +21,7 @@ body {
   width: 900px;
   max-width: 95%;
   border-radius: 16px;
-  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 35px rgba(241, 241, 241, 0.286);
   display: flex;
   overflow: hidden;
 }
@@ -29,7 +29,7 @@ body {
 /* ===== COLUNA ESQUERDA (IMAGEM) ===== */
 .login-imagem {
   flex: 1;
-  background: #0099ff;
+  background: #060526;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,7 +81,7 @@ body {
 
 .form-grupo-login input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #ddd;
 }
 
 /* ===== OPÇÕES (lembrar/esqueceu) ===== */
@@ -94,7 +94,7 @@ body {
 }
 
 .opcoes-login a {
-  color: #3498db;
+  color: #060526;
   text-decoration: none;
 }
 
@@ -106,7 +106,7 @@ body {
 button[type="submit"] {
   width: 100%;
   padding: 12px;
-  background: #0099ff;
+  background: #060526;
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -117,7 +117,7 @@ button[type="submit"] {
 }
 
 button[type="submit"]:hover {
-  background: #0078d7;
+  background: #060526;
 }
 
 button[type="submit"]:active {
@@ -133,7 +133,13 @@ button[type="submit"]:active {
 }
 
 .criar-conta a {
-  color: #0099ff;
+  color: #060526;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.criar-conta a:hover {
+  color: #1BCBF2;
   font-weight: 500;
   text-decoration: none;
 }

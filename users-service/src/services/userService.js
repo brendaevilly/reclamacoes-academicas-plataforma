@@ -1,27 +1,3 @@
-<<<<<<< HEAD
-/*
-
-APENAS PARA TESTE DOS CONTAINERS - APENAS PARA TESTE DOS CONTAINERS
-
-*/
-
-export default {
-    async register(data) {
-        return {
-            status: 201,
-            message: "Usuário registrado com sucesso!",
-        };
-    },
-
-    async login(data) {
-        return {
-            status: 200,
-            message: "Login realizado",
-            token: "jwt-mock",
-        };
-    }
-};
-=======
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User.js";
@@ -49,13 +25,13 @@ export const userService = {
     if (!user) return null;
 
     const valid = await bcrypt.compare(senha, user.senha);
-    console.log("VALID PASSWORD?", valid); 
+    console.log("VALID PASSWORD?", valid);
     if (valid != true) return null;
 
     const token = jwt.sign(
-        { id: user.id, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
+      { id: user.id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     console.log(user);
@@ -95,9 +71,9 @@ export const userService = {
     if (!valid) return null;
 
     const token = jwt.sign(
-        { id: universidade.id, email: universidade.email, type: 'universidade' },
-        process.env.JWT_SECRET,
-        { expiresIn: "1d" }
+      { id: universidade.id, email: universidade.email, type: 'universidade' },
+      process.env.JWT_SECRET,
+      { expiresIn: "1d" }
     );
 
     const { senha: _, ...univSemSenha } = universidade;
@@ -108,7 +84,7 @@ export const userService = {
   findUniversidadeById: (id) => Universidade.findById(id),
   searchUniversidades: async (query) => {
     const searchTerm = query?.trim() || "";
-    
+
     if (!searchTerm) {
       return Universidade.findAll();
     }
@@ -131,10 +107,10 @@ export const userService = {
         const nomeLower = (uni.nome || "").toLowerCase();
         const siglaLower = (uni.sigla || "").toLowerCase();
         const campusLower = (uni.campus || "").toLowerCase();
-        
-        return nomeLower.includes(termoLower) || 
-               siglaLower.includes(termoLower) || 
-               campusLower.includes(termoLower);
+
+        return nomeLower.includes(termoLower) ||
+          siglaLower.includes(termoLower) ||
+          campusLower.includes(termoLower);
       });
 
       return resultados;
@@ -149,7 +125,6 @@ export const userService = {
   // Métodos para Avaliações
   createOrUpdateAvaliacao: (data) => Avaliacao.createOrUpdate(data),
   getAvaliacaoMedia: (universidadeId) => Avaliacao.getAverageRating(universidadeId),
-  getAvaliacaoByUsuario: (usuarioId, universidadeId) => 
+  getAvaliacaoByUsuario: (usuarioId, universidadeId) =>
     Avaliacao.findByUsuarioAndUniversidade(usuarioId, universidadeId),
 };
->>>>>>> origin/brenda

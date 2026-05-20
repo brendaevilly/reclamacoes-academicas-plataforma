@@ -1,23 +1,3 @@
-<<<<<<< HEAD
-/*
-
-APENAS PARA TESTE DOS CONTAINERS - APENAS PARA TESTE DOS CONTAINERS
-
-*/
-
-import userService from "../services/userService.js";
-
-export default {
-    async register(req, res) {
-        const result = await userService.register(req.body);
-        res.status(result.status).json(result);
-    },
-
-    async login(req, res) {
-        const result = await userService.login(req.body);
-        res.status(result.status).json(result);
-    }
-=======
 import { validate } from "../middlewares/validate.js";
 import { cadastroSchema, loginSchema, idParamSchema } from "../validators/userValidator.js";
 
@@ -39,7 +19,7 @@ export const userController = {
 
   async login(req, res) {
     try {
-      const { email, senha } = req.body; 
+      const { email, senha } = req.body;
       const data = await userService.login(email, senha);
       if (!data) {
         return res.status(401).json({ error: "Email ou senha inválidos." });
@@ -98,5 +78,4 @@ export const userController = {
       return res.status(400).json({ error: err.message });
     }
   }
->>>>>>> origin/brenda
 };

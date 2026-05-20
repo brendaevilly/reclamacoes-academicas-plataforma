@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
@@ -26,6 +27,7 @@ async function main() {
   
   // Criar uma universidade de exemplo
   const campusNome = 'Campus Senador Helvídio Nunes de Barros';
+  const hashedPassword = await bcrypt.hash('123456', 10);
   const universidade = await prisma.universidade.upsert({
     where: { campus: campusNome },
     update: {},
@@ -33,6 +35,8 @@ async function main() {
       nome: 'Universidade Federal do Piauí',
       sigla: 'UFPI',
       campus: campusNome, 
+      email: 'ufpi@ufpi.edu.br',
+      senha: hashedPassword
     }
   });
 

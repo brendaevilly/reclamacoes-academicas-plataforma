@@ -39,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('token', data.token);
             localStorage.setItem('user', JSON.stringify(data.user));
             localStorage.setItem('userType', 'aluno');
-            
+
             alert('Login realizado com sucesso!');
             window.location.href = 'telafeed.html';
         } catch (error) {

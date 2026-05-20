@@ -1,58 +1,3 @@
-
-
-function voltarPagina() {
-   window.location.href = "telaprincipal.html";;
-}
-
-
-
-document.getElementById("btn-filtrar").addEventListener("click", function () {
-  const categoriaFiltro = document.getElementById("categoria").value;
-  const universidadeFiltro = document.getElementById("universidade").value;
-
-  const cards = document.querySelectorAll("main .card");
-
-  cards.forEach(card => {
-    const categoria = card.getAttribute("data-categoria");
-    const universidade = card.getAttribute("data-universidade");
-
-    let mostrar = true;
-
-    if (categoriaFiltro !== "Todos" && categoria !== categoriaFiltro) {
-      mostrar = false;
-    }
-
-    if (universidadeFiltro !== "Todas" && universidade !== universidadeFiltro) {
-      mostrar = false;
-    }
-
-    card.style.display = mostrar ? "block" : "none";
-  });
-});
-
-// ========= AUMENTAR SETA E CONTADOR =========
-document.querySelectorAll(".btn-icon").forEach(button => {
-  button.addEventListener("click", () => {
-    // Seleciona o contador relacionado (próximo elemento com a classe .contador)
-    const contador = button.nextElementSibling;
-    let valorAtual = parseInt(contador.textContent);
-    contador.textContent = valorAtual + 1;
-
-    // Animação de clique
-    button.style.transform = "scale(1.5)";
-    button.style.transition = "transform 0.2s";
-
-    setTimeout(() => {
-      button.style.transform = "scale(1.2)"; // retorna para tamanho normal
-    }, 200);
-
-    // Opcional: marca o botão como já clicado
-    button.disabled = true; 
-    button.style.cursor = "not-allowed";
-    button.style.color = "#007b8a"; // muda cor para indicar ação
-  });
-});
-
 const API_BASE_URL = "http://localhost:3000"; // Assumindo que o Gateway está na porta 3000
 const feedContainer = document.querySelector("main.container");
 const statusGeralElement = document.querySelector(".status-geral");
@@ -63,12 +8,12 @@ function voltarPagina() {
 
 async function updateTotalComplaints() {
   if (!statusGeralElement) return;
-  
+
   try {
     // Buscar o feed sem filtros para obter o total de reclamações
     const response = await fetch(`${API_BASE_URL}/complaints/feed?page=1&limit=1`);
     const result = await response.json();
-    
+
     if (response.ok && result.meta && result.meta.total !== undefined) {
       const total = result.meta.total;
       statusGeralElement.textContent = `Plataforma ativa · ${total} reclamação${total !== 1 ? 'ões' : ''} pública${total !== 1 ? 's' : ''}`;
@@ -102,7 +47,7 @@ async function loadUniversidadesForFilter() {
       option.dataset.campus = univ.campus || '';
       selectUniversidade.appendChild(option);
     });
-    
+
     // Carregar todos os campus únicos
     const campusUnicos = [...new Set(universidades.map(u => u.campus).filter(c => c))];
     selectCampus.innerHTML = '<option value="Todos" selected>Todos</option>';
@@ -179,12 +124,12 @@ async function loadFeed(filters = {}) {
       el.remove();
     }
   });
-  
+
   // Também remover qualquer parágrafo que seja mensagem de "sem dados"
   const allParagraphs = feedContainer.querySelectorAll("p");
   allParagraphs.forEach(p => {
-    if (p.classList.contains("no-data-message") || 
-        (p.textContent.includes("Nenhuma reclamação") && !p.closest(".filtro-area"))) {
+    if (p.classList.contains("no-data-message") ||
+      (p.textContent.includes("Nenhuma reclamação") && !p.closest(".filtro-area"))) {
       p.remove();
     }
   });
@@ -210,7 +155,7 @@ async function loadFeed(filters = {}) {
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
     }
-    
+
     const response = await fetch(url, { headers });
     const result = await response.json();
 
@@ -220,7 +165,7 @@ async function loadFeed(filters = {}) {
         // Remover qualquer mensagem anterior antes de adicionar nova
         const existingMessages = feedContainer.querySelectorAll(".no-data-message");
         existingMessages.forEach(msg => msg.remove());
-        
+
         const noData = document.createElement("p");
         noData.className = "no-data-message";
         noData.textContent = "Nenhuma reclamação encontrada com os filtros selecionados.";
@@ -249,10 +194,10 @@ async function loadFeed(filters = {}) {
 document.addEventListener("DOMContentLoaded", async () => {
   // Atualizar contagem total de reclamações
   await updateTotalComplaints();
-  
+
   // Carregar universidades para o filtro
   await loadUniversidadesForFilter();
-  
+
   // Limpar elementos estáticos do HTML antes de carregar o feed
   const staticElements = feedContainer.querySelectorAll(".card, .categoria-titulo");
   staticElements.forEach(el => {
@@ -269,7 +214,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       btnAdicionar.style.display = 'none';
     }
   }
-  
+
   // Carrega o feed inicial
   loadFeed();
 

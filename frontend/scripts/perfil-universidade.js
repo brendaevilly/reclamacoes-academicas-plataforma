@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 1. Buscar dados da universidade
     try {
         const response = await fetch(`${window.API_BASE_URL}/universidades/${universidadeId}`);
-        
+
         if (!response.ok) {
             throw new Error('Universidade não encontrada');
         }
 
         const universidade = await response.json();
-        
+
         document.getElementById('universidade-nome').textContent = universidade.nome;
         document.getElementById('campus').textContent = universidade.campus || 'Campus não informado';
         document.getElementById('sigla').textContent = universidade.sigla || '-';
@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function carregarAvaliacaoMedia() {
         try {
             const response = await fetch(`${window.API_BASE_URL}/avaliacoes/universidade/${universidadeId}/media`);
-            
+
             if (response.ok) {
                 const data = await response.json();
                 const media = data.media || 0;
@@ -46,9 +46,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 // Renderizar estrelas da média
                 renderizarEstrelas('estrelas-avaliacao-media', media, false);
-                
-                document.getElementById('valor-avaliacao').textContent = 
-                    total > 0 
+
+                document.getElementById('valor-avaliacao').textContent =
+                    total > 0
                         ? `Média: ${media.toFixed(1)} / 5.0 (Baseado em ${total} avaliação${total !== 1 ? 'ões' : ''})`
                         : 'Ainda não há avaliações para esta universidade.';
             }
@@ -94,11 +94,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderizarEstrelas(containerId, rating, interativa) {
         const container = document.getElementById(containerId);
         container.innerHTML = '';
-        
+
         for (let i = 1; i <= 5; i++) {
             const estrela = document.createElement('span');
             estrela.classList.add('estrela');
-            
+
             if (i <= rating) {
                 estrela.classList.add('filled');
             } else {
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function highlightEstrelas(containerId, rating) {
         const container = document.getElementById(containerId);
         const estrelas = container.querySelectorAll('.estrela');
-        
+
         estrelas.forEach((estrela, index) => {
             if (index + 1 <= rating) {
                 estrela.classList.add('filled');
@@ -158,9 +158,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
             if (response.ok) {
-                document.getElementById('mensagem-avaliacao').textContent = 
+                document.getElementById('mensagem-avaliacao').textContent =
                     `Você avaliou com ${nota} estrela${nota !== 1 ? 's' : ''}. Obrigado!`;
-                
+
                 // Recarregar média
                 await carregarAvaliacaoMedia();
             } else {
@@ -210,12 +210,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 `).join('');
             } else {
-                document.getElementById('reclamacoes-container').innerHTML = 
+                document.getElementById('reclamacoes-container').innerHTML =
                     '<p>Erro ao carregar reclamações.</p>';
             }
         } catch (error) {
             console.error('Erro ao carregar reclamações:', error);
-            document.getElementById('reclamacoes-container').innerHTML = 
+            document.getElementById('reclamacoes-container').innerHTML =
                 '<p>Erro ao carregar reclamações.</p>';
         }
     }

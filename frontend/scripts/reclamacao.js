@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     selectUniversidade.addEventListener("change", (e) => {
         const selectedId = e.target.value;
         const selectedUniv = universidadesData.find(u => u.id == selectedId);
-        
+
         if (selectedUniv) {
             // Buscar todos os campus disponíveis para universidades com a mesma sigla/nome
             const siglaOuNome = selectedUniv.sigla || selectedUniv.nome;
@@ -58,11 +58,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .filter(u => (u.sigla === siglaOuNome || u.nome === selectedUniv.nome) && u.campus)
                 .map(u => u.campus)
                 .filter((campus, index, self) => self.indexOf(campus) === index); // Remover duplicatas
-            
+
             if (campusDisponiveis.length > 0) {
                 selectCampus.disabled = false;
                 selectCampus.innerHTML = '<option selected disabled>Selecione o campus</option>';
-                
+
                 campusDisponiveis.forEach(campus => {
                     const option = document.createElement("option");
                     option.value = campus;
@@ -111,14 +111,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Encontrar a universidade correta com o campus selecionado
         const selectedUniv = universidadesData.find(u => u.id == universidadeId);
         let universidadeIdFinal = Number(universidadeId);
-        
+
         if (selectedUniv) {
             // Se o campus selecionado for diferente do campus da universidade selecionada,
             // buscar a universidade com o campus correto
             if (selectedUniv.campus !== campus) {
                 const siglaOuNome = selectedUniv.sigla || selectedUniv.nome;
-                const universidadeComCampus = universidadesData.find(u => 
-                    (u.sigla === siglaOuNome || u.nome === selectedUniv.nome) && 
+                const universidadeComCampus = universidadesData.find(u =>
+                    (u.sigla === siglaOuNome || u.nome === selectedUniv.nome) &&
                     u.campus === campus
                 );
                 if (universidadeComCampus) {

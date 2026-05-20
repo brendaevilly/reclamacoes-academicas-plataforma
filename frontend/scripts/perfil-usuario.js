@@ -67,12 +67,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const renderPostCard = (complaint) => {
                 const card = document.createElement('div');
                 card.classList.add('post-card');
-                
+
                 // Mapear status (se houver) ou usar categoria
                 const status = complaint.status || complaint.categoria || 'Ativa';
                 const supports = complaint.likes_count || 0;
                 const comentariosCount = complaint.comentarios_count || 0;
-                
+
                 card.innerHTML = `
                     <h4>${complaint.titulo}</h4>
                     <p>Status: <strong>${status}</strong> | Apoios: ${supports} | Comentários: ${comentariosCount}</p>

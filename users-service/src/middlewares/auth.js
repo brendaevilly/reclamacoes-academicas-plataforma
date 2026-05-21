@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 
 export function auth(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
+  const tokenCookie = req.cookies?.token;
+  const tokenHeader = req.headers.authorization?.split(" ")[1];
+  const token = tokenCookie || tokenHeader;
+
   if (!token) return res.status(401).json({ error: "Token necessário" });
 
   try {

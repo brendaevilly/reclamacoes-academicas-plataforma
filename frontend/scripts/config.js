@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // A universidade não está no modelo de usuário atual, então deixamos vazio
             universidadeInput.value = '';
         } else {
-            // Usar dados do localStorage como fallback
+            // Usar dados do sessionStorage como fallback
             nomeInput.value = currentUser.nome || '';
             emailInput.value = currentUser.email || '';
         }
@@ -118,17 +118,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (response.ok) {
                 const updatedUser = await response.json();
-                
-                // Atualizar localStorage
-                localStorage.setItem('user', JSON.stringify(updatedUser));
-                
+
+                // Atualizar sessionStorage
+                sessionStorage.setItem("user", JSON.stringify(updatedUser));
+
+                if (novaSenha) {
+                    const senhaResponse = await window.fetchWithAuth(
+                        `${window.API_BASE_URL}/auth/${currentUser.id}/senha`,
+                        {
+                            method: "PUT",
+                            body: JSON.stringify({ senhaAtual, novaSenha })
+                        }
+                    );
+                    if (!senhaResponse.ok) {
+                        const errorData = await senhaResponse.json();
+                        alert(errorData.error || "Erro ao alterar senha.");
+                        return;
+                    }
+                }
+
                 alert('Dados atualizados com sucesso!');
-                
+
                 // Limpar campos de senha
                 senhaAtualInput.value = '';
                 novaSenhaInput.value = '';
                 confirmarSenhaInput.value = '';
-                
+
                 // Opcional: redirecionar para o perfil
                 // window.location.href = 'perfil-usuario.html';
             } else {

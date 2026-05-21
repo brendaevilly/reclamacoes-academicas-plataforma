@@ -2,7 +2,7 @@ const API_BASE_URL = "http://localhost:3000"; // Gateway
 
 document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector("form");
-    const token = localStorage.getItem("token");
+    const token = null;
 
     if (!token) {
         alert("Você precisa estar logado para adicionar uma reclamação.");
@@ -136,6 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         try {
             const response = await fetch(`${API_BASE_URL}/complaints`, {
+                credentials: "include",
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

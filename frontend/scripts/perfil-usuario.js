@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. Buscar dados atualizados do usuário da API
     try {
-        const token = localStorage.getItem('token');
+        const token = null;
         const userResponse = await window.fetchWithAuth(`${window.API_BASE_URL}/auth/${currentUser.id}`, {
             method: 'GET'
         });
@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Buscar histórico de reclamações do usuário
     try {
-        const token = localStorage.getItem('token');
+        const token = null;
         const complaintsResponse = await fetch(`${window.API_BASE_URL}/complaints/feed?page=1&limit=100&alunoId=${currentUser.id}`, {
+            credentials: "include",
             headers: {
                 'Authorization': `Bearer ${token}`
             }

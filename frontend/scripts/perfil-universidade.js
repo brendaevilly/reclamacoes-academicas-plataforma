@@ -64,8 +64,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = null;
             const response = await fetch(`${window.API_BASE_URL}/avaliacoes/universidade/${universidadeId}/usuario`, {
+                credentials: "include",
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -144,9 +145,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const token = localStorage.getItem('token');
+            const token = null;
             const response = await fetch(`${window.API_BASE_URL}/avaliacoes`, {
                 method: 'POST',
+                credentials: "include",
                 headers: {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
@@ -176,7 +178,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 7. Carregar reclamações da universidade
     async function carregarReclamacoes() {
         try {
-            const token = localStorage.getItem('token');
+            const token = null;
             const headers = {};
             if (token) {
                 headers['Authorization'] = `Bearer ${token}`;

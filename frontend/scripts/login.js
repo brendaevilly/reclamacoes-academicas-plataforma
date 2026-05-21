@@ -17,12 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const dadosLogin = { email, senha };
 
         try {
-            // Tentar login como aluno
+            // credentials: "include" faz o browser armazenar o cookie HttpOnly retornado
             const response = await fetch(`${API_BASE_URL}/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify(dadosLogin)
             });
 
@@ -36,9 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // interrompe a execução
             }
 
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('userType', 'aluno');
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            sessionStorage.setItem('userType', 'aluno');
 
             alert('Login realizado com sucesso!');
             window.location.href = 'telafeed.html';

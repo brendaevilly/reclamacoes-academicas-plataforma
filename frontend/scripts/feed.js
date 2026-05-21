@@ -150,7 +150,7 @@ async function loadFeed(filters = {}) {
   }
 
   try {
-    const token = localStorage.getItem('token');
+    const token = null;
     const headers = {};
     if (token) {
       headers['Authorization'] = `Bearer ${token}`;
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.target.classList.contains("btn-like") || e.target.closest(".btn-like")) {
       const button = e.target.classList.contains("btn-like") ? e.target : e.target.closest(".btn-like");
       const complaintId = button.getAttribute("data-complaint-id");
-      const token = localStorage.getItem('token');
+      const token = null;
 
       if (!token) {
         alert("Você precisa estar logado para dar like.");
@@ -250,6 +250,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       try {
         const response = await fetch(`${API_BASE_URL}/interactions/likes/reclamacao`, {
+          credentials: "include",
           method: "POST",
           headers: {
             "Content-Type": "application/json",

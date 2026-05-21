@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                credentials: "include",
                 body: JSON.stringify(dadosLogin)
             });
 
@@ -33,9 +34,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // interrompe a execução
             }
 
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('userType', 'universidade');
+            sessionStorage.setItem('user', JSON.stringify(data.user));
+            sessionStorage.setItem('userType', 'universidade');
 
             alert('Login realizado com sucesso!');
             window.location.href = 'telafeed.html';

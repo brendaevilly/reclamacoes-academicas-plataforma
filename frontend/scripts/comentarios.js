@@ -3,7 +3,7 @@ const API_BASE_URL = "http://localhost:3000";
 document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const reclamacaoId = urlParams.get("id");
-    const token = localStorage.getItem("token");
+    //const token = null;
 
     if (!reclamacaoId) {
         alert("ID da reclamação não fornecido.");
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Carregar dados da reclamação
     await loadReclamacao(reclamacaoId);
-    
+
     // Carregar comentários
     await loadComentarios(reclamacaoId);
 
@@ -23,13 +23,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         formComentario.addEventListener("submit", async (e) => {
             e.preventDefault();
             const texto = document.getElementById("texto-comentario").value.trim();
-            
+
             if (!texto) {
                 alert("Por favor, digite um comentário.");
                 return;
             }
 
-            if (!token) {
+            const userStr = sessionStorage.getItem("user");
+            if (!userStr) {
                 alert("Você precisa estar logado para comentar.");
                 window.location.href = "login.html";
                 return;
@@ -38,9 +39,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             try {
                 const response = await fetch(`${API_BASE_URL}/interactions/comentarios`, {
                     method: "POST",
+                    "credentials": "include",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({
                         texto,
@@ -95,10 +96,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             try {
                 const response = await fetch(`${API_BASE_URL}/interactions/likes/comentario`, {
+                    credentials: "include",
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`
                     },
                     body: JSON.stringify({ comentarioId: parseInt(comentarioId) })
                 });
@@ -132,7 +133,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Excluir comentário
         if (e.target.classList.contains("btn-excluir-comentario")) {
             const comentarioId = e.target.getAttribute("data-comentario-id");
-            
+
             if (!confirm("Tem certeza que deseja excluir este comentário?")) {
                 return;
             }
@@ -144,10 +145,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             try {
                 const response = await fetch(`${API_BASE_URL}/interactions/comentarios/${comentarioId}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Authorization": `Bearer ${token}`
-                    }
+                    credentials: "include",
+                    method: "DELETE"
                 });
 
                 const result = await response.json();
@@ -180,7 +179,7 @@ async function loadReclamacao(id) {
         if (response.ok && result.data) {
             const reclamacao = result.data;
             const reclamacaoArea = document.querySelector(".comentario-area");
-            
+
             if (reclamacaoArea) {
                 reclamacaoArea.innerHTML = `
                     <h4>${reclamacao.titulo}</h4>
@@ -190,22 +189,22 @@ async function loadReclamacao(id) {
             }
 
             // Ocultar botão de nova reclamação e form de comentário se universidade
-            const userType = localStorage.getItem('userType');
+            const userType = sessionStorage.getItem('userType');
             if (userType === 'universidade') {
                 const areaNovaReclamacao = document.getElementById('area-nova-reclamacao');
                 if (areaNovaReclamacao) areaNovaReclamacao.style.display = 'none';
 
-                const userStr = localStorage.getItem('user');
+                const userStr = sessionStorage.getItem('user');
                 let userId = null;
                 if (userStr) {
                     try {
                         const userObj = JSON.parse(userStr);
                         userId = userObj.id;
-                    } catch (e) {}
+                    } catch (e) { }
                 }
 
                 const univIdDaReclamacao = reclamacao.universidadeId || reclamacao.universidade_id;
-                
+
                 if (userId !== univIdDaReclamacao) {
                     const areaAddComentario = document.getElementById('area-adicionar-comentario');
                     if (areaAddComentario) areaAddComentario.style.display = 'none';
@@ -218,27 +217,12 @@ async function loadReclamacao(id) {
 }
 
 async function loadComentarios(reclamacaoId) {
-    const token = localStorage.getItem("token");
-    let currentUserId = null;
-    
-    // Obter userId do token se disponível
-    if (token) {
-        try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
-            currentUserId = payload.id;
-        } catch (e) {
-            // Ignorar erro
-        }
-    }
+    const user = getCurrentUser();
+    const currentUserId = user ? user.id : null;
 
     try {
-        const headers = {};
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-        
         const response = await fetch(`${API_BASE_URL}/interactions/comentarios/reclamacao/${reclamacaoId}`, {
-            headers
+            credentials: "include"
         });
         const result = await response.json();
 
@@ -264,7 +248,7 @@ async function loadComentarios(reclamacaoId) {
             comentariosOrdenados.forEach(comentario => {
                 const comentarioDiv = document.createElement("div");
                 comentarioDiv.className = "comentario";
-                
+
                 const date = new Date(comentario.createdAt).toLocaleDateString('pt-BR');
                 let autorNome = 'Anônimo';
                 if (comentario.autor) {
@@ -273,12 +257,12 @@ async function loadComentarios(reclamacaoId) {
                     autorNome = `${comentario.universidade.nome} (${comentario.universidade.sigla}) - Resposta Oficial`;
                 }
 
-                const userType = localStorage.getItem('userType') || 'aluno';
+                const userType = sessionStorage.getItem('userType') || 'aluno';
                 const isAutor = currentUserId && (
                     (userType === 'aluno' && comentario.autorId === currentUserId) ||
                     (userType === 'universidade' && comentario.universidadeId === currentUserId)
                 );
-                
+
                 const likesCount = comentario.likesCount || 0;
                 const userLiked = comentario.userLiked || false;
 
@@ -313,4 +297,3 @@ async function loadComentarios(reclamacaoId) {
         }
     }
 }
-

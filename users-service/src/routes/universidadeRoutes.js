@@ -6,6 +6,7 @@ const router = Router();
 
 router.post("/cadastro", universidadeController.cadastro);
 router.post("/login", universidadeController.login);
+router.post("/logout", universidadeController.logout);
 
 router.get("/", universidadeController.list);
 router.get("/:id", universidadeController.findOne);

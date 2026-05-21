@@ -3,45 +3,51 @@ const API_BASE_URL = "http://localhost:3000"; // Gateway URL
 
 // Função auxiliar para fazer requisições autenticadas
 async function fetchWithAuth(url, options = {}) {
-    const token = localStorage.getItem('token');
-    
+    //const token = localStorage.getItem('token');
+
     const headers = {
         'Content-Type': 'application/json',
         ...options.headers
     };
-    
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-    
+
     return fetch(url, {
         ...options,
-        headers
+        headers,
+        credentials: "include"
     });
 }
 
 // Função para verificar se o usuário está logado
 function isAuthenticated() {
-    return !!localStorage.getItem('token');
+    return !!sessionStorage.getItem("user");
 }
 
 // Função para obter dados do usuário logado
 function getCurrentUser() {
-    const userStr = localStorage.getItem('user');
+    const userStr = sessionStorage.getItem('user');
     return userStr ? JSON.parse(userStr) : null;
 }
 
 // Função para obter tipo do usuário
 function getUserType() {
-    return localStorage.getItem('userType') || 'aluno';
+    return sessionStorage.getItem("userType") || "aluno";
 }
 
 // Função para fazer logout
-function logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    localStorage.removeItem('userType');
-    window.location.href = 'login.html';
+async function logout() {
+    try {
+        await fetch(`${API_BASE_URL}/auth/logout`, {
+            method: "POST",
+            credentials: "include"
+        });
+
+    } catch (e) {
+        console.error("Erro ao chamar logout:", e);
+    } finally {
+        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("userType");
+        window.location.href = "login.html";
+    }
 }
 
 // Exportar para uso global

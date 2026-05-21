@@ -1,5 +1,12 @@
 import { userService } from "../services/userService.js";
 
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  maxAge: 24 * 60 * 60 * 1000 // 1 dia
+}
+
 export const universidadeController = {
   async cadastro(req, res) {
     try {
@@ -20,32 +27,39 @@ export const universidadeController = {
       if (!data) {
         return res.status(401).json({ error: "Credenciais inválidas." });
       }
-      return res.json(data);
+      res.cookie("token", data.token, COOKIE_OPTIONS);
+      return res.json({ user: data.user });
     } catch (err) {
       return res.status(401).json({ error: err.message });
     }
   },
 
+  async logout(req, res) {
+    res.clearCookie("token");
+    return res.json({ message: "Logout realizado com sucesso." });
+  },
+
+
   async list(req, res) {
     try {
       let { search } = req.query;
-      
+
       // Tratar caso search venha como array (quando há múltiplos parâmetros)
       if (Array.isArray(search)) {
         search = search[0];
       }
-      
+
       // Converter para string e fazer trim
       const searchTerm = search ? String(search).trim() : "";
-      
+
       console.log("Parâmetro search recebido:", searchTerm);
-      
+
       if (searchTerm && searchTerm.length > 0) {
         const universidades = await userService.searchUniversidades(searchTerm);
         console.log("Resultados da busca:", universidades.length);
         return res.json(universidades);
       }
-      
+
       const universidades = await userService.findAllUniversidades();
       return res.json(universidades);
     } catch (err) {

@@ -1,8 +1,13 @@
+import { userService } from "../services/userService.js";
 import { validate } from "../middlewares/validate.js";
 import { cadastroSchema, loginSchema, idParamSchema } from "../validators/userValidator.js";
 
-import { userService } from "../services/userService.js";
-
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: false,
+  sameSite: "lax",
+  maxAge: 24 * 60 * 60 * 1000 // 1 dia
+}
 export const userController = {
   async cadastro(req, res) {
     try {
@@ -24,11 +29,17 @@ export const userController = {
       if (!data) {
         return res.status(401).json({ error: "Email ou senha inválidos." });
       }
-      return res.json(data);
+      res.cookie("token", data.token, COOKIE_OPTIONS);
+      return res.json({ user: data.user });
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       return res.status(500).json({ error: err.message });
     }
+  },
+
+  async logout(req, res) {
+    res.clearCookie("token");
+    return res.json({ message: "Logout realizado com sucesso." });
   },
 
   async list(req, res) {

@@ -8,10 +8,12 @@ const router = Router();
 
 router.post("/cadastro", validate(cadastroSchema, "body"), userController.cadastro);
 router.post("/login", validate(loginSchema, "body"), userController.login);
+router.post("/logout", auth, userController.logout);
 
 router.get("/", auth, userController.list);
 router.get("/:id", auth, validate(idParamSchema, "params"), userController.findOne);
 router.put("/:id", auth, validate(idParamSchema, "params"), userController.update);
+//router.put("/:id/senha", auth, validate(idParamSchema, "params"), userController.changePassword);
 router.delete("/:id", auth, validate(idParamSchema, "params"), userController.delete);
 
 export default router;

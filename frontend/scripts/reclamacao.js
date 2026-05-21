@@ -3,7 +3,7 @@ const API_BASE_URL = "http://localhost:3000"; // Gateway
 document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector("form");
 
-    if (!isAuthenticated()) {
+    if (!(await isAuthenticated())) {  // ← await aqui
         alert("Você precisa estar logado para adicionar uma reclamação.");
         window.location.href = "login.html";
         return;
@@ -16,7 +16,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Carregar universidades do backend
     try {
-        const response = await fetch(`${API_BASE_URL}/universidades`);
+        const response = await fetch(`${API_BASE_URL}/universidades`, {
+            credentials: "include"
+        });
+
+        if (!response.ok) {
+            throw new Error(`Erro HTTP: ${response.status}`);
+        }
+
         universidadesData = await response.json();
 
         selectUniversidade.innerHTML = '<option selected disabled>Selecione a instituição</option>';
@@ -29,6 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 universidadesAgrupadas[key] = univ;
             }
         });
+
 
         // Adicionar universidades agrupadas ao select
         Object.values(universidadesAgrupadas).forEach(univ => {

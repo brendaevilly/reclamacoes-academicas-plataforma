@@ -88,5 +88,16 @@ export const userController = {
     } catch (err) {
       return res.status(400).json({ error: err.message });
     }
+  },
+
+  async me(req, res) {
+    try {
+      const user = await userService.findById(req.user.id);
+      if (!user) return res.status(404).json({ error: "Usuário não encontrado." });
+      return res.json({ user });
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
   }
+
 };

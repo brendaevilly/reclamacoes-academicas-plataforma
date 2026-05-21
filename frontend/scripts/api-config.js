@@ -18,8 +18,15 @@ async function fetchWithAuth(url, options = {}) {
 }
 
 // Função para verificar se o usuário está logado
-function isAuthenticated() {
-    return !!sessionStorage.getItem("user");
+async function isAuthenticated() {
+    try {
+        const res = await fetch(`${API_BASE_URL}/auth/me`, {
+            credentials: "include"
+        });
+        return res.ok;
+    } catch {
+        return false;
+    }
 }
 
 // Função para obter dados do usuário logado

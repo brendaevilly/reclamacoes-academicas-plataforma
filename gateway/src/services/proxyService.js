@@ -23,14 +23,13 @@ export default async function proxyService(req, res, baseUrl, basePath) {
             headers["authorization"] = `Bearer ${tokenCookie}`;
         }
 
-        console.log("URL FINAL:", url);
 
         const response = await axios({
             method: req.method,
             url,
             data: req.body,
             headers,
-            params: req.query,
+            //params: req.query,
             withCredentials: true,
             validateStatus: () => true // Aceitar qualquer status code
         });

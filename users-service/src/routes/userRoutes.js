@@ -10,6 +10,10 @@ router.post("/cadastro", validate(cadastroSchema, "body"), userController.cadast
 router.post("/login", validate(loginSchema, "body"), userController.login);
 router.post("/logout", auth, userController.logout);
 
+// Rota /me para verificar se o cookie ainda é válido
+router.get("/me", auth, userController.me);
+
+
 router.get("/", auth, userController.list);
 router.get("/:id", auth, validate(idParamSchema, "params"), userController.findOne);
 router.put("/:id", auth, validate(idParamSchema, "params"), userController.update);

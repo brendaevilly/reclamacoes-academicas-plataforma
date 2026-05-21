@@ -2,9 +2,8 @@ const API_BASE_URL = "http://localhost:3000"; // Gateway
 
 document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector("form");
-    const token = null;
 
-    if (!token) {
+    if (!isAuthenticated()) {
         alert("Você precisa estar logado para adicionar uma reclamação.");
         window.location.href = "login.html";
         return;
@@ -140,7 +139,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
                 },
                 body: JSON.stringify(complaintData),
             });

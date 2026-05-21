@@ -39,8 +39,8 @@ router.use("/interactions", (req, res) => {
  * Rota de health check
  */
 router.get("/health", (req, res) => {
-    res.json({ 
-        status: "ok", 
+    res.json({
+        status: "ok",
         message: "Gateway está funcionando",
         services: {
             users: process.env.USERS_SERVICE_URL,

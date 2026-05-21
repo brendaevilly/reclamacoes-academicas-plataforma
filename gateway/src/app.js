@@ -7,8 +7,9 @@ import router from "./routes/index.js";
 
 const app = express();
 
-
+// configura cabeçalhos http de segurança
 app.use(helmet());
+
 app.use(cors({
     origin: true,
     credentials: true
@@ -18,6 +19,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// proteção contra força bruta e Dos
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 100,
@@ -29,6 +31,7 @@ const globalLimiter = rateLimit({
     }
 });
 
+// Rate Limiting mais restrito para rotas de autenticação
 const authLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 10,

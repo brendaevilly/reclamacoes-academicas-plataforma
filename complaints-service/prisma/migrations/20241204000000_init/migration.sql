@@ -15,7 +15,9 @@ CREATE TABLE "universidades" (
     "id" SERIAL NOT NULL,
     "nome" TEXT NOT NULL,
     "sigla" TEXT NOT NULL,
-    "campus" TEXT NOT NULL, 
+    "campus" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "senha" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -67,6 +69,8 @@ CREATE UNIQUE INDEX "universidades_campus_key" ON "universidades"("campus");
 -- CreateIndex
 CREATE UNIQUE INDEX "categorias_nome_key" ON "categorias"("nome");
 
+CREATE UNIQUE INDEX "universidades_email_key" ON "universidades"("email");
+
 -- AddForeignKey
 ALTER TABLE "reclamacoes" ADD CONSTRAINT "reclamacoes_categoriaId_fkey" FOREIGN KEY ("categoriaId") REFERENCES "categorias"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
@@ -81,3 +85,4 @@ ALTER TABLE "comentarios" ADD CONSTRAINT "comentarios_reclamacaoId_fkey" FOREIGN
 
 -- AddForeignKey
 ALTER TABLE "comentarios" ADD CONSTRAINT "comentarios_autorId_fkey" FOREIGN KEY ("autorId") REFERENCES "usuarios"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+

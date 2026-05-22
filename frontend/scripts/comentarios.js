@@ -1,9 +1,7 @@
-const API_BASE_URL = "http://localhost:3000";
-
 document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const reclamacaoId = urlParams.get("id");
-    //const token = null;
+    // Token is stored in HttpOnly cookie; use isAuthenticated() to check session
 
     if (!reclamacaoId) {
         alert("ID da reclamação não fornecido.");
@@ -37,12 +35,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/interactions/comentarios`, {
+                const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/comentarios`, {
                     method: "POST",
-                    "credentials": "include",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
                     body: JSON.stringify({
                         texto,
                         reclamacaoId: parseInt(reclamacaoId)
@@ -87,7 +81,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const button = e.target.classList.contains("btn-like-comentario") ? e.target : e.target.closest(".btn-like-comentario");
             const comentarioId = button.getAttribute("data-comentario-id");
 
-            if (!token) {
+            if (!(await window.isAuthenticated())) {
                 alert("Você precisa estar logado para dar like.");
                 return;
             }
@@ -95,12 +89,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!comentarioId) return;
 
             try {
-                const response = await fetch(`${API_BASE_URL}/interactions/likes/comentario`, {
-                    credentials: "include",
+                const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/likes/comentario`, {
                     method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
                     body: JSON.stringify({ comentarioId: parseInt(comentarioId) })
                 });
 
@@ -138,14 +128,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            if (!token) {
+            if (!(await window.isAuthenticated())) {
                 alert("Você precisa estar logado.");
                 return;
             }
 
             try {
-                const response = await fetch(`${API_BASE_URL}/interactions/comentarios/${comentarioId}`, {
-                    credentials: "include",
+                const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/comentarios/${comentarioId}`, {
                     method: "DELETE"
                 });
 
@@ -173,7 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadReclamacao(id) {
     try {
-        const response = await fetch(`${API_BASE_URL}/complaints/${id}`);
+        const response = await fetch(`${window.API_BASE_URL}/complaints/${id}`);
         const result = await response.json();
 
         if (response.ok && result.data) {
@@ -221,7 +210,7 @@ async function loadComentarios(reclamacaoId) {
     const currentUserId = user ? user.id : null;
 
     try {
-        const response = await fetch(`${API_BASE_URL}/interactions/comentarios/reclamacao/${reclamacaoId}`, {
+        const response = await fetch(`${window.API_BASE_URL}/interactions/comentarios/reclamacao/${reclamacaoId}`, {
             credentials: "include"
         });
         const result = await response.json();

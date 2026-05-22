@@ -30,7 +30,7 @@ export const userController = {
         return res.status(401).json({ error: "Email ou senha inválidos." });
       }
       res.cookie("token", data.token, COOKIE_OPTIONS);
-      return res.json({ user: data.user });
+      return res.json({ user: data.user, token: data.token });
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       return res.status(500).json({ error: err.message });
@@ -87,6 +87,40 @@ export const userController = {
       return res.json({ message: "Usuário deletado." });
     } catch (err) {
       return res.status(400).json({ error: err.message });
+    }
+  },
+
+  //Troca de senha com validação da senha atual
+
+  async changePassword(req, res) {
+    try {
+      const userId = Number(req.params.id);
+      const currentUserId = req.user?.id;
+
+      if (currentUserId && userId !== currentUserId) {
+        return res.status(403).json({ error: "Você não tem permissão para alterar a senha deste usuário." });
+      }
+
+      const { senhaAtual, novaSenha } = req.body;
+
+      if (!senhaAtual || !novaSenha) {
+        return res.status(400).json({ error: "Senha atual e nova senha são obrigatórias." });
+      }
+
+      if (novaSenha.length < 8) {
+        return res.status(400).json({ error: "A nova senha deve ter pelo menos 8 caracteres." });
+      }
+
+      const result = await userService.changePassword(userId, senhaAtual, novaSenha);
+      if (!result) {
+        return res.status(401).json({ error: "Senha atual incorreta." });
+      }
+
+      return res.json({ message: "Senha alterada com sucesso." });
+
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+
     }
   },
 

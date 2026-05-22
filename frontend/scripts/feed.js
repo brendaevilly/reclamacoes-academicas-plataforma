@@ -1,4 +1,3 @@
-const API_BASE_URL = "http://localhost:3000"; // Assumindo que o Gateway está na porta 3000
 const feedContainer = document.querySelector("main.container");
 const statusGeralElement = document.querySelector(".status-geral");
 
@@ -11,9 +10,8 @@ async function updateTotalComplaints() {
 
   try {
     // Buscar o feed sem filtros para obter o total de reclamações
-    const response = await fetch(`${API_BASE_URL}/complaints/feed?page=1&limit=1`);
+    const response = await fetch(`${window.API_BASE_URL}/complaints/feed?page=1&limit=1`);
     const result = await response.json();
-
     if (response.ok && result.meta && result.meta.total !== undefined) {
       const total = result.meta.total;
       statusGeralElement.textContent = `Plataforma ativa · ${total} reclamação${total !== 1 ? 'ões' : ''} pública${total !== 1 ? 's' : ''}`;
@@ -33,7 +31,7 @@ async function loadUniversidadesForFilter() {
   if (!selectUniversidade || !selectCampus) return;
 
   try {
-    const response = await fetch(`${API_BASE_URL}/universidades`);
+    const response = await fetch(`${window.API_BASE_URL}/universidades`);
     const universidades = await response.json();
 
     // Limpar opções existentes (exceto "Todas")
@@ -136,7 +134,7 @@ async function loadFeed(filters = {}) {
 
   const { category, universityId, campus, page = 1, limit = 10 } = filters;
 
-  let url = `${API_BASE_URL}/complaints/feed?page=${page}&limit=${limit}`;
+  let url = `${window.API_BASE_URL}/complaints/feed?page=${page}&limit=${limit}`;
   if (category && category !== "Todos") {
     url += `&category=${category}`;
   }
@@ -150,13 +148,8 @@ async function loadFeed(filters = {}) {
   }
 
   try {
-    const token = null;
-    const headers = {};
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(url, { headers });
+    // use fetchWithAuth so cookie HttpOnly is sent via credentials
+    const response = await window.fetchWithAuth(url);
     const result = await response.json();
 
     if (response.ok && result.data) {
@@ -239,9 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (e.target.classList.contains("btn-like") || e.target.closest(".btn-like")) {
       const button = e.target.classList.contains("btn-like") ? e.target : e.target.closest(".btn-like");
       const complaintId = button.getAttribute("data-complaint-id");
-      const token = null;
-
-      if (!token) {
+      if (!(await window.isAuthenticated())) {
         alert("Você precisa estar logado para dar like.");
         return;
       }
@@ -249,13 +240,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!complaintId) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/interactions/likes/reclamacao`, {
-          credentials: "include",
+        const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/likes/reclamacao`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          },
           body: JSON.stringify({ reclamacaoId: parseInt(complaintId) })
         });
 

@@ -1,12 +1,20 @@
-const API_BASE_URL = "http://localhost:3000"; // Gateway
-
 document.addEventListener("DOMContentLoaded", async () => {
     const form = document.querySelector("form");
 
-    if (!(await isAuthenticated())) {  // ← await aqui
-        alert("Você precisa estar logado para adicionar uma reclamação.");
-        window.location.href = "login.html";
-        return;
+    // Verificar autenticação via API (cookie HttpOnly). Se falhar, permitir
+    // continuar quando já houver `user` em sessionStorage (login recente),
+    // assim o formulário ainda pode ser enviado e o backend retornará 401/403
+    // caso o cookie não tenha sido definido corretamente.
+    const authOk = await window.isAuthenticated();
+    if (!authOk) {
+        const currentUser = window.getCurrentUser();
+        if (!currentUser) {
+            alert("Você precisa estar logado para adicionar uma reclamação.");
+            window.location.href = "login.html";
+            return;
+        } else {
+            console.warn('isAuthenticated() retornou false, mas existe usuário em sessionStorage. Permitindo acesso ao formulário e confiando na validação do backend ao submeter.');
+        }
     }
 
     const selectUniversidade = document.getElementById("universidade");
@@ -16,7 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Carregar universidades do backend
     try {
-        const response = await fetch(`${API_BASE_URL}/universidades`, {
+        const response = await fetch(`${window.API_BASE_URL}/universidades`, {
             credentials: "include"
         });
 
@@ -142,12 +150,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         try {
-            const response = await fetch(`${API_BASE_URL}/complaints`, {
-                credentials: "include",
+            const response = await window.fetchWithAuth(`${window.API_BASE_URL}/complaints`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
                 body: JSON.stringify(complaintData),
             });
 

@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Verificar se o usuário está logado
-    if (!window.isAuthenticated || !window.isAuthenticated()) {
+    if (!window.isAuthenticated || !(await window.isAuthenticated())) {
         alert('Você precisa estar logado para acessar o perfil.');
         window.location.href = 'login.html';
         return;
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 1. Buscar dados atualizados do usuário da API
     try {
-        const token = null;
         const userResponse = await window.fetchWithAuth(`${window.API_BASE_URL}/auth/${currentUser.id}`, {
             method: 'GET'
         });
@@ -43,13 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // 2. Buscar histórico de reclamações do usuário
     try {
-        const token = null;
-        const complaintsResponse = await fetch(`${window.API_BASE_URL}/complaints/feed?page=1&limit=100&alunoId=${currentUser.id}`, {
-            credentials: "include",
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+        const complaintsResponse = await window.fetchWithAuth(`${window.API_BASE_URL}/complaints/feed?page=1&limit=100&alunoId=${currentUser.id}`);
 
         if (complaintsResponse.ok) {
             const result = await complaintsResponse.json();

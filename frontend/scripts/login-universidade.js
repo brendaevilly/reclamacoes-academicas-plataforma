@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 return; // interrompe a execução
             }
 
+            // Token é armazenado em cookie HttpOnly pelo backend; não salvar no frontend
             sessionStorage.setItem('user', JSON.stringify(data.user));
             sessionStorage.setItem('userType', 'universidade');
 

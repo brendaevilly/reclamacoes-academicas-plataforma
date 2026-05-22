@@ -15,17 +15,17 @@ export const User = {
   findByEmail: async (email) => {
     const where = clean({ email });
 
-    if (!where.email) return null; 
-    return prisma.usuario.findUnique({ 
-    where,
-    // Incluir explicitamente a senha para a verificação de login
-    select: {
-      id: true,
-      nome: true,
-      email: true,
-      senha: true,
-    }
-  });
+    if (!where.email) return null;
+    return prisma.usuario.findUnique({
+      where,
+      // Incluir explicitamente a senha para a verificação de login
+      select: {
+        id: true,
+        nome: true,
+        email: true,
+        senha: true,
+      }
+    });
   },
 
   findAll: async () =>
@@ -40,13 +40,15 @@ export const User = {
   findById: async (id) => {
     const where = clean({ id });
 
-    if (!where.id) return null; 
+    if (!where.id) return null;
     return prisma.usuario.findUnique({
       where,
+      // Incluir senha quando necessário para operações internas (ex: changePassword)
       select: {
         id: true,
         nome: true,
-        email: true
+        email: true,
+        senha: true
       }
     });
   },
@@ -56,7 +58,7 @@ export const User = {
     if (!where.id) return null;
 
     const updateData = clean(data);
-    
+
     // Se houver senha, fazer hash
     if (updateData.senha) {
       updateData.senha = await bcrypt.hash(updateData.senha, 10);
@@ -76,7 +78,7 @@ export const User = {
   delete: async (id) => {
     const where = clean({ id });
 
-    if (!where.id) return null; 
+    if (!where.id) return null;
     return prisma.usuario.delete({ where });
   }
 };

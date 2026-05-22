@@ -17,7 +17,7 @@ router.get("/me", auth, userController.me);
 router.get("/", auth, userController.list);
 router.get("/:id", auth, validate(idParamSchema, "params"), userController.findOne);
 router.put("/:id", auth, validate(idParamSchema, "params"), userController.update);
-//router.put("/:id/senha", auth, validate(idParamSchema, "params"), userController.changePassword);
+router.put("/:id/senha", auth, validate(idParamSchema, "params"), userController.changePassword);
 router.delete("/:id", auth, validate(idParamSchema, "params"), userController.delete);
 
 export default router;

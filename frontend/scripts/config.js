@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
     // Verificar se o usuário está logado
-    if (!window.isAuthenticated || !window.isAuthenticated()) {
+    if (!window.isAuthenticated || !(await window.isAuthenticated())) {
         alert('Você precisa estar logado para acessar as configurações.');
         window.location.href = 'login.html';
         return;
@@ -47,116 +47,88 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Event listener para salvar alterações
-    btnSalvar.addEventListener('click', async () => {
+    btnSalvar.addEventListener("click", async () => {
         const nome = nomeInput.value.trim();
         const email = emailInput.value.trim();
         const senhaAtual = senhaAtualInput.value;
         const novaSenha = novaSenhaInput.value;
         const confirmarSenha = confirmarSenhaInput.value;
 
-        // Validações básicas
-        if (!nome) {
-            alert('Por favor, preencha o nome completo.');
-            return;
-        }
+        if (!nome) { alert("Por favor, preencha o nome completo."); return; }
+        if (!email) { alert("Por favor, preencha o e-mail."); return; }
 
-        if (!email) {
-            alert('Por favor, preencha o e-mail.');
-            return;
-        }
-
-        // Validação de e-mail
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('Por favor, insira um e-mail válido.');
-            return;
-        }
+        if (!emailRegex.test(email)) { alert("Por favor, insira um e-mail válido."); return; }
 
-        // Se o usuário preencheu campos de senha, validar
-        if (senhaAtual || novaSenha || confirmarSenha) {
+        // Validação da senha atual obrigatória para trocar senha
+        const querAlterarSenha = senhaAtual || novaSenha || confirmarSenha;
+        if (querAlterarSenha) {
             if (!senhaAtual) {
-                alert('Por favor, informe a senha atual para alterar a senha.');
+                alert("Por favor, informe a senha atual para alterar a senha.");
                 return;
             }
-
             if (!novaSenha) {
-                alert('Por favor, informe a nova senha.');
+                alert("Por favor, informe a nova senha.");
                 return;
             }
-
-            if (novaSenha.length < 6) {
-                alert('A nova senha deve ter pelo menos 6 caracteres.');
+            if (novaSenha.length < 8) {
+                alert("A nova senha deve ter pelo menos 8 caracteres.");
                 return;
             }
-
             if (novaSenha !== confirmarSenha) {
-                alert('As senhas não coincidem.');
+                alert("As senhas não coincidem.");
                 return;
             }
-        }
-
-        // Preparar dados para atualização
-        const updateData = {
-            nome,
-            email
-        };
-
-        // Se houver nova senha, adicionar ao objeto de atualização
-        // Nota: A validação da senha atual deve ser feita no backend
-        if (novaSenha) {
-            updateData.senha = novaSenha;
         }
 
         try {
             btnSalvar.disabled = true;
-            btnSalvar.textContent = 'Salvando...';
+            btnSalvar.textContent = "Salvando...";
 
-            const response = await window.fetchWithAuth(`${window.API_BASE_URL}/auth/${currentUser.id}`, {
-                method: 'PUT',
-                body: JSON.stringify(updateData)
+            // Atualizar nome e email
+            const updateResponse = await window.fetchWithAuth(`${window.API_BASE_URL}/auth/${currentUser.id}`, {
+                method: "PUT",
+                body: JSON.stringify({ nome, email })
             });
 
-            if (response.ok) {
-                const updatedUser = await response.json();
-
-                // Atualizar sessionStorage
-                sessionStorage.setItem("user", JSON.stringify(updatedUser));
-
-                if (novaSenha) {
-                    const senhaResponse = await window.fetchWithAuth(
-                        `${window.API_BASE_URL}/auth/${currentUser.id}/senha`,
-                        {
-                            method: "PUT",
-                            body: JSON.stringify({ senhaAtual, novaSenha })
-                        }
-                    );
-                    if (!senhaResponse.ok) {
-                        const errorData = await senhaResponse.json();
-                        alert(errorData.error || "Erro ao alterar senha.");
-                        return;
-                    }
-                }
-
-                alert('Dados atualizados com sucesso!');
-
-                // Limpar campos de senha
-                senhaAtualInput.value = '';
-                novaSenhaInput.value = '';
-                confirmarSenhaInput.value = '';
-
-                // Opcional: redirecionar para o perfil
-                // window.location.href = 'perfil-usuario.html';
-            } else {
-                const errorData = await response.json();
-                alert(errorData.error || 'Erro ao atualizar dados. Por favor, tente novamente.');
+            if (!updateResponse.ok) {
+                const errorData = await updateResponse.json();
+                alert(errorData.error || "Erro ao atualizar dados. Por favor, tente novamente.");
+                return;
             }
+
+            const updatedUser = await updateResponse.json();
+            // TA1: Atualizar sessionStorage com novos dados (sem token)
+            sessionStorage.setItem("user", JSON.stringify(updatedUser));
+
+            // TA4: Se quiser alterar senha, chamar endpoint dedicado com validação da senha atual
+            if (querAlterarSenha) {
+                const senhaResponse = await window.fetchWithAuth(
+                    `${window.API_BASE_URL}/auth/${currentUser.id}/senha`,
+                    {
+                        method: "PUT",
+                        body: JSON.stringify({ senhaAtual, novaSenha })
+                    }
+                );
+
+                if (!senhaResponse.ok) {
+                    const errorData = await senhaResponse.json();
+                    alert(errorData.error || "Erro ao alterar senha.");
+                    return;
+                }
+            }
+
+            alert("Dados atualizados com sucesso!");
+            senhaAtualInput.value = "";
+            novaSenhaInput.value = "";
+            confirmarSenhaInput.value = "";
+
         } catch (error) {
-            console.error('Erro ao atualizar dados:', error);
-            alert('Erro de conexão com o servidor. Por favor, tente novamente.');
+            console.error("Erro ao atualizar dados:", error);
+            alert("Erro de conexão com o servidor. Por favor, tente novamente.");
         } finally {
             btnSalvar.disabled = false;
-            btnSalvar.textContent = 'Salvar Alterações';
+            btnSalvar.textContent = "Salvar Alterações";
         }
     });
 });
-

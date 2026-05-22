@@ -3,10 +3,9 @@ const API_BASE_URL = "http://localhost:3000"; // Gateway URL
 
 // Função auxiliar para fazer requisições autenticadas
 async function fetchWithAuth(url, options = {}) {
-    //const token = localStorage.getItem('token');
-
+    // Não ler token no frontend quando cookie HttpOnly é usado.
     const headers = {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         ...options.headers
     };
 
@@ -20,6 +19,7 @@ async function fetchWithAuth(url, options = {}) {
 // Função para verificar se o usuário está logado
 async function isAuthenticated() {
     try {
+        // Usar cookie HttpOnly (enviado por fetch com credentials)
         const res = await fetch(`${API_BASE_URL}/auth/me`, {
             credentials: "include"
         });
@@ -51,6 +51,7 @@ async function logout() {
     } catch (e) {
         console.error("Erro ao chamar logout:", e);
     } finally {
+        // token em cookie HttpOnly é limpo pelo backend via /auth/logout
         sessionStorage.removeItem("user");
         sessionStorage.removeItem("userType");
         window.location.href = "login.html";

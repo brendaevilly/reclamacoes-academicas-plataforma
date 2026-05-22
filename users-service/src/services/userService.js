@@ -41,6 +41,19 @@ export const userService = {
     return { user: userSemSenha, token };
   },
 
+  //troca de senha do usuário 
+  async changePassword(userId, senhaAtual, novaSenha) {
+    const user = await User.findById(userId);
+    if (!user) return null;
+
+    const valid = await bcrypt.compare(senhaAtual, user.senha);
+    if (!valid) return null;
+
+    const hash = await bcrypt.hash(novaSenha, 10);
+    await User.update(userId, { senha: hash });
+    return true;
+  },
+
   findAll: () => User.findAll(),
   findById: (id) => User.findById(id),
   update: (id, data) => User.update(id, data),

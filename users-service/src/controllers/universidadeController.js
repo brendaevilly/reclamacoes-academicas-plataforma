@@ -2,7 +2,7 @@ import { userService } from "../services/userService.js";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: false,
   sameSite: "lax",
   maxAge: 24 * 60 * 60 * 1000 // 1 dia
 }
@@ -28,7 +28,7 @@ export const universidadeController = {
         return res.status(401).json({ error: "Credenciais inválidas." });
       }
       res.cookie("token", data.token, COOKIE_OPTIONS);
-      return res.json({ user: data.user });
+      return res.json({ user: data.user, token: data.token });
     } catch (err) {
       return res.status(401).json({ error: err.message });
     }

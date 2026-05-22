@@ -64,13 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const token = null;
-            const response = await fetch(`${window.API_BASE_URL}/avaliacoes/universidade/${universidadeId}/usuario`, {
-                credentials: "include",
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
+            const response = await window.fetchWithAuth(`${window.API_BASE_URL}/avaliacoes/universidade/${universidadeId}/usuario`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -145,14 +139,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         try {
-            const token = null;
-            const response = await fetch(`${window.API_BASE_URL}/avaliacoes`, {
+            const response = await window.fetchWithAuth(`${window.API_BASE_URL}/avaliacoes`, {
                 method: 'POST',
-                credentials: "include",
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
                 body: JSON.stringify({
                     universidadeId: parseInt(universidadeId),
                     nota: nota
@@ -178,15 +166,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 7. Carregar reclamações da universidade
     async function carregarReclamacoes() {
         try {
-            const token = null;
-            const headers = {};
-            if (token) {
-                headers['Authorization'] = `Bearer ${token}`;
-            }
-
-            const response = await fetch(
-                `${window.API_BASE_URL}/complaints/feed?page=1&limit=20&universityId=${universidadeId}`,
-                { headers }
+            const response = await window.fetchWithAuth(
+                `${window.API_BASE_URL}/complaints/feed?page=1&limit=20&universityId=${universidadeId}`
             );
 
             if (response.ok) {

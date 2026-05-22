@@ -11,7 +11,7 @@ export default async function proxyService(req, res, baseUrl, basePath) {
 
         const url = `${baseUrl}${basePath}${path}`;
 
-        console.log(`[Gateway] ${req.method} ${req.originalUrl} -> ${url}`);
+        
 
         const headers = {
             ...req.headers,
@@ -19,14 +19,6 @@ export default async function proxyService(req, res, baseUrl, basePath) {
         };
 
         const tokenCookie = req.cookies?.token;
-        console.log('[Gateway] req.cookies:', req.cookies);
-        console.log('[Gateway] req.headers.cookie:', req.headers.cookie);
-        if (tokenCookie) {
-            console.log('[Gateway] forwarding token from cookie to Authorization header');
-            headers["authorization"] = `Bearer ${tokenCookie}`;
-        } else {
-            console.log('[Gateway] no token cookie found on request');
-        }
 
 
         const response = await axios({

@@ -21,11 +21,9 @@ export const userService = {
 
   async login(email, senha) {
     const user = await User.findByEmail(email);
-    console.log("USER =", user);
     if (!user) return null;
 
     const valid = await bcrypt.compare(senha, user.senha);
-    console.log("VALID PASSWORD?", valid);
     if (valid != true) return null;
 
     const token = jwt.sign(
@@ -34,8 +32,7 @@ export const userService = {
       { expiresIn: "1d" }
     );
 
-    console.log(user);
-    console.log(token);
+    // Não registrar informações sensíveis (user/token) em logs
 
     const { senha: _, ...userSemSenha } = user;
     return { user: userSemSenha, token };
@@ -49,8 +46,7 @@ export const userService = {
     const valid = await bcrypt.compare(senhaAtual, user.senha);
     if (!valid) return null;
 
-    const hash = await bcrypt.hash(novaSenha, 10);
-    await User.update(userId, { senha: hash });
+    await User.update(userId, { senha: novaSenha });
     return true;
   },
 

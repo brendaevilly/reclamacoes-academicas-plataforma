@@ -1,48 +1,45 @@
 const API_BASE_URL = "http://localhost:3000"; // Gateway URL
 
 document.addEventListener('DOMContentLoaded', () => {
-    const formLogin = document.getElementById('form-login-universidade');
+    // TB4: validação visual
+    window.FormValidator.attach('#form-login-universidade', {
+        fields: {
+            email: { label: 'E-mail institucional', required: true, email: true },
+            senha: { label: 'Senha', required: true, minLength: 1 }
+        },
+        onSubmit: async (values) => {
+            const submitBtn = document.querySelector('#form-login-universidade button[type="submit"]');
+            const oldText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Entrando...';
 
-    formLogin.addEventListener('submit', async (e) => {
-        e.preventDefault();
+            try {
+                const response = await fetch(`${API_BASE_URL}/universidades/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify({ email: values.email.trim(), senha: values.senha })
+                });
 
-        const email = document.getElementById('email').value.trim();
-        const senha = document.getElementById('senha').value.trim();
+                const data = await response.json();
 
-        if (!email || !senha) {
-            alert('Por favor, preencha o email e a senha.');
-            return;
-        }
+                if (!response.ok) {
+                    alert(data.error || 'Email ou senha incorretos.');
+                    return;
+                }
 
-        const dadosLogin = { email, senha };
+                sessionStorage.setItem('user', JSON.stringify(data.user));
+                sessionStorage.setItem('userType', 'universidade');
 
-        try {
-            // Tentar login como universidade
-            const response = await fetch(`${API_BASE_URL}/universidades/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: "include",
-                body: JSON.stringify(dadosLogin)
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                alert(data.error || 'Email ou senha incorretos.');
-                return; // interrompe a execução
+                alert('Login realizado com sucesso!');
+                window.location.href = 'telafeed.html';
+            } catch (error) {
+                console.error('Erro ao fazer login:', error);
+                alert('Erro ao conectar com o servidor. Tente novamente.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = oldText;
             }
-
-            // Token é armazenado em cookie HttpOnly pelo backend; não salvar no frontend
-            sessionStorage.setItem('user', JSON.stringify(data.user));
-            sessionStorage.setItem('userType', 'universidade');
-
-            alert('Login realizado com sucesso!');
-            window.location.href = 'telafeed.html';
-        } catch (error) {
-            console.error('Erro ao fazer login:', error);
-            alert('Erro ao conectar com o servidor. Tente novamente.');
         }
     });
 });

@@ -117,19 +117,19 @@ export default {
     // 4. UPDATE (PUT /complaints/:id)
     async update(req, res) {
         const { id } = req.params;
-        const aluno_id = req.user.id; // Para verificação de autorização (não implementada aqui, mas importante)
+        const userId = req.user.id;
         const data = req.body;
 
-        // Verificar se o usuário é o dono da reclamação
+        // RNF1.3: verificar se o usuário logado é o dono da reclamação
         try {
             const reclamacao = await prisma.reclamacao.findUnique({
                 where: { id: parseInt(id) },
-                select: { aluno_id: true }
+                select: { alunoId: true }
             });
             if (!reclamacao) {
                 return res.status(404).json({ message: "Reclamação não encontrada." });
             }
-            if (reclamacao.aluno_id !== parseInt(aluno_id)) {
+            if (reclamacao.alunoId !== parseInt(userId)) {
                 return res.status(403).json({ message: "Você não tem permissão para atualizar esta reclamação." });
             }
         } catch (error) {
@@ -144,25 +144,24 @@ export default {
     // 5. DELETE (DELETE /complaints/:id)
     async delete(req, res) {
         const { id } = req.params;
-        const aluno_id = req.user.id; // Para verificação de autorização
+        const userId = req.user.id;
 
         try {
             const reclamacao = await prisma.reclamacao.findUnique({
                 where: { id: parseInt(id) },
-                select: { aluno_id: true }
+                select: { alunoId: true }
             });
             if (!reclamacao) {
                 return res.status(404).json({ message: "Reclamação não encontrada." });
             }
-            if (reclamacao.aluno_id !== parseInt(aluno_id)) {
-                return res.status(403).json({ message: "Você não tem permissão para atualizar esta reclamação." });
+            if (reclamacao.alunoId !== parseInt(userId)) {
+                return res.status(403).json({ message: "Você não tem permissão para excluir esta reclamação." });
             }
         } catch (error) {
             console.error("Erro ao verificar dono da reclamação:", error);
             return res.status(500).json({ message: "Erro interno ao verificar permissão." });
         }
 
-        // Implementar lógica de autorização
         const result = await complaintService.delete(id);
         res.status(result.status).json(result);
     },

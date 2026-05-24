@@ -11,6 +11,12 @@ services:
       COMPLAINTS_SERVICE_URL: ${COMPLAINTS_SERVICE_URL}
       INTERACTIONS_SERVICE_URL: ${INTERACTIONS_SERVICE_URL}
       JWT_SECRET: ${JWT_SECRET}
+    # Monta o frontend dentro do container em /frontend (read-only).
+    # O gateway resolve esse caminho via path.join(process.cwd(), "../frontend"),
+    # já que o WORKDIR do container é /app -> /app/../frontend = /frontend.
+    # Vantagem: você edita HTML/CSS/JS na máquina e vê na hora (sem rebuild).
+    volumes:
+      - ./frontend:/frontend:ro
     depends_on:
       - users-service
       - complaints-service

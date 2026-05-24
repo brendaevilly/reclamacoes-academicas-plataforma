@@ -1,65 +1,93 @@
 import axios from "axios";
-//import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 dotenv.config();
 
+/**
+ * Proxy server-to-server para os microsserviços internos.
+ *
+ * Pontos importantes:
+ *   1. Remove headers tóxicos para proxy (host, accept-encoding,
+ *      content-length, connection) que podem fazer o axios receber
+ *      bodies gzipped e quebrar o forward de Set-Cookie / JSON.
+ *   2. TA1: converte o cookie HttpOnly `token` em
+ *      `Authorization: Bearer ...` para que os microsserviços
+ *      (que validam por header) continuem funcionando.
+ *   3. Encaminha `Set-Cookie` usando `res.append` (e não setHeader),
+ *      preservando múltiplos cookies caso existam.
+ */
 export default async function proxyService(req, res, baseUrl, basePath) {
     try {
-        // Remove o basePath do início da URL original para evitar duplicação
-        let path = req.url;
-
+        const path = req.url;
         const url = `${baseUrl}${basePath}${path}`;
 
-        console.log(`[Gateway] ${req.method} ${req.originalUrl} -> ${url}`);
+        // Limpa headers que não devem ser propagados num proxy
+        const {
+            host: _host,
+            "content-length": _cl,
+            "accept-encoding": _ae,
+            connection: _conn,
+            "transfer-encoding": _te,
+            ...safeHeaders
+        } = req.headers;
 
         const headers = {
-            ...req.headers,
-            host: new URL(baseUrl).host
+            ...safeHeaders,
+            host: new URL(baseUrl).host,
+            // Garante resposta NÃO comprimida — assim axios não precisa
+            // descomprimir nada e o forward sai limpo
+            "accept-encoding": "identity"
         };
 
+        // TA1: cookie HttpOnly -> Authorization Bearer
         const tokenCookie = req.cookies?.token;
-        console.log('[Gateway] req.cookies:', req.cookies);
-        console.log('[Gateway] req.headers.cookie:', req.headers.cookie);
-        if (tokenCookie) {
-            console.log('[Gateway] forwarding token from cookie to Authorization header');
-            headers["authorization"] = `Bearer ${tokenCookie}`;
-        } else {
-            console.log('[Gateway] no token cookie found on request');
+        if (tokenCookie && !headers.authorization) {
+            headers.authorization = `Bearer ${tokenCookie}`;
         }
-
 
         const response = await axios({
             method: req.method,
             url,
             data: req.body,
             headers,
-            //params: req.query,
             withCredentials: true,
-            validateStatus: () => true // Aceitar qualquer status code
+            // Aceita qualquer status para repassar fielmente ao client
+            validateStatus: () => true
         });
 
-        // Encaminhar o status e os dados da resposta
-
-        if (response.headers["set-cookie"]) {
-            res.setHeader("set-cookie", response.headers["set-cookie"]);
+        // Forward de Set-Cookie de forma robusta (pode ser string ou array)
+        const setCookies = response.headers?.["set-cookie"];
+        if (setCookies) {
+            const list = Array.isArray(setCookies) ? setCookies : [setCookies];
+            for (const c of list) {
+                res.append("Set-Cookie", c);
+            }
         }
-        res.status(response.status).json(response.data);
+
+        // Forward de tipo de conteúdo (caso não seja JSON)
+        const contentType = response.headers?.["content-type"];
+        if (contentType) res.setHeader("Content-Type", contentType);
+
+        res.status(response.status);
+
+        // axios com responseType:json devolve objeto/array/null em response.data;
+        // se for string (ex.: serviço caiu) usamos send para não duplicar JSON.stringify
+        if (response.data && typeof response.data === "object") {
+            return res.json(response.data);
+        }
+        return res.send(response.data ?? "");
 
     } catch (error) {
         console.error("[Gateway] Erro no proxy:", error.message);
 
         if (error.response) {
-            // O serviço respondeu com erro
             res.status(error.response.status).json(error.response.data);
         } else if (error.request) {
-            // Requisição foi feita mas não houve resposta
             res.status(503).json({
                 error: "Serviço indisponível",
                 message: "O microserviço não está respondendo"
             });
         } else {
-            // Erro na configuração da requisição
             res.status(500).json({
                 error: "Erro no gateway",
                 message: error.message

@@ -7,24 +7,31 @@ const router = Router();
 
 // ========== ROTAS DE COMENTÁRIOS ==========
 
-// Criar comentário (requer autenticação)
 router.post("/comentarios", authMiddleware, interactionController.createComentario);
-
-// Buscar comentários de uma reclamação (público, mas opcionalmente autenticado)
 router.get("/comentarios/reclamacao/:reclamacaoId", optionalAuthMiddleware, interactionController.getComentariosByReclamacao);
-
-// Atualizar comentário (requer autenticação e ser o autor)
 router.put("/comentarios/:id", authMiddleware, interactionController.updateComentario);
-
-// Deletar comentário (requer autenticação e ser o autor)
 router.delete("/comentarios/:id", authMiddleware, interactionController.deleteComentario);
+
+// ========== ROTAS DE NOTIFICAÇÕES (TB2 + TB3) ==========
+
+// Listar notificações do usuário/universidade logado (suporta ?lida=false e paginação)
+router.get("/notificacoes", authMiddleware, interactionController.getNotificacoes);
+
+// Contagem de não lidas (útil para badge no header)
+router.get("/notificacoes/unread-count", authMiddleware, interactionController.getUnreadCount);
+
+// Marcar uma notificação específica como lida
+router.put("/notificacoes/:id/read", authMiddleware, interactionController.markNotificacaoAsRead);
+
+// Marcar todas as notificações como lidas
+router.put("/notificacoes/read-all", authMiddleware, interactionController.markAllNotificacoesAsRead);
+
+// Endpoint INTERNO (chamado pelo complaints-service via x-internal-key)
+router.post("/internal/notificacoes/nova-reclamacao", interactionController.createNotificacaoInterna);
 
 // ========== ROTAS DE LIKES ==========
 
-// Toggle like em reclamação (requer autenticação)
 router.post("/likes/reclamacao", authMiddleware, interactionController.toggleLikeReclamacao);
-
-// Toggle like em comentário (requer autenticação)
 router.post("/likes/comentario", authMiddleware, interactionController.toggleLikeComentario);
 
 export default router;

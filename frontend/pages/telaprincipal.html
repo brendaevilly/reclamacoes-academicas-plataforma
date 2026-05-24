@@ -142,7 +142,14 @@
   <!-- HEADER -->
   <header>
     <h1>Ouvidoria Universitária</h1>
-    <div class="status-geral">Bem-vindo(a) ao seu painel</div>
+    <div class="d-flex align-items-center gap-3">
+      <a href="notificacoes.html" class="position-relative" style="color: var(--text-primary); text-decoration: none; font-size: 1.4rem;" title="Notificações">
+        🔔
+        <span class="notif-badge badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle"
+              style="display: none; font-size: 0.65rem;">0</span>
+      </a>
+      <div class="status-geral">Bem-vindo(a) ao seu painel</div>
+    </div>
   </header>
 
   <div class="container-fluid">
@@ -154,9 +161,13 @@
         <a href="telafeed.html">Feed de Reclamações</a>
         <a href="buscar-universidade.html">Buscar Universidade</a>
         <a id="link-menu-reclamacao" href="reclamacao.html">Adicionar Reclamação</a>
+        <a href="notificacoes.html">
+          Notificações
+          <span class="notif-badge badge bg-danger rounded-pill ms-1" style="display: none; font-size: 0.7rem;">0</span>
+        </a>
         <a href="perfil-usuario.html">Meu Perfil</a>
         <a href="config.html">Configurações</a>
-        <a href="login.html">Sair</a>
+        <a href="#" id="link-sair">Sair</a>
       </nav>
 
       <!-- CONTEÚDO PRINCIPAL -->
@@ -197,6 +208,16 @@
           </div>
 
           <div class="col-md-4">
+            <div class="card-option" onclick="window.location.href='notificacoes.html'">
+              <h5>
+                Notificações
+                <span class="notif-badge badge bg-danger rounded-pill ms-2" style="display: none; font-size: 0.7rem;">0</span>
+              </h5>
+              <p>Veja respostas das universidades, novos comentários e atualizações.</p>
+            </div>
+          </div>
+
+          <div class="col-md-4">
             <div class="card-option" onclick="window.location.href='config.html'">
               <h5>Configurações</h5>
               <p>Gerencie opções de segurança, privacidade e personalização.</p>
@@ -208,22 +229,21 @@
     </div>
   </div>
 
+  <script src="../scripts/api-config.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const userType = localStorage.getItem('userType');
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userType = sessionStorage.getItem('userType') || localStorage.getItem('userType');
       if (userType === 'universidade') {
-        const userStr = localStorage.getItem('user');
+        const userStr = sessionStorage.getItem('user') || localStorage.getItem('user');
         if (userStr) {
           const user = JSON.parse(userStr);
-          
-          // Alterar link do sidebar
+
           const linkMenuPerfil = document.querySelector('a[href="perfil-usuario.html"]');
           if (linkMenuPerfil) {
             linkMenuPerfil.href = `perfil-universidade.html?id=${user.id}`;
             linkMenuPerfil.textContent = 'Perfil da Universidade';
           }
-          
-          // Alterar card do perfil
+
           const cardPerfil = document.querySelector('.card-option[onclick*="perfil-usuario.html"]');
           if (cardPerfil) {
             cardPerfil.setAttribute('onclick', `window.location.href='perfil-universidade.html?id=${user.id}'`);
@@ -234,9 +254,28 @@
 
         const linkMenuReclamacao = document.getElementById('link-menu-reclamacao');
         const cardReclamacao = document.getElementById('card-reclamacao');
-        
+
         if (linkMenuReclamacao) linkMenuReclamacao.style.display = 'none';
         if (cardReclamacao) cardReclamacao.style.display = 'none';
+      }
+
+      // TB3: badge global de notificações
+      if (typeof window.refreshNotificationBadge === 'function') {
+        await window.refreshNotificationBadge();
+        setInterval(window.refreshNotificationBadge, 60000);
+      }
+
+      // Sair via API para limpar o cookie HttpOnly
+      const linkSair = document.getElementById('link-sair');
+      if (linkSair) {
+        linkSair.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (typeof window.logout === 'function') {
+            window.logout();
+          } else {
+            window.location.href = 'login.html';
+          }
+        });
       }
     });
   </script>

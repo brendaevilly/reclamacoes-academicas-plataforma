@@ -94,6 +94,13 @@ const Notificacao = {
         });
     },
 
+    // Buscar notificação por ID (usado para verificar dono - RNF1.3)
+    async findById(id) {
+        return await prisma.notificacao.findUnique({
+            where: { id: parseInt(id) }
+        });
+    },
+
     // Marcar notificação como lida
     async markAsRead(id) {
         return await prisma.notificacao.update({

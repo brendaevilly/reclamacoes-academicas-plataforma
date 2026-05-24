@@ -58,6 +58,31 @@ async function logout() {
     }
 }
 
+// TB3: Obtém a quantidade de notificações não lidas para o usuário logado.
+// Usado por outras telas (telaprincipal, telafeed, etc.) para mostrar badge.
+async function getUnreadNotificationsCount() {
+    try {
+        const res = await fetchWithAuth(
+            `${API_BASE_URL}/interactions/notificacoes/unread-count`
+        );
+        if (!res.ok) return 0;
+        const json = await res.json();
+        return json?.data?.unreadCount ?? 0;
+    } catch {
+        return 0;
+    }
+}
+
+// TB3: Atualiza badges (.notif-badge) presentes na página com o número de não lidas.
+async function refreshNotificationBadge() {
+    if (!(await isAuthenticated())) return;
+    const unread = await getUnreadNotificationsCount();
+    document.querySelectorAll(".notif-badge").forEach((el) => {
+        el.textContent = unread > 99 ? "99+" : String(unread);
+        el.style.display = unread > 0 ? "inline-block" : "none";
+    });
+}
+
 // Exportar para uso global
 window.API_BASE_URL = API_BASE_URL;
 window.fetchWithAuth = fetchWithAuth;
@@ -65,3 +90,5 @@ window.isAuthenticated = isAuthenticated;
 window.getCurrentUser = getCurrentUser;
 window.getUserType = getUserType;
 window.logout = logout;
+window.getUnreadNotificationsCount = getUnreadNotificationsCount;
+window.refreshNotificationBadge = refreshNotificationBadge;

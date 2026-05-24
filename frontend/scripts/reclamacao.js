@@ -1,10 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const form = document.querySelector("form");
+    const form = document.getElementById("form-reclamacao");
 
-    // Verificar autenticação via API (cookie HttpOnly). Se falhar, permitir
-    // continuar quando já houver `user` em sessionStorage (login recente),
-    // assim o formulário ainda pode ser enviado e o backend retornará 401/403
-    // caso o cookie não tenha sido definido corretamente.
     const authOk = await window.isAuthenticated();
     if (!authOk) {
         const currentUser = window.getCurrentUser();
@@ -12,8 +8,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             alert("Você precisa estar logado para adicionar uma reclamação.");
             window.location.href = "login.html";
             return;
-        } else {
-            console.warn('isAuthenticated() retornou false, mas existe usuário em sessionStorage. Permitindo acesso ao formulário e confiando na validação do backend ao submeter.');
         }
     }
 
@@ -34,19 +28,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         universidadesData = await response.json();
 
-        selectUniversidade.innerHTML = '<option selected disabled>Selecione a instituição</option>';
+        selectUniversidade.innerHTML = '<option value="">Selecione a instituição</option>';
 
-        // Agrupar universidades por sigla/nome para evitar duplicatas na lista
         const universidadesAgrupadas = {};
         universidadesData.forEach(univ => {
             const key = `${univ.sigla} - ${univ.nome}`;
-            if (!universidadesAgrupadas[key]) {
-                universidadesAgrupadas[key] = univ;
-            }
+            if (!universidadesAgrupadas[key]) universidadesAgrupadas[key] = univ;
         });
 
-
-        // Adicionar universidades agrupadas ao select
         Object.values(universidadesAgrupadas).forEach(univ => {
             const option = document.createElement("option");
             option.value = univ.id;
@@ -58,115 +47,111 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
         console.error("Erro ao carregar universidades:", error);
-        selectUniversidade.innerHTML = '<option disabled>Erro ao carregar instituições</option>';
+        selectUniversidade.innerHTML = '<option value="">Erro ao carregar instituições</option>';
     }
 
-    // Atualizar campus quando universidade for selecionada
     selectUniversidade.addEventListener("change", (e) => {
         const selectedId = e.target.value;
         const selectedUniv = universidadesData.find(u => u.id == selectedId);
 
         if (selectedUniv) {
-            // Buscar todos os campus disponíveis para universidades com a mesma sigla/nome
             const siglaOuNome = selectedUniv.sigla || selectedUniv.nome;
             const campusDisponiveis = universidadesData
                 .filter(u => (u.sigla === siglaOuNome || u.nome === selectedUniv.nome) && u.campus)
                 .map(u => u.campus)
-                .filter((campus, index, self) => self.indexOf(campus) === index); // Remover duplicatas
+                .filter((campus, index, self) => self.indexOf(campus) === index);
 
             if (campusDisponiveis.length > 0) {
                 selectCampus.disabled = false;
-                selectCampus.innerHTML = '<option selected disabled>Selecione o campus</option>';
+                selectCampus.innerHTML = '<option value="">Selecione o campus</option>';
 
                 campusDisponiveis.forEach(campus => {
                     const option = document.createElement("option");
                     option.value = campus;
                     option.textContent = campus;
-                    // Selecionar o campus da universidade selecionada por padrão
-                    if (campus === selectedUniv.campus) {
-                        option.selected = true;
-                    }
+                    if (campus === selectedUniv.campus) option.selected = true;
                     selectCampus.appendChild(option);
                 });
             } else {
                 selectCampus.disabled = true;
-                selectCampus.innerHTML = '<option selected disabled>Nenhum campus disponível</option>';
+                selectCampus.innerHTML = '<option value="">Nenhum campus disponível</option>';
             }
         } else {
             selectCampus.disabled = true;
-            selectCampus.innerHTML = '<option selected disabled>Selecione primeiro a instituição</option>';
+            selectCampus.innerHTML = '<option value="">Selecione primeiro a instituição</option>';
         }
     });
 
-    // Enviar reclamação
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+    // TB4: validação visual
+    window.FormValidator.attach('#form-reclamacao', {
+        fields: {
+            titulo: { label: 'Título', required: true, minLength: 5, maxLength: 150 },
+            categoria: { label: 'Categoria', required: true },
+            universidade: { label: 'Instituição', required: true },
+            campus: {
+                label: 'Campus',
+                required: true,
+                custom: (v) => (!v ? 'Selecione um campus.' : null)
+            },
+            descricao: {
+                label: 'Descrição',
+                required: true,
+                minLength: 20,
+                maxLength: 2000
+            }
+        },
+        onSubmit: async (values) => {
+            const titulo = values.titulo.trim();
+            const descricao = values.descricao.trim();
+            const categoriaId = values.categoria;
+            const universidadeId = values.universidade;
+            const campus = values.campus;
 
-        const titulo = document.getElementById("titulo").value.trim();
-        const descricao = document.getElementById("descricao").value.trim();
-        const categoriaId = selectCategoria.value;
-        const universidadeId = selectUniversidade.value;
-        const campus = selectCampus.value;
-
-        if (!categoriaId || categoriaId === "Selecione a categoria") {
-            alert("Por favor, selecione uma categoria.");
-            return;
-        }
-
-        if (!universidadeId) {
-            alert("Por favor, selecione uma instituição.");
-            return;
-        }
-
-        if (!campus || selectCampus.disabled || campus === "Selecione o campus") {
-            alert("Por favor, selecione um campus.");
-            return;
-        }
-
-        // Encontrar a universidade correta com o campus selecionado
-        const selectedUniv = universidadesData.find(u => u.id == universidadeId);
-        let universidadeIdFinal = Number(universidadeId);
-
-        if (selectedUniv) {
-            // Se o campus selecionado for diferente do campus da universidade selecionada,
-            // buscar a universidade com o campus correto
-            if (selectedUniv.campus !== campus) {
+            // Resolver universidade com campus correto (caso seja universidade
+            // multi-campus na lista)
+            const selectedUniv = universidadesData.find(u => u.id == universidadeId);
+            let universidadeIdFinal = Number(universidadeId);
+            if (selectedUniv && selectedUniv.campus !== campus) {
                 const siglaOuNome = selectedUniv.sigla || selectedUniv.nome;
                 const universidadeComCampus = universidadesData.find(u =>
                     (u.sigla === siglaOuNome || u.nome === selectedUniv.nome) &&
                     u.campus === campus
                 );
-                if (universidadeComCampus) {
-                    universidadeIdFinal = universidadeComCampus.id;
+                if (universidadeComCampus) universidadeIdFinal = universidadeComCampus.id;
+            }
+
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const oldText = submitBtn.textContent;
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Enviando...';
+
+            try {
+                const response = await window.fetchWithAuth(`${window.API_BASE_URL}/complaints`, {
+                    method: "POST",
+                    body: JSON.stringify({
+                        titulo,
+                        descricao,
+                        categoriaId,
+                        universidadeId: universidadeIdFinal
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert("Reclamação adicionada com sucesso!");
+                    window.location.href = "telafeed.html";
+                } else {
+                    alert(`Erro ao adicionar reclamação: ${result.error || result.message || response.statusText}`);
                 }
+
+            } catch (error) {
+                console.error("Erro de rede:", error);
+                alert("Erro de conexão com o servidor.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = oldText;
             }
-        }
-
-        const complaintData = {
-            titulo,
-            descricao,
-            categoriaId: categoriaId, // Enviar como string (nome da categoria)
-            universidadeId: universidadeIdFinal,
-        };
-
-        try {
-            const response = await window.fetchWithAuth(`${window.API_BASE_URL}/complaints`, {
-                method: "POST",
-                body: JSON.stringify(complaintData),
-            });
-
-            const result = await response.json();
-
-            if (response.ok) {
-                alert("Reclamação adicionada com sucesso!");
-                window.location.href = "telafeed.html";
-            } else {
-                alert(`Erro ao adicionar reclamação: ${result.error || result.message || response.statusText}`);
-            }
-
-        } catch (error) {
-            console.error("Erro de rede:", error);
-            alert("Erro de conexão com o servidor.");
         }
     });
 });

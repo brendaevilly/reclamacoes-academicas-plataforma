@@ -21,6 +21,7 @@ model Usuario {
   comentarios   Comentario[]
   likes         Like[]
   avaliacoes    Avaliacao[]
+  notificacoes  Notificacao[]
 
   @@map("usuarios")
 }
@@ -40,6 +41,7 @@ model Universidade {
   reclamacoes   Reclamacao[]
   comentarios   Comentario[]
   avaliacoes    Avaliacao[]
+  notificacoes  Notificacao[]
 
   @@map("universidades")
 }
@@ -74,6 +76,7 @@ model Reclamacao {
   aluno             Usuario       @relation(fields: [alunoId], references: [id])
   comentarios       Comentario[]
   likes             Like[]
+  notificacoes      Notificacao[]
 
   @@map("reclamacoes")
 }
@@ -130,4 +133,27 @@ model Avaliacao {
 
   @@unique([universidadeId, usuarioId])
   @@map("avaliacoes")
+}
+
+// TB2: Tabela de Notificações
+// Uma notificação pode ser direcionada a um Aluno (usuarioId) OU
+// a uma Universidade (universidadeId). Apenas um dos dois é preenchido.
+model Notificacao {
+  id                Int           @id @default(autoincrement())
+  mensagem          String
+  tipo              String        // ex: "novo_comentario", "resposta_universidade", "nova_reclamacao"
+  lida              Boolean       @default(false)
+  reclamacaoId      Int?
+  usuarioId         Int?          // destinatário aluno
+  universidadeId    Int?          // destinatário universidade
+  createdAt         DateTime      @default(now())
+
+  // Relações
+  reclamacao        Reclamacao?   @relation(fields: [reclamacaoId], references: [id], onDelete: Cascade)
+  usuario           Usuario?      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  universidade      Universidade? @relation(fields: [universidadeId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, lida])
+  @@index([universidadeId, lida])
+  @@map("notificacoes")
 }

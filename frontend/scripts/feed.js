@@ -185,6 +185,11 @@ async function loadFeed(filters = {}) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // TB3: badge global de notificações
+  if (typeof window.refreshNotificationBadge === 'function') {
+    window.refreshNotificationBadge();
+  }
+
   // Atualizar contagem total de reclamações
   await updateTotalComplaints();
 

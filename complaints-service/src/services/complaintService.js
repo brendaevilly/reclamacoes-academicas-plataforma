@@ -1,5 +1,6 @@
 import Complaint from "../models/Complaint.js";
 import prisma from "../database/connection.js";
+import { complaintNotifications } from "./notificationHelper.js";
 
 export default {
     // 1. CREATE
@@ -7,6 +8,16 @@ export default {
         try {
             // data deve incluir: titulo, descricao, categoria, universidade_id, aluno_id
             const newComplaint = await Complaint.create(data);
+
+            // TB2: Notifica a universidade alvo de forma assíncrona
+            // (fire-and-forget — não bloqueia a resposta).
+            complaintNotifications.onNovaReclamacao({
+                reclamacaoId: newComplaint.id,
+                titulo: newComplaint.titulo,
+                universidadeId: newComplaint.universidadeId,
+                autorNome: newComplaint.aluno?.nome
+            }).catch(() => {});
+
             return {
                 status: 201,
                 message: "Reclamação registrada com sucesso.",

@@ -1,291 +1,504 @@
-# Estrutura do Projeto
+# Documentação da Plataforma de Reclamações Acadêmicas
 
-Projeto estruturado em "microsserviços", estre aspas pois eles compartilham banco.
+> Disciplina: **PWEB2**
+> Projeto: **Ouvidoria Universitária**
+> Arquitetura: microsserviços + gateway + frontend estático
+> Banco: **PostgreSQL** (compartilhado entre microsserviços), executado em Docker
+> Stack server-side: **Node.js + Express + Prisma**
+> Stack client-side: **HTML5 + CSS3 + Bootstrap 5 + JavaScript ES Modules**
 
-- Pastas para cada microsservico
-    - **users-service**: Gerenciamento de usuários (alunos e universidades), login, registro, perfis, autenticação (JWT) e autorização. Entidades do banco: Usuario (Aluno), Universidade, Credenciais.
-    - **complaints-service**: Criação, visualização, edição e exclusão de reclamações. Gerenciamento do feed principal e busca de reclamações. Entidades do banco: Reclamacao, Categoria.
-    - **interactions-service**: Gerenciamento de comentários em reclamações e respostas de universidades. Geração e entrega de notificações para usuários e universidades. Entidades do banco: Comentario, Notificacao.
+---
 
-- Gateway
-    - Roteamento de requisições:
-        - Quando uma requisição chega, o gateway decide para qual serviço ela deve ir.
-        - Exemplo: /users → users-service, /complaints → complaints-service.
-        - Autenticação e segurança centralizadas:
-        - Você pode colocar filtros de segurança (como JWT, API keys ou autenticação básica) no gateway em vez de replicar em todos os serviços.
+## 1. Visão Geral
 
-    - Balanceamento e abstração dos serviços:
-        - Você pode expor uma única URL para o mundo externo, mesmo que existam vários serviços internos.
-        - Facilita o desenvolvimento porque o frontend não precisa saber os detalhes de cada serviço ou porta.
+A Ouvidoria Universitária permite que **alunos** registrem reclamações públicas
+sobre suas universidades (infraestrutura, atendimento, ensino etc.), comentem,
+deem like, avaliem instituições e recebam notificações quando suas reclamações
+forem comentadas ou respondidas. As **universidades** têm sua própria conta e
+podem responder oficialmente às reclamações que recebem.
 
-    - Logging e monitoramento centralizados:
-        - Todas as requisições passam pelo gateway, então é mais fácil registrar logs, métricas ou auditoria.
-        - Analogia: O gateway é como a portaria de um prédio — ele recebe todos que chegam e direciona para o apartamento certo.
+A aplicação é dividida em quatro componentes:
 
-## Estrutura de pastas
+1. **Gateway** (porta `3000`) — porta de entrada única. Faz proxy autenticado
+   para os microsserviços, aplica `Helmet`, `Rate Limiting` e serve o
+   frontend estático.
+2. **users-service** (porta `3001`) — cadastro/login de alunos e
+   universidades, JWT em cookie HttpOnly, troca de senha com validação.
+3. **complaints-service** (porta `3002`) — CRUD de reclamações, feed
+   paginado/filtros, autorização "dono do recurso".
+4. **interactions-service** (porta `3003`) — comentários, likes e
+   **notificações** (TB2/TB3).
+
+---
+
+## 2. Estrutura de Pastas
 
 ```
-codigo/
+reclamacoes-academicas-plataforma-main/
+├── docker-compose.yml
+├── README.md
+├── Document/
+│   └── documentacao.md        <- este arquivo
+│
  ├── gateway/
- │    ├── src/
- │    │    ├── routes/
- │    │    │    └── index.js
- │    │    ├── middlewares/
- │    │    │    └── auth.js
- │    │    ├── controllers/
- │    │    │    └── gatewayController.js
- │    │    ├── services/
- │    │    │    └── proxyService.js
- │    │    ├── utils/
- │    │    │    └── logger.js
- │    │    └── app.js
- │    ├── server.js
- │    ├── package.json
- │    └── .env
-
+│   ├── src/
+│   │   ├── routes/index.js
+│   │   ├── services/proxyService.js
+│   │   └── app.js              (helmet, rate limit, cookie-parser, static frontend)
+│   ├── tests/                  (Jest + Supertest)
+│   ├── jest.config.js
+│   └── server.js
+│
  ├── users-service/
- │    ├── src/
- │    │    ├── routes/
- │    │    │    └── userRoutes.js
- │    │    ├── controllers/
- │    │    │    └── userController.js
- │    │    ├── services/
- │    │    │    └── userService.js
- │    │    ├── models/
- │    │    │    └── User.js
- │    │    ├── database/
- │    │    │    ├── connection.js
- │    │    │    └── migrations/
- │    │    ├── utils/
- │    │    │    └── responses.js
- │    │    └── app.js
- │    ├── server.js
- │    ├── package.json
- │    └── .env
-
+│   ├── src/
+│   │   ├── routes/userRoutes.js, universidadeRoutes.js, ...
+│   │   ├── controllers/userController.js, universidadeController.js
+│   │   ├── services/userService.js
+│   │   ├── middlewares/auth.js (lê cookie HttpOnly OU header Bearer)
+│   │   ├── validators/userValidator.js
+│   │   ├── models/User.js, Universidade.js, Avaliacao.js
+│   │   └── app.js
+│   ├── prisma/schema.prisma, migrations/
+│   ├── tests/                  (cadastro, login, logout, troca de senha)
+│   └── server.js
+│
  ├── complaints-service/
- │    ├── src/
- │    │    ├── routes/
- │    │    │    └── complaintRoutes.js
- │    │    ├── controllers/
- │    │    │    └── complaintController.js
- │    │    ├── services/
- │    │    │    └── complaintService.js
- │    │    ├── models/
- │    │    │    └── Complaint.js
- │    │    ├── database/
- │    │    │    └── connection.js
- │    │    ├── utils/
- │    │    │    └── responses.js
- │    │    └── app.js
- │    ├── server.js
- │    ├── package.json
- │    └── .env
-
+│   ├── src/
+│   │   ├── controllers/complaintController.js
+│   │   ├── services/complaintService.js, notificationHelper.js
+│   │   ├── models/Complaint.js
+│   │   ├── middleware/authMiddleware.js
+│   │   └── app.js
+│   ├── prisma/schema.prisma, migrations/
+│   └── server.js
+│
  ├── interactions-service/
- │    ├── src/
- │    │    ├── routes/
- │    │    │    └── interactionRoutes.js
- │    │    ├── controllers/
- │    │    │    └── interactionController.js
- │    │    ├── services/
- │    │    │    └── interactionService.js
- │    │    ├── models/
- │    │    │    └── Interaction.js
- │    │    ├── database/
- │    │    │    └── connection.js
- │    │    ├── utils/
- │    │    │    └── responses.js
- │    │    └── app.js
- │    ├── server.js
- │    ├── package.json
- │    └── .env
-
- ├── Document -> documentação do projeto
- ├── docker-compose.yml
+│   ├── src/
+│   │   ├── controllers/interactionController.js
+│   │   ├── services/interactionService.js, notificationHelper.js
+│   │   ├── models/Comentario.js, Like.js, Notificacao.js
+│   │   ├── middlewares/authMiddleware.js, optionalAuthMiddleware.js
+│   │   └── app.js
+│   ├── prisma/schema.prisma, migrations/  (inclui add_notificacoes)
+│   ├── docker-entrypoint.sh    (roda prisma migrate deploy ao subir)
+│   └── server.js
+│
  └── frontend/
-      └── (seu código atual)
-
+    ├── pages/                  (HTML estático servido pelo gateway)
+    ├── scripts/                (api-config.js, form-validation.js, ...)
+    └── styles/                 (form-validation.css, feed.css, ...)
 ```
 
-```
-gateway/
- ├── src/
- │    ├── routes/           → Rotas públicas e protegidas
- │    ├── middlewares/      → Autenticação, logs, validações
- │    ├── controllers/      → Lógica das rotas
- │    ├── services/         → Proxy para os microserviços
- │    ├── utils/            → Funções auxiliares
- │    └── app.js            → Configurações do Express
- ├── server.js              → Inicia o servidor
- └── .env
+---
 
-```
+## 3. Como rodar
 
-```
-users-service/
- ├── src/
- │    ├── routes/           → userRoutes.js
- │    ├── controllers/      → userController.js
- │    ├── services/         → userService.js (regras de negócio)
- │    ├── models/           → User.js (schema/model)
- │    ├── database/         → conexão + migrations
- │    ├── utils/            → formatação de respostas
- │    └── app.js
- ├── server.js
- ├── package.json
- └── .env
-
-```
-
-## Para rodar
-
+```bash
 docker-compose up --build
+```
 
-## Microsserviços rodando
+- Gateway/Frontend: <http://localhost:3000>
+- Postgres exposto na porta definida em `.env`
+- Migrations são aplicadas automaticamente pelo `docker-entrypoint.sh` do
+  `interactions-service` (que possui o schema mais completo do banco
+  compartilhado).
 
-![Microsserviços](image-2.png)
+Para rodar os testes:
 
-## Para testar conexão
+```bash
+docker compose exec user-service npm test
+docker compose exec gateway        npm test
+```
 
-- Entrar em um microsserviço (container): docker exec -it nome-do-container bash
-- Dentro do container: ping nome-de-outro-container
-- Se estiverem trocando pacotes de forma saudável: Tudo OK
+---
 
-![ping nos microsserviços](image-1.png) 
+## 4. Modelo de Dados (Prisma)
 
+Todos os microsserviços compartilham o mesmo banco PostgreSQL. Os schemas
+ficam duplicados em cada serviço apenas para permitir que cada Prisma Client
+saiba quais tabelas pode acessar.
 
+Tabelas principais:
 
-## Pasta Auth — 
- **1. Cadastro (Register / Sign Up)**
+| Tabela           | Descrição                                                            |
+| ---------------- | -------------------------------------------------------------------- |
+| `usuarios`       | Alunos                                                               |
+| `universidades`  | Instituições                                                         |
+| `categorias`     | Categorias de reclamação (Infraestrutura, Ensino, ...)               |
+| `reclamacoes`    | Reclamações dos alunos                                               |
+| `comentarios`    | Comentários (de alunos OU resposta oficial de universidades)         |
+| `likes`          | Likes em reclamações e em comentários                                |
+| `avaliacoes`     | Nota (0-5) de aluno para universidade                                |
+| `notificacoes`   | **TB2** — notificações para alunos ou universidades                  |
 
-Fluxo:
+A tabela `notificacoes` tem `usuarioId` **OU** `universidadeId` preenchido
+(nunca os dois) e referencia opcionalmente a `reclamacaoId` que originou a
+notificação. Os tipos atuais são:
 
-Usuário envia nome, email e senha.
+- `nova_reclamacao` — disparada para a universidade quando um aluno
+  registra uma nova reclamação contra ela.
+- `novo_comentario` — disparada para o dono da reclamação e/ou para a
+  universidade quando alguém comenta.
+- `resposta_universidade` — disparada para o aluno quando a universidade
+  responde oficialmente à reclamação dele.
 
-A senha NÃO é salva em texto puro → é transformada em hash com:
+---
 
-bcrypt ou argon2
+## 5. API Pública (via Gateway)
 
-O usuário é salvo no banco com:
+Todas as rotas listadas abaixo são acessadas via `http://localhost:3000`.
+Rotas marcadas com 🔒 exigem cookie HttpOnly válido (`token`).
 
-id
+### 5.1 Autenticação de Alunos
 
-nome
+| Método | Rota                  | Descrição                                       |
+| ------ | --------------------- | ----------------------------------------------- |
+| POST   | `/auth/cadastro`      | Cadastro de aluno                               |
+| POST   | `/auth/login`         | Login (seta cookie HttpOnly)                    |
+| POST   | `/auth/logout` 🔒     | Limpa o cookie                                  |
+| GET    | `/auth/me` 🔒         | Retorna o usuário do cookie atual               |
+| GET    | `/auth/:id` 🔒        | Detalhe de um usuário                           |
+| PUT    | `/auth/:id` 🔒        | Atualiza nome/e-mail                            |
+| PUT    | `/auth/:id/senha` 🔒  | **TA4** — troca de senha com validação da atual |
+| DELETE | `/auth/:id` 🔒        | Remove usuário                                  |
 
-email
+### 5.2 Autenticação de Universidades
 
-senha (hash)
+| Método | Rota                          | Descrição                                |
+| ------ | ----------------------------- | ---------------------------------------- |
+| POST   | `/universidades/cadastro`     | Cadastro de universidade                 |
+| POST   | `/universidades/login`        | Login (seta cookie HttpOnly, tipo `universidade`) |
+| POST   | `/universidades/logout` 🔒    | Limpa o cookie                           |
+| GET    | `/universidades`              | Lista pública (busca via `?search=`)     |
+| GET    | `/universidades/:id`          | Detalhe                                  |
+| PUT    | `/universidades/:id` 🔒       | Atualização                              |
+| DELETE | `/universidades/:id` 🔒       | Remoção                                  |
 
-timestamps 
+### 5.3 Reclamações
 
-Objetivo: criar conta com segurança.
+| Método | Rota                  | Descrição                                                  |
+| ------ | --------------------- | ---------------------------------------------------------- |
+| GET    | `/complaints/feed`    | Feed paginado com filtros (`category`, `universityId`, `campus`, `page`, `limit`) |
+| GET    | `/complaints/:id`     | Detalhe                                                    |
+| POST   | `/complaints` 🔒      | Criar reclamação — **emite notificação para a universidade** |
+| PUT    | `/complaints/:id` 🔒  | Atualizar (somente o dono — RNF1.3)                        |
+| DELETE | `/complaints/:id` 🔒  | Remover (somente o dono — RNF1.3)                          |
 
-## 2. Login (Sign In)
+### 5.4 Interações
 
-Fluxo:
+| Método | Rota                                                  | Descrição                                                 |
+| ------ | ----------------------------------------------------- | --------------------------------------------------------- |
+| GET    | `/interactions/comentarios/reclamacao/:id`            | Lista comentários (aceita auth opcional para `userLiked`) |
+| POST   | `/interactions/comentarios` 🔒                        | Criar comentário — **emite notificações** (TB2)           |
+| PUT    | `/interactions/comentarios/:id` 🔒                    | Editar (somente o autor)                                  |
+| DELETE | `/interactions/comentarios/:id` 🔒                    | Excluir (somente o autor)                                 |
+| POST   | `/interactions/likes/reclamacao` 🔒                   | Toggle like em reclamação                                 |
+| POST   | `/interactions/likes/comentario` 🔒                   | Toggle like em comentário                                 |
 
-Usuário envia email e senha.
+### 5.5 Notificações (TB2 + TB3)
 
-Você busca o usuário pelo email.
+| Método | Rota                                                  | Descrição                                                  |
+| ------ | ----------------------------------------------------- | ---------------------------------------------------------- |
+| GET    | `/interactions/notificacoes` 🔒                       | Lista paginada (`?limit=`, `?offset=`, `?lida=true|false`) |
+| GET    | `/interactions/notificacoes/unread-count` 🔒          | Contagem de não lidas (para o badge)                       |
+| PUT    | `/interactions/notificacoes/:id/read` 🔒              | Marca uma como lida (só o dono — RNF1.3)                   |
+| PUT    | `/interactions/notificacoes/read-all` 🔒              | Marca todas como lidas                                     |
+| POST   | `/interactions/internal/notificacoes/nova-reclamacao` | **Interno** (usa header `x-internal-key`)                  |
 
-Compara a senha enviada com o hash salvo no banco.
+A resposta de listagem inclui `meta.unreadCount`.
 
-Se estiver tudo certo, gera um token JWT com:
+---
 
-id do usuário
+## 6. Fluxos Principais
 
-tempo de expiração (15m, 1h, etc.)
+### 6.1 Cadastro e Login
 
-Objetivo: gerar um token que representa que o usuário está autenticado.
+1. Frontend envia `POST /auth/cadastro` → senha é hasheada com bcrypt no
+   `users-service`.
+2. Login retorna **somente** `{ user }` no body; o token JWT vai num
+   **Cookie HttpOnly** com `SameSite=lax` e `maxAge=1d` (TA1).
+3. Frontend salva apenas dados não sensíveis em `sessionStorage`.
+4. Logout chama `POST /auth/logout` que limpa o cookie via `res.clearCookie`.
 
-## 3. Token JWT
+### 6.2 Postagem de uma reclamação
 
-O JWT é dividido em 3 partes:
+1. `reclamacao.js` valida o formulário via `FormValidator` (TB4).
+2. `POST /complaints` é proxied para `complaints-service` com o JWT
+   convertido pelo gateway em `Authorization: Bearer`.
+3. Após salvar, `complaintService.create` chama
+   `complaintNotifications.onNovaReclamacao` que grava direto na tabela
+   `notificacoes` (banco compartilhado) — TB2.
+4. A universidade alvo passa a ver a notificação na tela.
 
-Header (tipo + algoritmo)
+### 6.3 Comentário e resposta
 
-Payload (dados do usuário, geralmente só o ID)
+1. `POST /interactions/comentarios` cria o registro.
+2. `interactionService.createComentario` dispara o helper:
+   - Autor é aluno → notifica o dono da reclamação **e** a universidade.
+   - Autor é universidade → notifica o dono da reclamação como
+     `resposta_universidade`.
 
-Signature (garante autenticidade)
+### 6.4 Visualização de notificações (TB3)
 
-Exemplo de payload:
+1. `notificacoes.html` chama `GET /interactions/notificacoes?limit=50`.
+2. Cada card mostra tipo, mensagem, "há quanto tempo" e estado (lida/não lida).
+3. Clique em um card marca como lido (`PUT /...:id/read`) e leva para a
+   reclamação relacionada.
+4. `api-config.js` expõe `refreshNotificationBadge()` que é chamado em
+   `telaprincipal.html` e `telafeed.html` para atualizar o `🔔` no header.
 
-{
-  "sub": "123",
-  "exp": 1735699000
+---
+
+## 7. Segurança
+
+| Mecanismo                       | Onde                                       | Tarefa |
+| ------------------------------- | ------------------------------------------ | ------ |
+| JWT em **Cookie HttpOnly**      | `users-service` + gateway + frontend       | TA1    |
+| `Helmet`                        | `gateway/src/app.js`                       | TA2    |
+| `express-rate-limit` (global)   | `gateway/src/app.js` (200req/15min)        | TA2    |
+| Rate limit em login/cadastro    | `gateway/src/app.js` (20req/15min)         | TA2    |
+| Autorização "dono do recurso"   | `complaints-service`, `interactions-service` | TA3 / TB2  |
+| Senha atual obrigatória         | `PUT /auth/:id/senha`                      | TA4    |
+| Bcrypt para hashing             | `userService`                              | (Base) |
+| Validação visual de formulário  | `FormValidator` (frontend)                 | TB4    |
+| Validação de payload no backend | `validators/userValidator.js` (Joi/Zod)    | (Base) |
+
+O **gateway** converte o cookie `token` em `Authorization: Bearer <token>`
+antes de fazer proxy para os microsserviços (TA1), eliminando a necessidade
+de expor o JWT ao JavaScript no navegador.
+
+---
+
+## 8. O que cada pessoa implementou
+
+### 8.1 Pessoa A — Segurança e Infraestrutura
+
+#### TA1 — JWT em Cookies HttpOnly (RNF1.1)
+
+Migrado do `localStorage` para Cookies HttpOnly.
+
+- `users-service/src/controllers/userController.js` e
+  `universidadeController.js` agora chamam
+  `res.cookie("token", token, { httpOnly: true, sameSite: "lax", maxAge: 1d })`
+  no login e `res.clearCookie("token")` no logout.
+- `users-service/src/middlewares/auth.js` aceita o token tanto pelo cookie
+  quanto pelo header `Authorization`.
+- `gateway/src/app.js` adicionou `cookie-parser`.
+- `gateway/src/services/proxyService.js` **lê o cookie do cliente e injeta**
+  `Authorization: Bearer <token>` antes de despachar para o microsserviço
+  interno (comunicação server-to-server). Isso permite que
+  `complaints-service` e `interactions-service` continuem validando por
+  header sem precisar conhecer cookies.
+- Todos os scripts do frontend (`api-config.js`, `login.js`, `feed.js`, …)
+  usam `credentials: "include"`. Não há mais `localStorage.getItem('token')`
+  em lugar nenhum.
+
+#### TA2 — Helmet.js e Rate Limiting (RNF1.2)
+
+Implementado em `gateway/src/app.js`:
+
+- `app.use(helmet())` aplica `X-Content-Type-Options`, `X-Frame-Options`,
+  `Content-Security-Policy`, etc.
+- `globalLimiter`: **200 req / 15 min** por IP em todas as rotas.
+- `authLimiter`: **20 req / 15 min** por IP em `/auth/login`,
+  `/universidades/login` e `/auth/cadastro`.
+
+#### TA3 — Autorização "Dono do Recurso" (RNF1.3)
+
+- `complaints-service/src/controllers/complaintController.js` busca
+  `reclamacao.alunoId` e retorna **403** se diferente de `req.user.id` em
+  `PUT` e `DELETE`.
+- `interactions-service` já fazia essa validação em `updateComentario` e
+  `deleteComentario` (em `interactionService.js`).
+- A pessoa B estendeu esse padrão para a tabela `notificacoes`
+  (`markNotificacaoAsRead` checa `usuarioId` ou `universidadeId`).
+
+#### TA4 — Confirmação de Senha Atual (RNF1.4)
+
+- Novo método `userService.changePassword(userId, senhaAtual, novaSenha)`
+  que valida a senha atual com `bcrypt.compare` antes de gravar.
+- Rota dedicada: `PUT /auth/:id/senha`.
+- `frontend/scripts/config.js` chama esse endpoint separado quando o usuário
+  preenche os campos de troca de senha — agora também integrado com a
+  validação visual de TB4.
+
+#### TA5 — Testes (RNF1.6)
+
+- **`users-service/tests/auth.test.js`** (Jest + Supertest):
+  cadastro com sucesso, e-mail duplicado, campos faltando, login com
+  cookie HttpOnly, login inválido, logout, troca de senha sem auth.
+- **`gateway/tests/gateway.test.js`**: presença dos headers do Helmet,
+  retorno **429** após exceder o rate limit, health check.
+
+---
+
+### 8.2 Pessoa B — Funcionalidades e Usabilidade
+
+#### TB2 — Tabela de notificações + geração automática (RF1.2)
+
+**Modelagem Prisma (`interactions-service/prisma/schema.prisma` e
+`complaints-service/prisma/schema.prisma`):**
+
+```prisma
+model Notificacao {
+  id                Int           @id @default(autoincrement())
+  mensagem          String
+  tipo              String        // novo_comentario | resposta_universidade | nova_reclamacao
+  lida              Boolean       @default(false)
+  reclamacaoId      Int?
+  usuarioId         Int?          // destinatário aluno
+  universidadeId    Int?          // destinatário universidade
+  createdAt         DateTime      @default(now())
+
+  reclamacao        Reclamacao?   @relation(fields: [reclamacaoId], references: [id], onDelete: Cascade)
+  usuario           Usuario?      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  universidade      Universidade? @relation(fields: [universidadeId], references: [id], onDelete: Cascade)
+
+  @@index([usuarioId, lida])
+  @@index([universidadeId, lida])
+  @@map("notificacoes")
 }
+```
 
+Os relacionamentos inversos (`Usuario.notificacoes`,
+`Universidade.notificacoes`, `Reclamacao.notificacoes`) também foram
+adicionados.
 
-Objetivo: permitir autenticação sem precisar perguntar senha toda hora.
+**Migration:**
+`interactions-service/prisma/migrations/20260524000000_add_notificacoes/migration.sql`
+cria a tabela, dois índices compostos para acelerar a contagem de
+"não lidas" e três foreign keys com `ON DELETE CASCADE`. O
+`docker-entrypoint.sh` aplica essa migration automaticamente ao subir o
+container.
 
-## 4. Middleware de Autenticação
+**Disparo de notificações:**
 
-Fica no backend protegido.
+- `interactions-service/src/services/notificationHelper.js` centraliza a
+  criação em três funções (`onNovoComentarioDeAluno`,
+  `onRespostaDeUniversidade`, `onNovaReclamacao`). Toda chamada é
+  "fire-and-forget" e tem `try/catch` interno — uma falha em notificação
+  **nunca** derruba a operação principal.
+- `interactionService.createComentario` chama o helper apropriado conforme
+  o autor (aluno ou universidade).
+- `complaints-service/src/services/notificationHelper.js` espelha a função
+  `onNovaReclamacao` usando o Prisma Client local (mesmo banco
+  compartilhado) e é chamado por `complaintService.create`.
 
-Fluxo:
+#### TB3 — Visualização de notificações (RF1.3)
 
-Recebe um header:
+**Backend** (`interactions-service`):
 
-Authorization: Bearer TOKEN_AQUI
+- `GET /interactions/notificacoes` — listagem paginada, com filtro `?lida=`
+  e `meta.unreadCount` na resposta. Decide entre aluno e universidade pelo
+  campo `req.user.type`.
+- `GET /interactions/notificacoes/unread-count` — usado para o badge
+  global.
+- `PUT /interactions/notificacoes/:id/read` — marca uma como lida,
+  verificando o dono (`usuarioId` ou `universidadeId`).
+- `PUT /interactions/notificacoes/read-all` — marca todas em lote.
 
+**Frontend:**
 
-Verifica se o token existe.
+- `frontend/pages/notificacoes.html` foi reescrita: dark mode consistente
+  com o resto do app, contagem de não lidas, filtros
+  *Todas / Não lidas / Lidas*, "marcar todas como lidas" e cards clicáveis
+  que abrem a reclamação relacionada e marcam como lidas.
+- `frontend/scripts/notificacoes.js` implementa toda essa lógica usando
+  `fetchWithAuth` (cookie HttpOnly).
+- `frontend/scripts/api-config.js` ganhou `getUnreadNotificationsCount()` e
+  `refreshNotificationBadge()` para manter o `🔔` no header das telas
+  principais sincronizado (refresh a cada 60s na `telaprincipal.html` e a
+  cada navegação na `telafeed.html`).
 
-Valida o token com jsonwebtoken.verify.
+#### TB4 — Validação visual de formulários (RNF1.5)
 
-Se OK → coloca req.user = { id } e continua
+Foi criada uma biblioteca de validação reutilizável compartilhada por
+**todos** os formulários do sistema:
 
-Se falhar → retorna 401.
+- **`frontend/scripts/form-validation.js`** — expõe `window.FormValidator`
+  com a API:
 
-Objetivo: controlar acesso às rotas privadas.
+  ```js
+  FormValidator.attach('#meu-form', {
+    fields: {
+      email: { required: true, email: true, label: 'E-mail' },
+      senha: { required: true, strongPassword: true, label: 'Senha' }
+    },
+    onSubmit: async (values) => { /* só roda se tudo válido */ }
+  });
+  ```
 
-## 5. Rotas Protegidas
+  Regras suportadas: `required`, `email`, `minLength`, `maxLength`,
+  `pattern` (+ `patternMessage`), `match` (+ `matchMessage`),
+  `strongPassword`, `custom(value, allValues)`.
 
-Exemplo:
+  Recursos:
 
-/me
+  - Mensagem de erro abaixo do campo em vermelho (em tempo real, com
+    `blur` / `input` / `change`).
+  - Marcação visual `is-invalid` / `is-valid` (borda vermelha/verde).
+  - Resumo de erros no topo do formulário quando `submit` é bloqueado.
+  - "Hint" interativo para senhas fortes (lista de regras + barra de força
+    com 5 níveis).
+  - `setServerError(field, message)` para exibir erros do backend abaixo
+    do campo certo (usado em `config.js` para "Senha atual incorreta").
 
-/posts/create
+- **`frontend/styles/form-validation.css`** — todos os estilos
+  (cores adaptadas ao dark mode do app, transições suaves).
 
-/dashboard
+- **Formulários adaptados:**
+  - `cadastro.html` / `cadastro.js` — nome (condicional), e-mail forte,
+    senha forte com hint.
+  - `login.html` / `login.js`
+  - `cadastro-universidade.html` / `cadastro-universidade.js`
+  - `login-universidade.html` / `login-universidade.js`
+  - `reclamacao.html` / `reclamacao.js` — título, categoria, instituição,
+    campus e descrição (com `minLength: 20`).
+  - `config.html` / `config.js` — perfil + troca de senha com regras
+    cruzadas (se preencher qualquer campo de senha, todos viram
+    obrigatórios e a confirmação é checada).
+  - `telacomentarios.html` / `comentarios.js`.
 
-/settings
+---
 
-Só funcionam se o middleware validar o token.
+## 9. Como isso atende aos requisitos do trabalho
 
-## 6. Refresh Token (opcional)
+### 9.1 Fase 1 — Interface gráfica
 
-Serve para manter o usuário logado sem pedir login sempre.
+Frontend completo em HTML5 + Bootstrap 5 + CSS3, com tema escuro
+consistente, layout responsivo e fluxo navegacional cobrindo: login/
+cadastro (aluno e universidade), feed, detalhe de reclamação,
+comentários, perfil, configurações, notificações e busca de universidade.
 
-JWT curto (15min)
+### 9.2 Fase 2 — Implementação de conceitos
 
-Refresh token longo (7 dias, 30 dias)
+| Conceito                                  | Onde é demonstrado                                                          |
+| ----------------------------------------- | --------------------------------------------------------------------------- |
+| Comunicação síncrona/assíncrona (Fetch)   | Todos os scripts do `frontend/scripts/` — todas as chamadas são `async/await fetch(...)` |
+| **Web Storage API**                       | `sessionStorage` em `login.js`, `login-universidade.js`, `config.js`        |
+| **HTTP Cookies**                          | Cookie HttpOnly do JWT (TA1) + `cookie-parser` no gateway e no users-service |
+| HTTP Authentication                       | JWT (Bearer / cookie) com middlewares `auth.js` e `authMiddleware.js`        |
+| Mecanismo extra de segurança              | **Helmet** (cabeçalhos) + **Rate Limiting** (anti-bruteforce) + **autorização por dono do recurso** + **bcrypt** para senhas |
+| **Validação de formulários**              | TB4 — biblioteca `FormValidator` aplicada a 7 formulários                   |
 
-Armazenado em cookie httpOnly
+### 9.3 Fase 3 — Integração com banco e finalização
 
-Fluxo:
+- **Frameworks server-side**: Express + Prisma em todos os serviços; Joi/
+  Zod (validators) no users-service.
+- **Modelagem e banco**: PostgreSQL via Prisma com 8 tabelas (incluindo a
+  nova `notificacoes` de TB2). Schema em `*/prisma/schema.prisma`.
+- **Banco no Docker**: `postgres:15` declarado em `docker-compose.yml` com
+  `healthcheck` e volume `postgres-data`. Migrations aplicadas
+  automaticamente no boot do `interactions-service`.
+- **Testes**: TA5 entregou `users-service/tests/auth.test.js` e
+  `gateway/tests/gateway.test.js`.
 
-Quando o JWT expira, o user envia o refresh token.
+---
 
-Backend valida e gera um novo JWT.
+## 10. Próximos Passos
 
-Objetivo: sessão mais estável e segura.
-
-## 7. Logout
-
-Se usar refresh token:
-
-apaga refresh da base
-
-limpa cookies httpOnly
-
-Se usar JWT simples:
-
-frontend só remove o token local
-
-Objetivo: encerrar sessão.
-
-
-
-Resumo da pasta Auth = cadastrar usuário → verificar senha → gerar token → validar token em rotas protegidas →  refresh token para sessão longa.
+- Adicionar paginação visual na `notificacoes.html`.
+- Cobrir o `complaints-service` e o `interactions-service` com testes
+  de integração (Jest + Supertest), similares aos já existentes.
+- Avaliar mover as notificações em tempo real para WebSockets
+  (`socket.io`) — a tabela e os endpoints já suportariam essa evolução.

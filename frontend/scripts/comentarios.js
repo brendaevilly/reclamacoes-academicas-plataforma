@@ -15,61 +15,62 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Carregar comentários
     await loadComentarios(reclamacaoId);
 
-    // Configurar formulário de novo comentário
+    // Configurar formulário de novo comentário com validação visual (TB4)
     const formComentario = document.getElementById("form-comentario");
-    if (formComentario) {
-        formComentario.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const texto = document.getElementById("texto-comentario").value.trim();
-
-            if (!texto) {
-                alert("Por favor, digite um comentário.");
-                return;
-            }
-
-            const userStr = sessionStorage.getItem("user");
-            if (!userStr) {
-                alert("Você precisa estar logado para comentar.");
-                window.location.href = "login.html";
-                return;
-            }
-
-            try {
-                const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/comentarios`, {
-                    method: "POST",
-                    body: JSON.stringify({
-                        texto,
-                        reclamacaoId: parseInt(reclamacaoId)
-                    })
-                });
-
-                const result = await response.json();
-
-                if (response.ok) {
-                    document.getElementById("texto-comentario").value = "";
-                    // Recarregar comentários após criar (com pequeno delay para garantir que o banco processou)
-                    setTimeout(async () => {
-                        try {
-                            await loadComentarios(reclamacaoId);
-                        } catch (reloadError) {
-                            console.error("Erro ao recarregar comentários:", reloadError);
-                            // Tentar novamente
-                            setTimeout(async () => {
-                                try {
-                                    await loadComentarios(reclamacaoId);
-                                } catch (e) {
-                                    console.error("Erro ao recarregar comentários (segunda tentativa):", e);
-                                    alert("Comentário criado! Por favor, atualize a página para ver os comentários.");
-                                }
-                            }, 500);
-                        }
-                    }, 300);
-                } else {
-                    alert(result.message || "Erro ao criar comentário.");
+    if (formComentario && window.FormValidator) {
+        window.FormValidator.attach('#form-comentario', {
+            fields: {
+                'texto-comentario': {
+                    label: 'Comentário',
+                    required: true,
+                    minLength: 2,
+                    maxLength: 1000
                 }
-            } catch (error) {
-                console.error("Erro ao criar comentário:", error);
-                alert("Erro de conexão com o servidor.");
+            },
+            onSubmit: async (values) => {
+                const userStr = sessionStorage.getItem("user");
+                if (!userStr) {
+                    alert("Você precisa estar logado para comentar.");
+                    window.location.href = "login.html";
+                    return;
+                }
+
+                const submitBtn = formComentario.querySelector('button[type="submit"]');
+                const oldText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+
+                try {
+                    const response = await window.fetchWithAuth(`${window.API_BASE_URL}/interactions/comentarios`, {
+                        method: "POST",
+                        body: JSON.stringify({
+                            texto: values['texto-comentario'].trim(),
+                            reclamacaoId: parseInt(reclamacaoId)
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        document.getElementById("texto-comentario").value = "";
+                        document.getElementById("texto-comentario").classList.remove('is-valid', 'is-invalid');
+                        setTimeout(async () => {
+                            try {
+                                await loadComentarios(reclamacaoId);
+                            } catch (reloadError) {
+                                console.error("Erro ao recarregar comentários:", reloadError);
+                            }
+                        }, 300);
+                    } else {
+                        alert(result.message || "Erro ao criar comentário.");
+                    }
+                } catch (error) {
+                    console.error("Erro ao criar comentário:", error);
+                    alert("Erro de conexão com o servidor.");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = oldText;
+                }
             }
         });
     }

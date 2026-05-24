@@ -30,7 +30,7 @@ export const userController = {
         return res.status(401).json({ error: "Email ou senha inválidos." });
       }
       res.cookie("token", data.token, COOKIE_OPTIONS);
-      return res.json({ user: data.user, token: data.token });
+      return res.json({ user: data.user });
     } catch (err) {
       console.error("Erro ao fazer login:", err);
       return res.status(500).json({ error: err.message });

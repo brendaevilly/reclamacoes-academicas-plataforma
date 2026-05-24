@@ -25,47 +25,44 @@
     const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     /**
-     * Garante que existe um <small class="fv-error-message"> abaixo do campo.
+     * Garante que existe um <small class="fv-error-message"> imediatamente
+     * depois do campo, no MESMO nó pai. NÃO movemos o campo para um wrapper
+     * porque mover um <select> já renderizado para outro pai quebra o popup
+     * nativo do dropdown no Firefox (e em algumas builds do Chrome no Linux),
+     * deixando o campo focável mas com o menu suspenso travado.
      */
     function ensureErrorEl(field) {
-        let container = field.closest(".fv-field");
-        if (!container) {
-            // Envelopar o campo em um wrapper .fv-field para permitir o ::after
-            container = document.createElement("div");
-            container.className = "fv-field";
-            field.parentNode.insertBefore(container, field);
-            container.appendChild(field);
-        }
-        let err = container.querySelector(".fv-error-message");
-        if (!err) {
+        // Reaproveita uma mensagem já criada se ela for o irmão seguinte
+        // do campo (foi onde a inserimos da primeira vez).
+        let err = field.nextElementSibling;
+        if (!err || !err.classList || !err.classList.contains("fv-error-message")) {
             err = document.createElement("small");
             err.className = "fv-error-message";
             err.setAttribute("aria-live", "polite");
-            container.appendChild(err);
+            // insertAdjacentElement é seguro: NÃO move o <select>, apenas
+            // insere um novo nó logo depois dele.
+            field.insertAdjacentElement("afterend", err);
         }
-        return { container, errorEl: err };
+        return { errorEl: err };
     }
 
     function setFieldState(field, message) {
-        const { container, errorEl } = ensureErrorEl(field);
+        const { errorEl } = ensureErrorEl(field);
         if (message) {
-            container.classList.add("is-invalid");
-            container.classList.remove("is-valid");
             field.classList.add("is-invalid");
             field.classList.remove("is-valid");
             errorEl.textContent = message;
+            errorEl.classList.add("visible");
             field.setAttribute("aria-invalid", "true");
         } else {
-            container.classList.remove("is-invalid");
             field.classList.remove("is-invalid");
             if (field.value && field.value.toString().trim().length > 0) {
-                container.classList.add("is-valid");
                 field.classList.add("is-valid");
             } else {
-                container.classList.remove("is-valid");
                 field.classList.remove("is-valid");
             }
             errorEl.textContent = "";
+            errorEl.classList.remove("visible");
             field.removeAttribute("aria-invalid");
         }
     }
@@ -147,16 +144,17 @@
 
     /**
      * Hint visual de senha forte: lista de regras + barra de força.
+     * Inserimos os elementos após o campo (mesmo pai), sem envolver o
+     * <input> em wrapper, para não disparar o bug do popup nativo do
+     * <select> no Firefox (e por consistência com ensureErrorEl).
      */
     function attachPasswordHint(field) {
-        let container = field.closest(".fv-field");
-        if (!container) {
-            container = document.createElement("div");
-            container.className = "fv-field";
-            field.parentNode.insertBefore(container, field);
-            container.appendChild(field);
+        // Se já existe um .fv-password-hint logo depois do campo, não duplica.
+        let cursor = field.nextElementSibling;
+        while (cursor) {
+            if (cursor.classList && cursor.classList.contains("fv-password-hint")) return;
+            cursor = cursor.nextElementSibling;
         }
-        if (container.querySelector(".fv-password-hint")) return;
 
         const hint = document.createElement("ul");
         hint.className = "fv-password-hint";
@@ -173,8 +171,9 @@
         bar.dataset.level = "0";
         bar.innerHTML = "<span></span>";
 
-        container.appendChild(hint);
-        container.appendChild(bar);
+        // Inserir bar e depois hint na ordem: campo -> hint -> bar
+        field.insertAdjacentElement("afterend", bar);
+        field.insertAdjacentElement("afterend", hint);
 
         const update = () => {
             const v = field.value;

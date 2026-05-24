@@ -53,15 +53,19 @@ export default {
         // Garantir que page e limit sejam números
         const page = parseInt(query.page) || 1;
         const limit = parseInt(query.limit) || 10;
-        const { category, universityId, campus, alunoId, userId } = query;
+        const { category, universityId, campus, alunoId } = query;
         const offset = (page - 1) * limit;
 
-        // Se userId estiver presente, usar como alunoId (para compatibilidade)
-        const alunoIdFinal = alunoId || userId;
+        // IMPORTANTE: `query.userId` é só o usuário logado (vem do JWT via
+        // optionalAuthMiddleware) e existe APENAS para calcular `user_liked`
+        // por usuário mais abaixo. Ele NÃO pode virar filtro de autor — se
+        // virar, o feed passa a mostrar só as reclamações do próprio usuário
+        // logado (bug reportado). O filtro por autor é controlado explícita-
+        // mente via `alunoId` (ex.: tela "Minhas reclamações").
 
         try {
-            const complaints = await Complaint.findAll({ limit, offset, category, universityId, campus, alunoId: alunoIdFinal });
-            const totalCount = await Complaint.countAll({ category, universityId, campus, alunoId: alunoIdFinal });
+            const complaints = await Complaint.findAll({ limit, offset, category, universityId, campus, alunoId });
+            const totalCount = await Complaint.countAll({ category, universityId, campus, alunoId });
             const totalPages = Math.ceil(totalCount / limit);
 
             // Buscar informações de likes para cada reclamação

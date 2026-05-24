@@ -62,11 +62,32 @@ header h1 {
   border: 1px solid #169EF266;
   color: #ffffff;
   transition: 0.2s ease;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .form-select:focus {
   border-color: #1BCBF2;
   box-shadow: 0 0 10px #1BCBF288;
+}
+
+.form-select[disabled] {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/*
+ * Popup das opções: fundo BRANCO + texto PRETO. O popup nativo do <select>
+ * ignora styling complexo em muitos browsers/SO; forçar essa combinação
+ * simples garante que as opções sempre fiquem visíveis e clicáveis.
+ */
+.form-select option {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.form-select option:disabled {
+  color: #888;
 }
 
 /* ===== TÍTULOS DE CATEGORIA ===== */

@@ -91,12 +91,14 @@ export default {
             query.alunoId = Number(query.alunoId);
         }
 
-        // Tentar obter userId do token se disponível (sem falhar se não houver)
+        // Só seta `userId` para alunos. JWT de universidade tem type:'universidade'
+        // e usar o id dela como usuarioId no cálculo de user_liked poderia bater
+        // por coincidência num Usuario de mesmo id. O filtro `alunoId` continua
+        // só sendo aplicado quando explicitamente pedido (myComplaints/userComplaints).
         try {
-            if (req.user && req.user.id) {
+            if (req.user && req.user.id && req.user.type !== "universidade") {
                 query.userId = req.user.id;
-                // Se houver um parâmetro específico para buscar reclamações do usuário
-                if (query.myComplaints === 'true' || query.userComplaints === 'true') {
+                if (query.myComplaints === "true" || query.userComplaints === "true") {
                     query.alunoId = req.user.id;
                 }
             }

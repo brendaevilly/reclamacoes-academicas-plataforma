@@ -25,9 +25,16 @@ A aplicação é dividida em quatro componentes:
 2. **users-service** (porta `3001`) — cadastro/login de alunos e
    universidades, JWT em cookie HttpOnly, troca de senha com validação.
 3. **complaints-service** (porta `3002`) — CRUD de reclamações, feed
-   paginado/filtros, autorização "dono do recurso".
+   paginado/filtros, autorização "dono do recurso" e auth opcional para
+   personalizar `user_liked` por usuário logado.
 4. **interactions-service** (porta `3003`) — comentários, likes e
    **notificações** (TB2/TB3).
+
+> Observação: o frontend é **servido pelo próprio gateway** via
+> `express.static`, e o diretório `./frontend` é montado como volume
+> `read-only` no container (`./frontend:/frontend:ro` em
+> `docker-compose.yml`). Isso permite alterar HTML/CSS/JS no host sem
+> precisar rebuildar o container.
 
 ---
 
@@ -67,7 +74,7 @@ reclamacoes-academicas-plataforma-main/
 │   │   ├── controllers/complaintController.js
 │   │   ├── services/complaintService.js, notificationHelper.js
 │   │   ├── models/Complaint.js
-│   │   ├── middleware/authMiddleware.js
+│   │   ├── middleware/authMiddleware.js, optionalAuthMiddleware.js
 │   │   └── app.js
 │   ├── prisma/schema.prisma, migrations/
 │   └── server.js
@@ -178,11 +185,17 @@ Rotas marcadas com 🔒 exigem cookie HttpOnly válido (`token`).
 
 | Método | Rota                  | Descrição                                                  |
 | ------ | --------------------- | ---------------------------------------------------------- |
-| GET    | `/complaints/feed`    | Feed paginado com filtros (`category`, `universityId`, `campus`, `page`, `limit`) |
-| GET    | `/complaints/:id`     | Detalhe                                                    |
+| GET    | `/complaints/feed`    | Feed paginado com filtros (`category`, `universityId`, `campus`, `page`, `limit`). Auth **opcional**: se houver, `user_liked` é por usuário |
+| GET    | `/complaints/:id`     | Detalhe (auth opcional, mesma lógica)                      |
 | POST   | `/complaints` 🔒      | Criar reclamação — **emite notificação para a universidade** |
 | PUT    | `/complaints/:id` 🔒  | Atualizar (somente o dono — RNF1.3)                        |
 | DELETE | `/complaints/:id` 🔒  | Remover (somente o dono — RNF1.3)                          |
+
+> O middleware `optionalAuthMiddleware` decodifica o JWT se houver, mas
+> não bloqueia visitantes anônimos. Importante: o `complaintController.list`
+> **só popula `query.userId`** se o usuário logado for aluno
+> (`req.user.type !== "universidade"`). Caso contrário, o feed acabaria
+> filtrando reclamações pelo ID da universidade tratando-o como `alunoId`.
 
 ### 5.4 Interações
 
@@ -254,8 +267,8 @@ A resposta de listagem inclui `meta.unreadCount`.
 | Mecanismo                       | Onde                                       | Tarefa |
 | ------------------------------- | ------------------------------------------ | ------ |
 | JWT em **Cookie HttpOnly**      | `users-service` + gateway + frontend       | TA1    |
-| `Helmet`                        | `gateway/src/app.js`                       | TA2    |
-| `express-rate-limit` (global)   | `gateway/src/app.js` (200req/15min)        | TA2    |
+| `Helmet` com CSP customizada    | `gateway/src/app.js`                       | TA2    |
+| `express-rate-limit` (global)   | `gateway/src/app.js` (600req/15min, com `skip` para `/auth/me` e `/interactions/notificacoes/unread-count`) | TA2 |
 | Rate limit em login/cadastro    | `gateway/src/app.js` (20req/15min)         | TA2    |
 | Autorização "dono do recurso"   | `complaints-service`, `interactions-service` | TA3 / TB2  |
 | Senha atual obrigatória         | `PUT /auth/:id/senha`                      | TA4    |
@@ -265,7 +278,15 @@ A resposta de listagem inclui `meta.unreadCount`.
 
 O **gateway** converte o cookie `token` em `Authorization: Bearer <token>`
 antes de fazer proxy para os microsserviços (TA1), eliminando a necessidade
-de expor o JWT ao JavaScript no navegador.
+de expor o JWT ao JavaScript no navegador. Também repassa fielmente
+`Set-Cookie` recebido do microsserviço para o cliente via `res.append`
+(preserva múltiplos cookies caso existam).
+
+A **CSP** explicitada em `app.js` libera `'unsafe-inline'` em
+`scriptSrcAttr` (necessário para os `onclick="..."` usados na navegação
+das telas) e libera `https://cdn.jsdelivr.net` em `scriptSrc`/`styleSrc`
+para o Bootstrap servido por CDN. Sem essas duas concessões, os botões
+de navegação e a estilização Bootstrap deixavam de funcionar.
 
 ---
 
@@ -288,7 +309,13 @@ Migrado do `localStorage` para Cookies HttpOnly.
   `Authorization: Bearer <token>` antes de despachar para o microsserviço
   interno (comunicação server-to-server). Isso permite que
   `complaints-service` e `interactions-service` continuem validando por
-  header sem precisar conhecer cookies.
+  header sem precisar conhecer cookies. O proxy também:
+  - remove headers tóxicos (`host`, `content-length`, `accept-encoding`,
+    `connection`, `transfer-encoding`) antes de encaminhar;
+  - força `accept-encoding: identity` para evitar respostas gzipped que
+    quebravam o forward de `Set-Cookie` e JSON;
+  - repassa `Set-Cookie` da resposta usando `res.append` (que preserva
+    múltiplos cookies, ao contrário de `res.setHeader`).
 - Todos os scripts do frontend (`api-config.js`, `login.js`, `feed.js`, …)
   usam `credentials: "include"`. Não há mais `localStorage.getItem('token')`
   em lugar nenhum.
@@ -297,9 +324,20 @@ Migrado do `localStorage` para Cookies HttpOnly.
 
 Implementado em `gateway/src/app.js`:
 
-- `app.use(helmet())` aplica `X-Content-Type-Options`, `X-Frame-Options`,
-  `Content-Security-Policy`, etc.
-- `globalLimiter`: **200 req / 15 min** por IP em todas as rotas.
+- `helmet({ contentSecurityPolicy: { directives: ... } })` aplica todos os
+  cabeçalhos de segurança padrão (`X-Content-Type-Options`,
+  `X-Frame-Options`, etc.) com CSP customizada que libera:
+  - `scriptSrc`: `'self' 'unsafe-inline' https://cdn.jsdelivr.net`
+  - `scriptSrcAttr`: `'unsafe-inline'` (necessário para `onclick="..."`)
+  - `styleSrc`: `'self' 'unsafe-inline' https://cdn.jsdelivr.net https://fonts.googleapis.com`
+  - `fontSrc`: `'self' https://fonts.gstatic.com data:`
+  - `imgSrc`: `'self' data:`
+- `crossOriginResourcePolicy: { policy: "cross-origin" }` para permitir
+  o uso de assets de CDN sem bloqueio CORP.
+- `globalLimiter`: **600 req / 15 min** por IP em todas as rotas, com
+  `skip` para `/auth/me` e
+  `/interactions/notificacoes/unread-count` (chamadas frequentes do
+  badge de notificações e do polling de sessão).
 - `authLimiter`: **20 req / 15 min** por IP em `/auth/login`,
   `/universidades/login` e `/auth/cadastro`.
 
@@ -443,8 +481,20 @@ Foi criada uma biblioteca de validação reutilizável compartilhada por
   - `setServerError(field, message)` para exibir erros do backend abaixo
     do campo certo (usado em `config.js` para "Senha atual incorreta").
 
+  > **Decisão importante**: a mensagem de erro é inserida como **irmão
+  > direto** do campo via `insertAdjacentElement("afterend", err)`, **sem
+  > envolver o campo num wrapper**. Isso evita um bug do Firefox (e de
+  > alguns Chrome no Linux) em que mover um `<select>` já renderizado
+  > para outro nó pai trava o popup nativo do dropdown — o campo
+  > continua focável mas o menu suspenso não abre mais. Pelo mesmo
+  > motivo, todo código que repopula `<select>` em runtime
+  > (`feed.js`, `reclamacao.js`) usa `select.remove(0)` + `appendChild`
+  > em vez de `select.innerHTML = "..."`.
+
 - **`frontend/styles/form-validation.css`** — todos os estilos
-  (cores adaptadas ao dark mode do app, transições suaves).
+  (cores adaptadas ao dark mode do app, transições suaves). Visibilidade
+  da mensagem de erro é controlada por `.fv-error-message.visible` (sem
+  depender de um wrapper).
 
 - **Formulários adaptados:**
   - `cadastro.html` / `cadastro.js` — nome (condicional), e-mail forte,
@@ -495,10 +545,64 @@ comentários, perfil, configurações, notificações e busca de universidade.
 
 ---
 
-## 10. Próximos Passos
+## 10. Decisões técnicas e correções importantes
+
+Alguns bugs sutis foram corrigidos no caminho e merecem registro para
+quem for manter o código:
+
+### 10.1 `user_liked` por usuário no feed
+A rota `GET /complaints/feed` originalmente não tinha auth — o frontend
+recebia sempre `user_liked: false` e o "primeiro clique" de quem já tinha
+curtido em outra sessão acabava **descurtindo**. Solução: adicionar
+`optionalAuthMiddleware` na rota e calcular `user_liked` per-user. **Mas
+`query.userId` é usado SÓ no cálculo de likes** — em `complaintService.list`
+ele NÃO entra em `Complaint.findAll`, senão o feed começa a mostrar
+apenas as reclamações do usuário logado.
+
+### 10.2 Botão "Adicionar Reclamação" aparecendo para universidade
+O `userType` é guardado em `sessionStorage` (escrito por
+`login.js`/`login-universidade.js`), mas `feed.js` lia de `localStorage`.
+Resultado: sempre `null` e o botão nunca era escondido. Fix em
+`frontend/scripts/feed.js`.
+
+### 10.3 Botões `onclick="..."` deixando de funcionar
+O Helmet aplica `script-src-attr 'none'` por padrão, o que bloqueia todos
+os handlers inline. Os botões "Voltar" do feed e os cards de navegação
+da `telaprincipal.html` paravam de funcionar silenciosamente. Fix:
+explicitar `scriptSrcAttr: ["'unsafe-inline'"]` na CSP.
+
+### 10.4 Dropdowns nativos do `<select>` não abrindo
+Dois sintomas distintos com mesma raiz no Firefox/alguns Chrome Linux:
+
+1. **Validação visual quebrando o popup** — o `FormValidator` envolvia o
+   `<select>` num wrapper `.fv-field`. Mover um `<select>` já renderizado
+   para outro nó pai trava o popup nativo do dropdown. Fix: a mensagem
+   de erro é inserida como irmão direto via `insertAdjacentElement`.
+2. **`select.innerHTML = "..."` quebrando o popup** — repopular os
+   filhos de um `<select>` via `innerHTML` causa o mesmo travamento. Fix:
+   usar `select.remove(0)` em loop + `appendChild` para cada nova
+   `<option>`. Aplicado em `feed.js` (filtros) e `reclamacao.js`
+   (instituição/campus).
+
+### 10.5 Migration do Prisma ficando "stuck"
+O Prisma marca migrations como "failed" no banco e bloqueia
+`prisma migrate deploy` futuras (erro `P3009`). O
+`interactions-service/docker-entrypoint.sh` foi reforçado para detectar
+falhas e tentar `prisma migrate resolve --rolled-back` antes de
+re-aplicar — e, como último recurso, marcar como `--applied`. A migration
+de `notificacoes` também foi tornada idempotente usando
+`CREATE TABLE IF NOT EXISTS` + blocos `DO $$ ... EXCEPTION WHEN
+duplicate_object THEN NULL; END $$` para as FKs.
+
+---
+
+## 11. Próximos Passos
 
 - Adicionar paginação visual na `notificacoes.html`.
 - Cobrir o `complaints-service` e o `interactions-service` com testes
   de integração (Jest + Supertest), similares aos já existentes.
 - Avaliar mover as notificações em tempo real para WebSockets
   (`socket.io`) — a tabela e os endpoints já suportariam essa evolução.
+- Avaliar substituir os `<select>` nativos por componentes custom
+  (ex.: Choices.js) caso queiramos integrar o popup ao dark theme; hoje
+  os `<option>` saem com fundo branco/preto por compatibilidade.

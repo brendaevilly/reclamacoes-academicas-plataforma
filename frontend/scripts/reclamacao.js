@@ -28,7 +28,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         universidadesData = await response.json();
 
-        selectUniversidade.innerHTML = '<option value="">Selecione a instituição</option>';
+        // Limpamos via .remove() em vez de .innerHTML = "..." porque
+        // sobrescrever innerHTML de um <select> renderizado quebra o popup
+        // nativo do dropdown no Firefox (e em alguns Chrome Linux): o campo
+        // fica focável mas o menu suspenso nunca abre.
+        while (selectUniversidade.options.length > 0) selectUniversidade.remove(0);
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Selecione a instituição";
+        selectUniversidade.appendChild(placeholder);
 
         const universidadesAgrupadas = {};
         universidadesData.forEach(univ => {
@@ -47,7 +56,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     } catch (error) {
         console.error("Erro ao carregar universidades:", error);
-        selectUniversidade.innerHTML = '<option value="">Erro ao carregar instituições</option>';
+        while (selectUniversidade.options.length > 0) selectUniversidade.remove(0);
+        const errOpt = document.createElement("option");
+        errOpt.value = "";
+        errOpt.textContent = "Erro ao carregar instituições";
+        selectUniversidade.appendChild(errOpt);
+    }
+
+    // Helper local para repopular o select de campus sem usar innerHTML
+    // (mesmo motivo: preservar o popup nativo do dropdown).
+    function setCampusOptions(placeholderText, items, enabled) {
+        while (selectCampus.options.length > 0) selectCampus.remove(0);
+
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = placeholderText;
+        selectCampus.appendChild(placeholder);
+
+        for (const item of items) {
+            const opt = document.createElement("option");
+            opt.value = item.value;
+            opt.textContent = item.text;
+            if (item.selected) opt.selected = true;
+            selectCampus.appendChild(opt);
+        }
+        selectCampus.disabled = !enabled;
     }
 
     selectUniversidade.addEventListener("change", (e) => {
@@ -62,23 +95,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .filter((campus, index, self) => self.indexOf(campus) === index);
 
             if (campusDisponiveis.length > 0) {
-                selectCampus.disabled = false;
-                selectCampus.innerHTML = '<option value="">Selecione o campus</option>';
-
-                campusDisponiveis.forEach(campus => {
-                    const option = document.createElement("option");
-                    option.value = campus;
-                    option.textContent = campus;
-                    if (campus === selectedUniv.campus) option.selected = true;
-                    selectCampus.appendChild(option);
-                });
+                setCampusOptions(
+                    "Selecione o campus",
+                    campusDisponiveis.map(c => ({
+                        value: c, text: c, selected: c === selectedUniv.campus
+                    })),
+                    true
+                );
             } else {
-                selectCampus.disabled = true;
-                selectCampus.innerHTML = '<option value="">Nenhum campus disponível</option>';
+                setCampusOptions("Nenhum campus disponível", [], false);
             }
         } else {
-            selectCampus.disabled = true;
-            selectCampus.innerHTML = '<option value="">Selecione primeiro a instituição</option>';
+            setCampusOptions("Selecione primeiro a instituição", [], false);
         }
     });
 

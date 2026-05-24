@@ -36,18 +36,49 @@
       color: #ffffff !important;
     }
 
-    /* Inputs, selects e textarea */
+    /* Inputs e textarea — dark theme. NÃO incluímos .form-select aqui
+       porque o `color: white` herdava para os <option> e os tornava
+       invisíveis sobre o fundo branco do popup nativo. */
     .form-control,
-    .form-select,
     textarea {
       background-color: #050418 !important;
       color: #ffffff !important;
       border: 1px solid #444 !important;
     }
 
+    /* Select fechado: dark theme. Os <option> recebem styling próprio
+       logo abaixo, sem herdar color/background daqui. */
+    .form-select {
+      background-color: #050418 !important;
+      color: #ffffff !important;
+      border: 1px solid #444 !important;
+      pointer-events: auto !important;
+      cursor: pointer;
+    }
+
+    .form-select[disabled] {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
     .form-control::placeholder,
     textarea::placeholder {
       color: #cccccc !important;
+    }
+
+    /*
+     * Popup das opções: fundo BRANCO + texto PRETO. Forçar essa combinação
+     * garante que as opções sempre fiquem visíveis e clicáveis, em qualquer
+     * SO/tema/browser. O dropdown nativo do <select> historicamente ignora
+     * styling complexo, então quanto mais simples melhor.
+     */
+    .form-select option {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+    }
+
+    .form-select option:disabled {
+      color: #888 !important;
     }
 
     /* Botão Voltar */

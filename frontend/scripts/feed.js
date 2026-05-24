@@ -34,30 +34,50 @@ async function loadUniversidadesForFilter() {
     const response = await fetch(`${window.API_BASE_URL}/universidades`);
     const universidades = await response.json();
 
-    // Limpar opções existentes (exceto "Todas")
-    selectUniversidade.innerHTML = '<option value="Todas" selected>Todas</option>';
+    // Importante: NÃO usar innerHTML para repopular um <select>. Em alguns
+    // browsers (Firefox principalmente) isso recria os filhos de forma que
+    // o popup nativo do dropdown deixa de abrir. Em vez disso, limpamos
+    // .options e usamos appendChild — os métodos estáveis para alterar
+    // o conteúdo de um <select> em runtime.
+    refillSelect(selectUniversidade, [
+      { value: "Todas", text: "Todas", selected: true },
+      ...universidades.map(univ => ({
+        value: univ.sigla,
+        text: `${univ.sigla} - ${univ.nome}`,
+        dataset: { campus: univ.campus || "" }
+      }))
+    ]);
 
-    // Adicionar universidades do banco
-    universidades.forEach(univ => {
-      const option = document.createElement("option");
-      option.value = univ.sigla;
-      option.textContent = `${univ.sigla} - ${univ.nome}`;
-      option.dataset.campus = univ.campus || '';
-      selectUniversidade.appendChild(option);
-    });
-
-    // Carregar todos os campus únicos
     const campusUnicos = [...new Set(universidades.map(u => u.campus).filter(c => c))];
-    selectCampus.innerHTML = '<option value="Todos" selected>Todos</option>';
-    campusUnicos.forEach(campus => {
-      const option = document.createElement("option");
-      option.value = campus;
-      option.textContent = campus;
-      selectCampus.appendChild(option);
-    });
+    refillSelect(selectCampus, [
+      { value: "Todos", text: "Todos", selected: true },
+      ...campusUnicos.map(campus => ({ value: campus, text: campus }))
+    ]);
   } catch (error) {
     console.error("Erro ao carregar universidades para filtro:", error);
-    // Manter opções padrão se falhar
+  }
+}
+
+/**
+ * Limpa e repreenche um <select> de forma segura para Firefox/Chrome Linux,
+ * preservando o popup nativo do dropdown.
+ */
+function refillSelect(selectEl, items) {
+  // remove option a option (mais estável do que innerHTML = "")
+  while (selectEl.options.length > 0) {
+    selectEl.remove(0);
+  }
+  for (const item of items) {
+    const opt = document.createElement("option");
+    opt.value = item.value;
+    opt.textContent = item.text;
+    if (item.selected) opt.selected = true;
+    if (item.dataset) {
+      for (const [k, v] of Object.entries(item.dataset)) {
+        opt.dataset[k] = v;
+      }
+    }
+    selectEl.appendChild(opt);
   }
 }
 
@@ -204,8 +224,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   });
 
-  // Ocultar botão "Adicionar Reclamação" se for universidade
-  const userType = localStorage.getItem('userType');
+  // Ocultar botão "Adicionar Reclamação" se for universidade.
+  // O userType é guardado em sessionStorage por login.js / login-universidade.js,
+  // não em localStorage; ler do storage errado deixava o botão sempre visível.
+  const userType = sessionStorage.getItem('userType') || localStorage.getItem('userType');
   if (userType === 'universidade') {
     const btnAdicionar = document.querySelector('.btn-adicionar');
     if (btnAdicionar) {

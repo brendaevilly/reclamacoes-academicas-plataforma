@@ -11,8 +11,10 @@ const frontendPath = path.join(process.cwd(), "../frontend");
 
 // TA2: cabeçalhos HTTP de segurança via Helmet.
 // CSP customizada para permitir as bibliotecas vindas de CDN
-// (Bootstrap + Google Fonts) e os <script> inline usados em algumas
-// telas (ex.: telaprincipal.html).
+// (Bootstrap + Google Fonts), os <script> inline e os handlers
+// onclick="..." usados em várias telas (ex.: telaprincipal.html,
+// telafeed.html, etc.). Sem `scriptSrcAttr: 'unsafe-inline'` o
+// Helmet aplica o default `'none'`, que quebra todos os onclick.
 app.use(helmet({
     contentSecurityPolicy: {
         directives: {
@@ -22,6 +24,7 @@ app.use(helmet({
                 "'unsafe-inline'",
                 "https://cdn.jsdelivr.net"
             ],
+            scriptSrcAttr: ["'unsafe-inline'"],
             styleSrc: [
                 "'self'",
                 "'unsafe-inline'",

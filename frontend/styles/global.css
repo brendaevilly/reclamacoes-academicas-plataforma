@@ -1,7 +1,14 @@
+/*
+ * Estilos globais — IMPORTA o design system Notion e adiciona ajustes
+ * mínimos que não pertencem a nenhuma página específica.
+ *
+ * Carregue este arquivo logo após `design-system.css` (ou apenas este,
+ * que já importa o design-system).
+ */
+@import url("./design-system.css");
+@import url("./page-layout.css");
+
+html,
 body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color:#050418; /* Fundo claro para o design limpo */
-    color: #1bcdf2;
+  min-height: 100vh;
 }

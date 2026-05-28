@@ -9,7 +9,14 @@
     <link rel="stylesheet" href="../styles/global.css">
 </head>
 
-<body>
+<body class="page-app">
+    <header class="page-header d-flex justify-content-between align-items-center">
+        <div class="app-logo">
+            <span class="app-logo-mark">O</span>
+            <span class="app-logo-text">Ouvidoria Universitária</span>
+        </div>
+        <a href="telaprincipal.html" class="btn-back-page btn-back-page--flush">← Voltar</a>
+    </header>
     <main class="perfil-container">
         
         <div class="universidade-header">
@@ -24,7 +31,7 @@
             <p class="avaliacao-texto" id="valor-avaliacao">Carregando...</p>
         </section>
 
-        <section class="avaliacao-user" id="secao-avaliar-usuario" style="display: none;">
+        <section class="avaliacao-user" id="secao-avaliar-usuario">
             <h2>Sua Avaliação</h2>
             <div class="estrelas-input" id="estrelas-avaliacao-usuario"></div>
             <p id="mensagem-avaliacao"></p>

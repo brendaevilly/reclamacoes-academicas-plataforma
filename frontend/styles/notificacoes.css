@@ -1,0 +1,197 @@
+/*
+ * Página de notificações.
+ * Requer design-system.css e page-layout.css.
+ */
+
+body.notificacoes-page {
+  background-color: var(--color-surface-soft);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+.container-notif {
+  max-width: 760px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+
+.notif-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.notif-title {
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0;
+  font-size: var(--fs-h3);
+  letter-spacing: -0.01em;
+}
+
+.notif-title .badge {
+  background-color: var(--color-surface) !important;
+  color: var(--color-charcoal) !important;
+  font-size: 12px;
+  border: 1px solid var(--color-hairline);
+  vertical-align: middle;
+}
+
+#notif-counter {
+  font-size: 0.75rem;
+}
+
+.notif-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-acao {
+  background-color: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.btn-acao:hover {
+  background-color: var(--color-surface);
+  border-color: var(--color-hairline-strong);
+}
+
+.btn-acao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.notif-filtros {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.filtro-btn {
+  background-color: transparent;
+  border: 1px solid var(--color-hairline);
+  color: var(--color-steel);
+  border-radius: var(--radius-full);
+  padding: 6px 14px;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+
+.filtro-btn:hover {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.filtro-btn.active {
+  background-color: var(--color-ink-deep);
+  color: var(--color-on-dark);
+  border-color: var(--color-ink-deep);
+}
+
+.notificacao {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.notificacao:hover {
+  border-color: var(--color-hairline-strong);
+  box-shadow: var(--shadow-1);
+  transform: translateY(-1px);
+}
+
+.notificacao.nao-lida {
+  border-left: 3px solid var(--color-primary);
+  background-color: #faf9ff;
+}
+
+.notificacao .badge-novo {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+}
+
+.notificacao h6 {
+  margin: 0 0 4px 0;
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: var(--fs-body);
+}
+
+.notificacao p {
+  margin: 0;
+  color: var(--color-charcoal);
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+
+.notificacao small {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-stone);
+  font-size: var(--fs-caption);
+}
+
+.notif-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-steel);
+}
+
+.notif-empty .icone {
+  font-size: 3rem;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-steel);
+}
+
+.tipo-label {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-charcoal);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.tipo-label.novo_comentario {
+  background-color: var(--tint-lavender);
+  color: var(--color-brand-purple-800);
+}
+
+.tipo-label.resposta_universidade {
+  background-color: var(--tint-mint);
+  color: var(--color-success-deep);
+}
+
+.tipo-label.nova_reclamacao {
+  background-color: var(--tint-peach);
+  color: var(--color-brand-orange-deep);
+}

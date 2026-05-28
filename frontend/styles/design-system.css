@@ -1,0 +1,694 @@
+/*
+ * Design System — Notion-inspired
+ * Paleta clara, minimalista e profissional.
+ * Carregue ESTE arquivo PRIMEIRO em todas as páginas, antes de CSS específicos.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+:root {
+  /* ===== Brand / Primary ===== */
+  --color-primary: #5645d4;
+  --color-primary-pressed: #4534b3;
+  --color-primary-deep: #3a2a99;
+  --color-on-primary: #ffffff;
+
+  --color-brand-navy: #0a1530;
+  --color-brand-navy-deep: #070f24;
+  --color-brand-navy-mid: #1a2a52;
+
+  --color-link: #0075de;
+  --color-link-pressed: #005bab;
+
+  /* ===== Brand spectrum (accents) ===== */
+  --color-brand-pink: #ff64c8;
+  --color-brand-pink-deep: #a02e6d;
+  --color-brand-orange: #dd5b00;
+  --color-brand-orange-deep: #793400;
+  --color-brand-purple: #7b3ff2;
+  --color-brand-purple-300: #d6b6f6;
+  --color-brand-purple-800: #391c57;
+  --color-brand-teal: #2a9d99;
+  --color-brand-green: #1aae39;
+  --color-brand-yellow: #f5d75e;
+  --color-brand-brown: #523410;
+
+  /* ===== Pastel card tints ===== */
+  --tint-peach: #ffe8d4;
+  --tint-rose: #fde0ec;
+  --tint-mint: #d9f3e1;
+  --tint-lavender: #e6e0f5;
+  --tint-sky: #dcecfa;
+  --tint-yellow: #fef7d6;
+  --tint-yellow-bold: #f9e79f;
+  --tint-cream: #f8f5e8;
+  --tint-gray: #f0eeec;
+
+  /* ===== Surfaces ===== */
+  --color-canvas: #ffffff;
+  --color-surface: #f6f5f4;
+  --color-surface-soft: #fafaf9;
+
+  /* ===== Hairlines ===== */
+  --color-hairline: #e5e3df;
+  --color-hairline-soft: #ede9e4;
+  --color-hairline-strong: #c8c4be;
+
+  /* ===== Text ===== */
+  --color-ink-deep: #000000;
+  --color-ink: #1a1a1a;
+  --color-charcoal: #37352f;
+  --color-slate: #5d5b54;
+  --color-steel: #787671;
+  --color-stone: #a4a097;
+  --color-muted: #bbb8b1;
+
+  /* ===== On dark ===== */
+  --color-on-dark: #ffffff;
+  --color-on-dark-muted: #a4a097;
+
+  /* ===== Semantic ===== */
+  --color-success: #1aae39;
+  --color-success-soft: var(--tint-mint);
+  --color-success-deep: #0e7a25;
+  --color-warning: #dd5b00;
+  --color-warning-soft: var(--tint-peach);
+  --color-warning-deep: var(--color-brand-orange-deep);
+  --color-error: #e03131;
+  --color-error-soft: #fde7e7;
+  --color-error-deep: #b81e1e;
+
+  /* ===== Radius ===== */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 20px;
+  --radius-xxxl: 24px;
+  --radius-full: 9999px;
+
+  /* ===== Spacing ===== */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-xxl: 32px;
+  --space-xxxl: 40px;
+  --space-section-sm: 48px;
+  --space-section: 64px;
+  --space-section-lg: 96px;
+  --space-hero: 120px;
+
+  /* ===== Elevation ===== */
+  --shadow-1: 0 1px 2px 0 rgba(15, 15, 15, 0.04);
+  --shadow-2: 0 4px 12px 0 rgba(15, 15, 15, 0.08);
+  --shadow-3: 0 24px 48px -8px rgba(15, 15, 15, 0.20);
+  --shadow-4: 0 16px 48px -8px rgba(15, 15, 15, 0.16);
+
+  /* ===== Typography ===== */
+  --font-sans: "Inter", -apple-system, system-ui, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+
+  --fs-hero: 80px;
+  --fs-display: 56px;
+  --fs-h1: 48px;
+  --fs-h2: 36px;
+  --fs-h3: 28px;
+  --fs-h4: 22px;
+  --fs-h5: 18px;
+  --fs-body: 16px;
+  --fs-sm: 14px;
+  --fs-caption: 13px;
+  --fs-micro: 12px;
+}
+
+/* ===========================================================
+ * Reset moderno e base
+ * =========================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.55;
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--fs-h1); line-height: 1.15; letter-spacing: -0.5px; }
+h2 { font-size: var(--fs-h2); line-height: 1.20; letter-spacing: -0.5px; }
+h3 { font-size: var(--fs-h3); line-height: 1.25; }
+h4 { font-size: var(--fs-h4); line-height: 1.30; }
+h5 { font-size: var(--fs-h5); line-height: 1.40; }
+
+p {
+  margin: 0 0 var(--space-md) 0;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-link-pressed);
+  text-decoration: underline;
+}
+
+/* ===========================================================
+ * Botões (sobrescreve Bootstrap quando presente)
+ * =========================================================== */
+.btn,
+button {
+  font-family: var(--font-sans);
+}
+
+.btn {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  line-height: 1.30;
+  padding: 10px 18px;
+  border-radius: var(--radius-md);
+  transition: background-color 0.18s ease, color 0.18s ease,
+    border-color 0.18s ease, box-shadow 0.18s ease, transform 0.06s ease;
+  border: 1px solid transparent;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+/* Primário (roxo Notion) */
+.btn-primary,
+.btn.btn-primary {
+  background-color: var(--color-primary) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+.btn-primary:hover,
+.btn.btn-primary:hover {
+  background-color: var(--color-primary-pressed) !important;
+  border-color: var(--color-primary-pressed) !important;
+  color: var(--color-on-primary) !important;
+}
+.btn-primary:focus,
+.btn.btn-primary:focus {
+  box-shadow: 0 0 0 3px rgba(86, 69, 212, 0.25) !important;
+}
+
+/* Escuro (CTA secundário forte) */
+.btn-dark,
+.btn.btn-dark {
+  background-color: var(--color-ink-deep) !important;
+  color: var(--color-on-dark) !important;
+  border-color: var(--color-ink-deep) !important;
+}
+.btn-dark:hover,
+.btn.btn-dark:hover {
+  background-color: #2d2d2d !important;
+  border-color: #2d2d2d !important;
+}
+
+/* Secundário (outline neutro) */
+.btn-secondary,
+.btn.btn-secondary,
+.btn-outline-secondary,
+.btn.btn-outline-secondary {
+  background-color: transparent !important;
+  color: var(--color-ink) !important;
+  border: 1px solid var(--color-hairline-strong) !important;
+}
+.btn-secondary:hover,
+.btn.btn-secondary:hover,
+.btn-outline-secondary:hover,
+.btn.btn-outline-secondary:hover {
+  background-color: var(--color-surface) !important;
+  color: var(--color-ink) !important;
+  border-color: var(--color-hairline-strong) !important;
+}
+
+/* Info / outline-info (usado em filtros) */
+.btn-outline-info,
+.btn.btn-outline-info {
+  background-color: transparent !important;
+  color: var(--color-primary) !important;
+  border: 1px solid var(--color-primary) !important;
+}
+.btn-outline-info:hover,
+.btn.btn-outline-info:hover {
+  background-color: var(--color-primary) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* Perigo */
+.btn-danger,
+.btn.btn-danger {
+  background-color: var(--color-error) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-error) !important;
+}
+.btn-danger:hover,
+.btn.btn-danger:hover {
+  background-color: var(--color-error-deep) !important;
+  border-color: var(--color-error-deep) !important;
+}
+
+/* Sucesso */
+.btn-success,
+.btn.btn-success {
+  background-color: var(--color-success) !important;
+  color: var(--color-on-primary) !important;
+  border-color: var(--color-success) !important;
+}
+.btn-success:hover,
+.btn.btn-success:hover {
+  background-color: var(--color-success-deep) !important;
+  border-color: var(--color-success-deep) !important;
+}
+
+/* ===========================================================
+ * Inputs / forms (sobrescreve Bootstrap)
+ * =========================================================== */
+.form-control,
+.form-select,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+textarea,
+select {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  line-height: 1.4;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(86, 69, 212, 0.18);
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+}
+
+.form-control::placeholder,
+textarea::placeholder,
+input::placeholder {
+  color: var(--color-stone);
+  opacity: 1;
+}
+
+.form-control:disabled,
+.form-select:disabled,
+input:disabled,
+textarea:disabled,
+select:disabled {
+  background-color: var(--color-surface);
+  color: var(--color-steel);
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.form-label,
+label {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-charcoal);
+  margin-bottom: 6px;
+  display: inline-block;
+}
+
+/*
+ * Popup das opções do <select> nativo: sempre branco com texto preto.
+ * Garante visibilidade em qualquer SO/tema, sem herdar cores da página.
+ */
+.form-select option,
+select option {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.form-select option:disabled,
+select option:disabled {
+  color: #888;
+}
+
+/* ===========================================================
+ * Cards
+ * =========================================================== */
+.card {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  transition: box-shadow 0.18s ease, border-color 0.18s ease,
+    transform 0.18s ease;
+}
+
+.card:hover {
+  border-color: var(--color-hairline-strong);
+  box-shadow: var(--shadow-2);
+}
+
+/* ===========================================================
+ * Badges / Status pills
+ * =========================================================== */
+.badge {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-caption);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.02em;
+}
+
+.bg-danger {
+  background-color: var(--color-error) !important;
+  color: var(--color-on-primary) !important;
+}
+.bg-success {
+  background-color: var(--color-success) !important;
+  color: var(--color-on-primary) !important;
+}
+.bg-secondary {
+  background-color: var(--color-surface) !important;
+  color: var(--color-charcoal) !important;
+}
+.bg-warning {
+  background-color: var(--color-warning) !important;
+  color: var(--color-on-primary) !important;
+}
+
+/* ===========================================================
+ * Utilitários textuais
+ * =========================================================== */
+.text-muted {
+  color: var(--color-steel) !important;
+}
+
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+/* ===========================================================
+ * Layout: header padrão do app
+ * =========================================================== */
+.app-header {
+  background-color: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline);
+  padding: 14px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 64px;
+}
+
+.app-header h1,
+.app-brand {
+  color: var(--color-ink);
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+.app-header .status-geral,
+.status-geral {
+  color: var(--color-steel);
+  font-size: var(--fs-sm);
+}
+
+/* ===========================================================
+ * Notificações: ícone + badge no header
+ * =========================================================== */
+.notif-icon-link {
+  color: var(--color-charcoal);
+  text-decoration: none;
+  font-size: 1.25rem;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: background-color 0.15s ease;
+}
+.notif-icon-link:hover {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.notif-badge {
+  display: none;
+  font-size: 0.7rem;
+  background-color: var(--color-error) !important;
+  color: var(--color-on-primary) !important;
+  font-weight: 600;
+}
+
+.notif-badge--sm {
+  font-size: 0.65rem;
+}
+
+/* ===========================================================
+ * Scrollbar sutil
+ * =========================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline-strong);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-canvas);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-stone);
+}
+
+/* ===========================================================
+ * Focus visível acessível
+ * =========================================================== */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ===========================================================
+ * Card tints (pastéis Notion — feature cards)
+ * =========================================================== */
+.card-tint-peach {
+  background-color: var(--tint-peach) !important;
+  border-color: rgba(221, 91, 0, 0.12) !important;
+}
+.card-tint-rose {
+  background-color: var(--tint-rose) !important;
+  border-color: rgba(160, 46, 109, 0.12) !important;
+}
+.card-tint-mint {
+  background-color: var(--tint-mint) !important;
+  border-color: rgba(26, 174, 57, 0.12) !important;
+}
+.card-tint-lavender {
+  background-color: var(--tint-lavender) !important;
+  border-color: rgba(86, 69, 212, 0.12) !important;
+}
+.card-tint-sky {
+  background-color: var(--tint-sky) !important;
+  border-color: rgba(0, 117, 222, 0.12) !important;
+}
+.card-tint-yellow {
+  background-color: var(--tint-yellow) !important;
+  border-color: rgba(245, 215, 94, 0.35) !important;
+}
+.card-tint-cream {
+  background-color: var(--tint-cream) !important;
+  border-color: var(--color-hairline) !important;
+}
+.card-tint-gray {
+  background-color: var(--tint-gray) !important;
+  border-color: var(--color-hairline) !important;
+}
+
+/* ===========================================================
+ * Brand mark (logo minimalista no header)
+ * =========================================================== */
+.app-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.app-logo-mark {
+  width: 28px;
+  height: 28px;
+  background: var(--color-primary);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-on-primary);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+}
+
+.app-logo-text {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* ===========================================================
+ * Hero band (navy — seções de destaque)
+ * =========================================================== */
+.hero-band {
+  background-color: var(--color-brand-navy);
+  color: var(--color-on-dark);
+  padding: var(--space-section-sm) var(--space-xxl);
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: var(--space-xl);
+}
+
+.hero-band::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 12% 30%, rgba(255, 100, 200, 0.18) 0, transparent 40%),
+    radial-gradient(circle at 88% 20%, rgba(86, 69, 212, 0.25) 0, transparent 42%),
+    radial-gradient(circle at 70% 85%, rgba(42, 157, 153, 0.15) 0, transparent 38%);
+  pointer-events: none;
+}
+
+.hero-band > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-band h2,
+.hero-band h3,
+.hero-band h4 {
+  color: var(--color-on-dark);
+  margin-bottom: 8px;
+}
+
+.hero-band p {
+  color: var(--color-on-dark-muted);
+  margin: 0;
+  font-size: var(--fs-body);
+  max-width: 560px;
+  line-height: 1.55;
+}
+
+.hero-band__title {
+  font-size: var(--fs-h3);
+  margin-bottom: 8px;
+}
+
+/* ===========================================================
+ * Ícone decorativo em cards de menu
+ * =========================================================== */
+.card-option-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-bottom: 14px;
+  background-color: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.card-tint-peach .card-option-icon { background-color: rgba(255, 255, 255, 0.5); }
+.card-tint-lavender .card-option-icon { background-color: rgba(255, 255, 255, 0.55); }
+
+/* ===========================================================
+ * Badge tags (pastéis — categorias, status)
+ * =========================================================== */
+.badge-tag-purple {
+  background-color: var(--tint-lavender);
+  color: var(--color-brand-purple-800);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.badge-tag-orange {
+  background-color: var(--tint-peach);
+  color: var(--color-brand-orange-deep);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.badge-tag-green {
+  background-color: var(--tint-mint);
+  color: var(--color-success-deep);
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}
+
+.badge-tag-sky {
+  background-color: var(--tint-sky);
+  color: #1c5b94;
+  font-size: var(--fs-caption);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+  display: inline-block;
+}

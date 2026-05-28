@@ -1,0 +1,22 @@
+/*
+ * Página de republicar reclamação.
+ * Requer design-system.css e page-layout.css.
+ */
+
+.container-form {
+  max-width: 720px;
+  margin: 40px auto;
+  background-color: var(--color-canvas);
+  padding: 40px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-hairline);
+  box-shadow: var(--shadow-1);
+}
+
+.container-form h2 {
+  color: var(--color-ink);
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}

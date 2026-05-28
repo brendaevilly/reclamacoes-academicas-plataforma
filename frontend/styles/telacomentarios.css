@@ -1,0 +1,133 @@
+/*
+ * Página de comentários de uma reclamação.
+ * Requer design-system.css, page-layout.css e form-validation.css.
+ */
+
+body.comentarios-page {
+  background-color: var(--color-surface-soft);
+  color: var(--color-ink);
+  padding-bottom: 90px;
+}
+
+.comentario-area {
+  background: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-top: 20px;
+  box-shadow: var(--shadow-1);
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.comentario-area h4 {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: var(--fs-h4);
+  letter-spacing: -0.01em;
+  margin-bottom: 8px;
+}
+
+.comentario-area h5 {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: var(--fs-h5);
+  margin-bottom: 16px;
+}
+
+.comentarios-page .text-muted {
+  color: var(--color-charcoal) !important;
+  line-height: 1.55;
+}
+
+.comentario {
+  border-bottom: 1px solid var(--color-hairline);
+  padding: 14px 0;
+}
+
+.comentario:last-child {
+  border-bottom: none;
+}
+
+.autor {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.data {
+  font-size: var(--fs-caption);
+  color: var(--color-steel);
+  margin-left: 10px;
+}
+
+.conteudo {
+  margin-top: 6px;
+  color: var(--color-charcoal);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+
+.likes-count-comentario {
+  color: var(--color-charcoal);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+}
+
+.comentarios-page .btn-icon {
+  background: none;
+  border: none;
+  color: var(--color-steel);
+  font-size: 1.15rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.comentarios-page .btn-icon:hover {
+  color: var(--color-primary);
+  background-color: var(--color-surface);
+}
+
+.comentarios-page .liked {
+  color: var(--color-error) !important;
+}
+
+.comentarios-page a {
+  text-decoration: none;
+}
+
+.comentarios-page .btn-voltar {
+  background-color: transparent;
+  color: var(--color-ink);
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  border: 1px solid var(--color-hairline-strong);
+  transition: background-color 0.15s ease;
+  font-size: var(--fs-sm);
+}
+
+.comentarios-page .btn-voltar:hover {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.comentarios-page textarea.form-control {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-md);
+}
+
+.comentarios-page textarea.form-control:focus {
+  background-color: var(--color-canvas);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(86, 69, 212, 0.18);
+  color: var(--color-ink);
+}
+
+@media (max-width: 576px) {
+  .comentario-area {
+    padding: 18px;
+  }
+}

@@ -6,6 +6,8 @@
  * - Campos inválidos recebem borda vermelha e ícone de erro.
  * - Campos válidos (após interação) recebem borda verde e ícone de check.
  * - Funciona tanto em formulários "puros" quanto Bootstrap.
+ *
+ * Paleta light/Notion — usa os tokens do design-system.css.
  */
 
 /*
@@ -20,15 +22,15 @@
 input.is-invalid,
 select.is-invalid,
 textarea.is-invalid {
-  border-color: #E63946 !important;
-  box-shadow: 0 0 0 3px rgba(230, 57, 70, 0.18) !important;
+  border-color: var(--color-error, #e03131) !important;
+  box-shadow: 0 0 0 3px rgba(224, 49, 49, 0.15) !important;
 }
 
 input.is-valid,
 select.is-valid,
 textarea.is-valid {
-  border-color: #2bb673 !important;
-  box-shadow: 0 0 0 3px rgba(43, 182, 115, 0.18) !important;
+  border-color: var(--color-success, #1aae39) !important;
+  box-shadow: 0 0 0 3px rgba(26, 174, 57, 0.15) !important;
 }
 
 /* Importante: NÃO aplicamos background-image:none em .form-select porque
@@ -37,8 +39,8 @@ textarea.is-valid {
 /* Mensagem de erro como irmão direto do campo. */
 .fv-error-message {
   display: block;
-  color: #E63946;
-  font-size: 0.82rem;
+  color: var(--color-error, #e03131);
+  font-size: 13px;
   margin-top: 6px;
   min-height: 1em;
   line-height: 1.3;
@@ -55,15 +57,15 @@ textarea.is-valid {
 
 /* Hint de senha forte (lista de regras) */
 .fv-password-hint {
-  margin-top: 8px;
-  padding: 10px 12px;
-  background-color: rgba(22, 180, 242, 0.08);
-  border: 1px solid rgba(22, 180, 242, 0.25);
+  margin-top: 10px;
+  padding: 12px 14px;
+  background-color: var(--color-surface, #f6f5f4);
+  border: 1px solid var(--color-hairline, #e5e3df);
   border-radius: 8px;
-  font-size: 0.78rem;
+  font-size: 13px;
   list-style: none;
-  padding-left: 12px;
-  color: #cfcfcf;
+  padding-left: 14px;
+  color: var(--color-slate, #5d5b54);
 }
 
 .fv-password-hint li {
@@ -75,24 +77,24 @@ textarea.is-valid {
 
 .fv-password-hint li::before {
   content: "○";
-  color: #888;
+  color: var(--color-stone, #a4a097);
   font-size: 0.9rem;
 }
 
 .fv-password-hint li.ok {
-  color: #2bb673;
+  color: var(--color-success-deep, #0e7a25);
 }
 
 .fv-password-hint li.ok::before {
   content: "✓";
-  color: #2bb673;
+  color: var(--color-success, #1aae39);
 }
 
 /* Barra de força de senha */
 .fv-strength-bar {
   height: 4px;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  background-color: var(--color-hairline, #e5e3df);
   margin-top: 8px;
   overflow: hidden;
 }
@@ -101,23 +103,24 @@ textarea.is-valid {
   display: block;
   height: 100%;
   width: 0%;
+  border-radius: 9999px;
   transition: width 0.25s ease, background-color 0.25s ease;
 }
 
-.fv-strength-bar[data-level="1"] > span { width: 25%; background-color: #E63946; }
-.fv-strength-bar[data-level="2"] > span { width: 50%; background-color: #f39c12; }
-.fv-strength-bar[data-level="3"] > span { width: 75%; background-color: #f1c40f; }
-.fv-strength-bar[data-level="4"] > span { width: 100%; background-color: #2bb673; }
+.fv-strength-bar[data-level="1"] > span { width: 25%; background-color: var(--color-error, #e03131); }
+.fv-strength-bar[data-level="2"] > span { width: 50%; background-color: #f59f00; }
+.fv-strength-bar[data-level="3"] > span { width: 75%; background-color: #f5d75e; }
+.fv-strength-bar[data-level="4"] > span { width: 100%; background-color: var(--color-success, #1aae39); }
 
 /* Resumo de erros do formulário (topo) */
 .fv-summary {
   display: none;
-  background-color: rgba(230, 57, 70, 0.12);
-  border: 1px solid rgba(230, 57, 70, 0.4);
-  color: #ff8a93;
+  background-color: var(--color-error-soft, #fde7e7);
+  border: 1px solid rgba(224, 49, 49, 0.35);
+  color: var(--color-error-deep, #b81e1e);
   border-radius: 8px;
-  padding: 10px 14px;
-  font-size: 0.85rem;
+  padding: 12px 14px;
+  font-size: 14px;
   margin-bottom: 14px;
 }
 

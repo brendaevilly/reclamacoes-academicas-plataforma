@@ -6,108 +6,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Ouvidoria Universitária - Adicionar Reclamação</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="../styles/design-system.css" />
+  <link rel="stylesheet" href="../styles/page-layout.css" />
   <link rel="stylesheet" href="../styles/form-validation.css">
-  <style>
-    /* ======== DARK MODE (igual ao Feed) ======== */
-
-    body {
-      background-color: #050418 !important;
-      color: #ffffff !important;
-    }
-
-    .container {
-      background-color: #050418 !important;
-      color: #ffffff !important;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-      margin-top: 40px !important;
-      box-shadow: 0 2px 15px rgba(241, 241, 241, 0.286);
-    }
-
-
-    /* Título */
-    h2 {
-      color: #ffffff !important;
-    }
-
-    /* Labels */
-    label {
-      color: #ffffff !important;
-    }
-
-    /* Inputs e textarea — dark theme. NÃO incluímos .form-select aqui
-       porque o `color: white` herdava para os <option> e os tornava
-       invisíveis sobre o fundo branco do popup nativo. */
-    .form-control,
-    textarea {
-      background-color: #050418 !important;
-      color: #ffffff !important;
-      border: 1px solid #444 !important;
-    }
-
-    /* Select fechado: dark theme. Os <option> recebem styling próprio
-       logo abaixo, sem herdar color/background daqui. */
-    .form-select {
-      background-color: #050418 !important;
-      color: #ffffff !important;
-      border: 1px solid #444 !important;
-      pointer-events: auto !important;
-      cursor: pointer;
-    }
-
-    .form-select[disabled] {
-      cursor: not-allowed;
-      opacity: 0.6;
-    }
-
-    .form-control::placeholder,
-    textarea::placeholder {
-      color: #cccccc !important;
-    }
-
-    /*
-     * Popup das opções: fundo BRANCO + texto PRETO. Forçar essa combinação
-     * garante que as opções sempre fiquem visíveis e clicáveis, em qualquer
-     * SO/tema/browser. O dropdown nativo do <select> historicamente ignora
-     * styling complexo, então quanto mais simples melhor.
-     */
-    .form-select option {
-      background-color: #ffffff !important;
-      color: #000000 !important;
-    }
-
-    .form-select option:disabled {
-      color: #888 !important;
-    }
-
-    /* Botão Voltar */
-    .btn-back {
-      background-color: #060526 !important;
-      border: none !important;
-      color: #fff !important;
-    }
-
-    .btn-back:hover {
-      background-color: #555 !important;
-    }
-
-    /* Botão Enviar */
-    button.btn-primary {
-      background-color: #16B4F2 !important;
-      border: none !important;
-    }
-
-    button.btn-primary:hover {
-      background-color: #0f81ae !important;
-    }
-  </style>
+  <link rel="stylesheet" href="../styles/reclamacao.css" />
 </head>
 
-<body>
-  <div class="container">
-    <a href="telaprincipal.html" class="btn btn-secondary btn-back">&larr; Voltar</a>
-    <h2>Adicionar Reclamação</h2>
+<body class="reclamacao-page">
+  <div class="reclamacao-form-container">
+    <a href="telaprincipal.html" class="btn btn-secondary btn-back-page">&larr; Voltar</a>
+    <h2 class="page-title">Adicionar Reclamação</h2>
+    <p class="page-subtitle">Descreva sua reclamação e selecione a instituição e categoria adequadas.</p>
     <form id="form-reclamacao" novalidate>
       <div class="mb-3">
         <label for="titulo" class="form-label">Título da Reclamação</label>

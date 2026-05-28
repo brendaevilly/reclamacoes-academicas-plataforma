@@ -1,0 +1,97 @@
+/*
+ * Página de configurações da conta.
+ * Requer design-system.css, page-layout.css e form-validation.css.
+ */
+
+body.config-page {
+  background-color: var(--color-surface-soft);
+  min-height: 100vh;
+  padding-bottom: 60px;
+  color: var(--color-ink);
+}
+
+.container-config {
+  max-width: 760px;
+  margin: 48px auto;
+  background: var(--color-canvas);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-1);
+  padding: 40px;
+  border: 1px solid var(--color-hairline);
+}
+
+.container-config h4 {
+  color: var(--color-ink);
+  font-size: var(--fs-h3);
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+
+.section-title {
+  color: var(--color-ink);
+  font-weight: 600;
+  font-size: var(--fs-h5);
+  border-bottom: 1px solid var(--color-hairline);
+  margin-bottom: 18px;
+  padding-bottom: 8px;
+}
+
+.config-page .form-label {
+  font-weight: 500;
+  color: var(--color-charcoal);
+  font-size: var(--fs-sm);
+}
+
+.config-page .form-control {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline-strong);
+  color: var(--color-ink);
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: var(--fs-body);
+}
+
+.config-page .form-control:focus {
+  background-color: var(--color-canvas);
+  border-color: var(--color-primary);
+  color: var(--color-ink);
+  box-shadow: 0 0 0 3px rgba(86, 69, 212, 0.18);
+}
+
+.config-page .form-control:disabled {
+  background-color: var(--color-surface);
+  opacity: 0.85;
+}
+
+.config-page .text-muted.small,
+.config-page .text-muted {
+  color: var(--color-steel) !important;
+}
+
+.btn-salvar {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 22px;
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  font-family: var(--font-sans);
+  transition: background-color 0.18s ease, transform 0.06s ease;
+}
+
+.btn-salvar:hover {
+  background-color: var(--color-primary-pressed);
+  color: var(--color-on-primary);
+}
+
+.btn-salvar:active {
+  transform: translateY(1px);
+}
+
+.config-page footer {
+  text-align: center;
+  color: var(--color-steel);
+  font-size: var(--fs-sm);
+  margin-top: 40px;
+}

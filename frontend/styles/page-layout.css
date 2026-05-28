@@ -1,0 +1,119 @@
+/*
+ * Layout compartilhado entre páginas internas (feed, config, notificações…).
+ * Requer design-system.css carregado antes.
+ */
+
+body.page-app {
+  background-color: var(--color-surface-soft);
+  color: var(--color-ink);
+  min-height: 100vh;
+}
+
+.page-header {
+  background-color: var(--color-canvas);
+  border-bottom: 1px solid var(--color-hairline);
+  padding: 14px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 64px;
+}
+
+.page-header h1 {
+  font-size: 18px;
+  color: var(--color-ink);
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.page-header .status-geral {
+  color: var(--color-steel);
+  font-size: var(--fs-sm);
+}
+
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 16px 60px;
+}
+
+.page-container-narrow {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 16px 60px;
+}
+
+.page-title {
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 8px 0;
+}
+
+.page-subtitle {
+  color: var(--color-steel);
+  font-size: var(--fs-body);
+  margin: 0 0 24px 0;
+  line-height: 1.5;
+}
+
+.btn-back-page {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: transparent !important;
+  border: 1px solid var(--color-hairline-strong) !important;
+  color: var(--color-ink) !important;
+  border-radius: var(--radius-md) !important;
+  padding: 8px 14px !important;
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-back-page:hover {
+  background-color: var(--color-surface) !important;
+  color: var(--color-ink) !important;
+  text-decoration: none;
+}
+
+.btn-back-page--flush {
+  margin-bottom: 0 !important;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.btn-voltar {
+  background-color: transparent;
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 8px 16px;
+  font-weight: 500;
+  font-size: var(--fs-sm);
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+
+.btn-voltar:hover {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.panel-card {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-1);
+}

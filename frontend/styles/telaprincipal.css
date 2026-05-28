@@ -1,0 +1,108 @@
+/*
+ * Dashboard / painel principal.
+ * Requer design-system.css e page-layout.css.
+ */
+
+body.dashboard-page {
+  background-color: var(--color-surface-soft);
+  color: var(--color-ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.dashboard-page main {
+  padding: 32px;
+}
+
+/* ======= SIDEBAR ======= */
+.sidebar {
+  background-color: var(--color-canvas);
+  border-right: 1px solid var(--color-hairline);
+  min-height: 100vh;
+  padding: 28px 16px;
+  position: sticky;
+  top: 64px;
+}
+
+.sidebar h5 {
+  color: var(--color-steel);
+  margin-bottom: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 1px;
+  padding: 0 12px;
+}
+
+.sidebar a {
+  display: block;
+  padding: 9px 12px;
+  margin-bottom: 2px;
+  color: var(--color-charcoal);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  background-color: transparent;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+}
+
+.sidebar a:hover {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+}
+
+.sidebar a.active-nav {
+  background-color: var(--tint-lavender);
+  color: var(--color-primary-deep);
+}
+
+/* ======= CARDS DE OPÇÃO ======= */
+.card-option {
+  background-color: var(--color-canvas);
+  border: 1px solid var(--color-hairline);
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+  height: 100%;
+}
+
+.card-option:hover {
+  transform: translateY(-2px);
+  border-color: var(--color-hairline-strong);
+  box-shadow: var(--shadow-2);
+}
+
+.card-option h5 {
+  color: var(--color-ink);
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+}
+
+.card-option p {
+  color: var(--color-slate);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.card-option[class*="card-tint-"] h5 {
+  color: var(--color-charcoal);
+}
+
+.card-option[class*="card-tint-"] p {
+  color: var(--color-slate);
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    min-height: auto;
+    position: relative;
+    top: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--color-hairline);
+  }
+}

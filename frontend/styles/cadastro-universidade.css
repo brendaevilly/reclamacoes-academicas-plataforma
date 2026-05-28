@@ -1,99 +1,74 @@
-/* ===== RESET ===== */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: "Poppins", sans-serif;
+/*
+ * Cadastro de universidade (formulário centralizado).
+ * Requer design-system.css e form-validation.css.
+ */
+
+body.cadastro-universidade-page {
+  background-color: var(--color-surface);
+  color: var(--color-ink);
+  min-height: 100vh;
+  padding: 24px 16px;
 }
 
-/* ===== BODY ===== */
-body {
-    background: linear-gradient(135deg, #f0f4f8 0%, #c2dcf8 50%, #a3d3ff 100%);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.cadastro-univ-container {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-xl);
+  padding: 40px;
+  max-width: 520px;
+  margin: 40px auto;
+  box-shadow: var(--shadow-2);
 }
 
-/* ===== FORMULÁRIO FLUTUANTE ===== */
-.form-container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
+.cadastro-univ-container h2 {
+  color: var(--color-ink);
+  margin-bottom: 28px;
+  text-align: left;
+  font-size: var(--fs-h3);
+  font-weight: 600;
+  letter-spacing: -0.02em;
 }
 
-.form-flutuante {
-    background-color: #fff;
-    padding: 50px 40px;
-    border-radius: 16px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-    width: 100%;
-    max-width: 450px;
+.cadastro-univ-container label,
+.cadastro-univ-container .form-label {
+  color: var(--color-charcoal);
+  font-weight: 500;
+  font-size: var(--fs-sm);
 }
 
-/* ===== TÍTULO ===== */
-.form-flutuante h2 {
-    text-align: center;
-    color: #2c3e50;
-    font-weight: 600;
-    margin-bottom: 30px;
+.cadastro-univ-container input.form-control {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border: 1px solid var(--color-hairline-strong);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  font-size: var(--fs-body);
 }
 
-/* ===== CAMPOS ===== */
-.form-grupo {
-    margin-bottom: 20px;
+.cadastro-univ-container input.form-control:focus {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(86, 69, 212, 0.18);
 }
 
-.form-grupo label {
-    display: block;
-    color: #34495e;
-    font-weight: 500;
-    margin-bottom: 6px;
+.cadastro-univ-container input.form-control::placeholder {
+  color: var(--color-stone);
 }
 
-.form-grupo input {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #f8f9fb;
-    font-size: 0.95rem;
-    transition: border 0.2s ease, box-shadow 0.2s ease;
+.cadastro-univ-container .btn-back {
+  background-color: transparent !important;
+  border: 1px solid var(--color-hairline-strong) !important;
+  color: var(--color-ink) !important;
+  border-radius: var(--radius-md) !important;
+  margin-bottom: 18px;
+  font-size: var(--fs-sm);
+  padding: 8px 14px !important;
+  font-weight: 500;
 }
 
-.form-grupo input:focus {
-    outline: none;
-    border-color: #3498db;
-    box-shadow: 0 0 8px rgba(52, 152, 219, 0.2);
-}
-
-/* ===== BOTÃO ===== */
-button[type="submit"] {
-    width: 100%;
-    padding: 14px;
-    background: #0099ff;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s ease, transform 0.1s ease;
-}
-
-button[type="submit"]:hover {
-    background: #0078d7;
-}
-
-button[type="submit"]:active {
-    transform: scale(0.98);
-}
-
-/* ===== RESPONSIVIDADE ===== */
-@media (max-width: 500px) {
-    .form-flutuante {
-        padding: 40px 25px;
-    }
+.cadastro-univ-container .btn-back:hover {
+  background-color: var(--color-surface) !important;
+  color: var(--color-ink) !important;
 }

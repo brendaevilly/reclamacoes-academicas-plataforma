@@ -74,6 +74,8 @@ async function getUnreadNotificationsCount() {
 }
 
 // TB3: Atualiza badges (.notif-badge) presentes na página com o número de não lidas.
+
+// Padrão 2 — Requisição em segundo plano sem travar nada (fire and update) (async/await)
 async function refreshNotificationBadge() {
     if (!(await isAuthenticated())) return;
     const unread = await getUnreadNotificationsCount();

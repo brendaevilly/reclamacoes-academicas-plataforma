@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // TB4: validação visual
   window.FormValidator.attach('#form-cadastro', {
     fields: fieldsConfig,
+
+    // Padrão 1 — Requisição que bloqueia a UI intencionalmente (feedback ao usuário) (async/await)
     onSubmit: async (values) => {
       const ehAnonimo = ehAnonimoCheckbox.checked;
       const dadosUsuario = {

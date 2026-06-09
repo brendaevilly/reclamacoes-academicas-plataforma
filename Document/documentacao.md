@@ -77,6 +77,8 @@ reclamacoes-academicas-plataforma-main/
 │   │   ├── middleware/authMiddleware.js, optionalAuthMiddleware.js
 │   │   └── app.js
 │   ├── prisma/schema.prisma, migrations/
+│   ├── tests/                  (Jest + Supertest)
+│   ├── jest.config.js
 │   └── server.js
 │
  ├── interactions-service/
@@ -88,7 +90,12 @@ reclamacoes-academicas-plataforma-main/
 │   │   └── app.js
 │   ├── prisma/schema.prisma, migrations/  (inclui add_notificacoes)
 │   ├── docker-entrypoint.sh    (roda prisma migrate deploy ao subir)
+│   ├── tests/                  (Jest + Supertest)
+│   ├── jest.config.js
 │   └── server.js
+│
+ ├── .github/
+│   └── workflows/ci.yml        (GitHub Actions — testes automáticos)
 │
  └── frontend/
     ├── pages/                  (HTML estático servido pelo gateway)
@@ -110,12 +117,34 @@ docker-compose up --build
   `interactions-service` (que possui o schema mais completo do banco
   compartilhado).
 
-Para rodar os testes:
+### Rodar os testes
+
+Os testes usam **Jest + Supertest** com mocks de banco de dados — não é
+necessário subir o PostgreSQL para executá-los.
+
+**Localmente** (dentro de cada pasta do microsserviço):
 
 ```bash
-docker compose exec user-service npm test
-docker compose exec gateway        npm test
+cd gateway              && npm ci && npm test
+cd users-service        && npm ci && npm test
+cd complaints-service   && npm ci && npm test
+cd interactions-service && npm ci && npm test
 ```
+
+**Via Docker** (com os containers em execução):
+
+```bash
+docker compose exec gateway              npm test
+docker compose exec users-service        npm test
+docker compose exec complaints-service   npm test
+docker compose exec interactions-service npm test
+```
+
+### CI/CD (GitHub Actions)
+
+O workflow `.github/workflows/ci.yml` roda automaticamente em **push** e
+**pull request** nas branches `main` e `master`. Ele executa os testes dos
+quatro microsserviços em paralelo (matrix), usando Node.js 20.
 
 ---
 
@@ -362,11 +391,20 @@ Implementado em `gateway/src/app.js`:
 
 #### TA5 — Testes (RNF1.6)
 
-- **`users-service/tests/auth.test.js`** (Jest + Supertest):
-  cadastro com sucesso, e-mail duplicado, campos faltando, login com
-  cookie HttpOnly, login inválido, logout, troca de senha sem auth.
-- **`gateway/tests/gateway.test.js`**: presença dos headers do Helmet,
-  retorno **429** após exceder o rate limit, health check.
+Todos os microsserviços possuem testes de integração HTTP (Jest +
+Supertest) com mocks — sem dependência de banco real.
+
+| Serviço | Arquivo(s) de teste | Cobertura principal |
+|---------|---------------------|---------------------|
+| **gateway** | `tests/gateway.test.js` | Headers Helmet, rate limiting (429), health check |
+| **users-service** | `tests/auth.test.js` | Cadastro, login, logout, troca de senha, `/auth/me` |
+| **users-service** | `tests/universidade.test.js` | Cadastro/login de universidade, listagem |
+| **users-service** | `tests/avaliacao.test.js` | Criar/atualizar avaliação, média, avaliação do usuário |
+| **complaints-service** | `tests/complaints.test.js` | Feed, CRUD, autenticação, autorização (dono do recurso) |
+| **interactions-service** | `tests/interactions.test.js` | Comentários, notificações, likes, endpoint interno |
+
+**CI/CD:** workflow `.github/workflows/ci.yml` executa todos os testes no
+GitHub Actions a cada push/PR.
 
 ---
 
@@ -540,8 +578,10 @@ comentários, perfil, configurações, notificações e busca de universidade.
 - **Banco no Docker**: `postgres:15` declarado em `docker-compose.yml` com
   `healthcheck` e volume `postgres-data`. Migrations aplicadas
   automaticamente no boot do `interactions-service`.
-- **Testes**: TA5 entregou `users-service/tests/auth.test.js` e
-  `gateway/tests/gateway.test.js`.
+- **Testes**: cobertura em todos os microsserviços (gateway, users-service,
+  complaints-service, interactions-service) com Jest + Supertest.
+- **CI/CD**: pipeline GitHub Actions (`.github/workflows/ci.yml`) roda os
+  testes automaticamente em push e pull request.
 
 ---
 
@@ -599,8 +639,8 @@ duplicate_object THEN NULL; END $$` para as FKs.
 ## 11. Próximos Passos
 
 - Adicionar paginação visual na `notificacoes.html`.
-- Cobrir o `complaints-service` e o `interactions-service` com testes
-  de integração (Jest + Supertest), similares aos já existentes.
+- Avaliar relatório de cobertura de código (coverage) no CI.
+- Avaliar testes E2E com Docker Compose + Playwright.
 - Avaliar mover as notificações em tempo real para WebSockets
   (`socket.io`) — a tabela e os endpoints já suportariam essa evolução.
 - Avaliar substituir os `<select>` nativos por componentes custom

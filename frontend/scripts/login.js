@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
             email: { label: 'E-mail', required: true, email: true },
             senha: { label: 'Senha', required: true, minLength: 1 }
         },
+
+        // Padrão 1 — Requisição que bloqueia a UI intencionalmente (feedback ao usuário) (async/await)
+
         onSubmit: async (values) => {
             const submitBtn = document.querySelector('#form-login button[type="submit"]');
             const oldText = submitBtn.textContent;

@@ -1,8 +1,7 @@
 
 
 import request from "supertest";
-import express from "express";
-import cookieParser from "cookie-parser";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { jest, describe, test, expect, beforeEach } from "@jest/globals";
 // ---- Mocks dos módulos de banco de dados ----
@@ -86,9 +85,6 @@ describe("POST /auth/cadastro", () => {
                 email: "joao@test.com",
                 senha: "Senha123!"
             });
-
-        // DEBUG
-        console.log("RESPOSTA CADASTRO:", res.body);
 
         expect(res.status).toBe(201);
         expect(res.body).toHaveProperty("email", "joao@test.com");
@@ -263,5 +259,38 @@ describe("PUT /auth/:id/senha", () => {
             .send({ senhaAtual: "old", novaSenha: "new123" });
 
         expect(res.status).toBe(401);
+    });
+});
+
+// =============================================
+// SESSÃO DO USUÁRIO
+// =============================================
+describe("GET /auth/me", () => {
+    it("deve retornar 401 sem autenticação", async () => {
+        const res = await request(app).get("/auth/me");
+
+        expect(res.status).toBe(401);
+    });
+
+    it("deve retornar dados do usuário autenticado", async () => {
+        mockFindById.mockResolvedValue({
+            id: 1,
+            nome: "João Silva",
+            email: "joao@test.com"
+        });
+
+        const token = jwt.sign(
+            { id: 1, email: "joao@test.com" },
+            process.env.JWT_SECRET,
+            { expiresIn: "1h" }
+        );
+
+        const res = await request(app)
+            .get("/auth/me")
+            .set("Authorization", `Bearer ${token}`);
+
+        expect(res.status).toBe(200);
+        expect(res.body).toHaveProperty("user");
+        expect(res.body.user).toHaveProperty("email", "joao@test.com");
     });
 });

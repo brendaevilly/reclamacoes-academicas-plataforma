@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, brenda]
+  pull_request:
+    branches: [main, master, brenda]
+
+jobs:
+  test:
+    name: Test ${{ matrix.service }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        service:
+          - gateway
+          - users-service
+          - complaints-service
+          - interactions-service
+
+    defaults:
+      run:
+        working-directory: ${{ matrix.service }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ${{ matrix.service }}/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        env:
+          JWT_SECRET: test-secret-key
+          NODE_ENV: test
+        run: npm test

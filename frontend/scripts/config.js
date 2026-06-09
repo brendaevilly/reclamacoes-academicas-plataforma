@@ -87,6 +87,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         },
+
+        // Padrão 1 — Requisição que bloqueia a UI intencionalmente (feedback ao usuário) (async/await)
         onSubmit: async (values) => {
             const btnSalvar = document.getElementById('btn-salvar');
             btnSalvar.disabled = true;
@@ -97,6 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const senhaAtual = values['senha-atual'];
             const novaSenha = values['nova-senha'];
 
+            // Padrão 3 — Múltiplas requisições encadeadas (sequencial assíncrono) (async/await)
             try {
                 const updateResponse = await window.fetchWithAuth(
                     `${window.API_BASE_URL}/auth/${currentUser.id}`,

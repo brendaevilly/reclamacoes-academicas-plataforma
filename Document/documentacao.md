@@ -144,7 +144,7 @@ docker compose exec interactions-service npm test
 
 O workflow `.github/workflows/ci.yml` roda automaticamente em **push** e
 **pull request** nas branches `main` e `master`. Ele executa os testes dos
-quatro microsserviços em paralelo (matrix), usando Node.js 20.
+quatro microsserviços em paralelo (matrix), usando Node.js 24.
 
 ---
 

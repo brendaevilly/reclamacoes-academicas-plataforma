@@ -18,4 +18,5 @@ echo "Executando seed (se necessário)..."
 npx prisma db seed || true
 
 echo "Iniciando aplicação..."
-exec "$@"
+exec "$@" 
+#hsja

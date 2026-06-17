@@ -13,7 +13,7 @@ const frontendPath = path.join(process.cwd(), "../frontend");
 // CSP customizada para permitir as bibliotecas vindas de CDN
 // (Bootstrap + Google Fonts), os <script> inline e os handlers
 // onclick="..." usados em várias telas (ex.: telaprincipal.html,
-// telafeed.html, etc.). Sem `scriptSrcAttr: 'unsafe-inline'` o
+//= telafeed.html, etc.). Sem `scriptSrcAttr: 'unsafe-inline'` o
 // Helmet aplica o default `'none'`, que quebra todos os onclick.
 app.use(helmet({
     contentSecurityPolicy: {
@@ -63,7 +63,7 @@ app.get("/", (req, res) => {
     res.redirect("/pages/login.html");
 });
 
-// proteção contra força bruta e Dos
+// proteção contra forrrrça bruta e Dos
 const globalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
     max: 600, // navegar pela SPA dispara muitas chamadas; 600 é confortável
@@ -97,5 +97,4 @@ app.use("/universidades/login", authLimiter);
 app.use("/auth/cadastro", authLimiter);
 
 app.use("/", router);
-
 export default app;
